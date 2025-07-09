@@ -1,22 +1,3 @@
-"""
-Synthetic Covid-19 Data Generator
-
-Purpose:
-    Generate a synthetic Covid-19 dataset matching the typical structure of covid_19_data.csv for testing and demonstration.
-    This script is useful for robust pipeline testing when real data is unavailable or for privacy reasons.
-
-How it helps:
-    - Enables end-to-end pipeline validation without real data.
-    - Ensures data quality checks and dashboards can be tested.
-    - Can be parameterized for different dataset sizes or distributions.
-
-Usage:
-    python3 generate_synthetic_covid_data.py
-    # Or modify n_rows for a different dataset size.
-
-Columns:
-    SNo, ObservationDate, Province/State, Country/Region, Last Update, Confirmed, Deaths, Recovered
-"""
 import pandas as pd
 import numpy as np
 import os
