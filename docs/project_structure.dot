@@ -1,0 +1,45 @@
+digraph ProjectStructure {
+    node [shape=box, fontname="Arial"];
+    rankdir=LR;
+
+    subgraph cluster_data_engineering {
+        label="data_engineering/";
+        common_data_loader [label="common_data_loader.py\n(Shared Loader)"];
+        data_lifecycle [label="data_lifecycle.py\n(Pipeline Manager)"];
+        connectors [label="connectors/\n(Modular Connectors)"];
+        example_pipeline [label="example_end_to_end_pipeline.py\n(Integration Test)"];
+        project1 [label="project_building_data_model_etl/\n(Project 1)"];
+        project2 [label="project_covid_data_analysis/\n(Project 2)"];
+        project3 [label="project_youtube_data_analysis/\n(Project 3)"];
+    }
+    plugins [label="plugins/\n(Pluggable Modules)"];
+    llm_engineering [label="llm_engineering/\n(LLM Lifecycle)"];
+    cloudscale_apis [label="cloudscale_apis/\n(Cloud APIs)"];
+    thirdparty_integrations [label="thirdparty_integrations/\n(Adapters, Webhooks)"];
+    src [label="src/\n(Core Algorithms)"];
+    tests [label="tests/\n(All Tests)"];
+    docs [label="docs/\n(Documentation)"];
+
+    common_data_loader -> project1;
+    common_data_loader -> project2;
+    common_data_loader -> project3;
+    data_lifecycle -> connectors;
+    project1 -> data_lifecycle;
+    project2 -> data_lifecycle;
+    project3 -> data_lifecycle;
+    project1 -> plugins;
+    project2 -> plugins;
+    project3 -> plugins;
+    project1 -> tests;
+    project2 -> tests;
+    project3 -> tests;
+    plugins -> src;
+    connectors -> src;
+    src -> tests;
+    llm_engineering -> src;
+    cloudscale_apis -> src;
+    thirdparty_integrations -> src;
+    docs -> project1;
+    docs -> project2;
+    docs -> project3;
+}
