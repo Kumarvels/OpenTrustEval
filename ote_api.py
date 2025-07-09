@@ -234,6 +234,39 @@ async def batch_evaluate(
     results = await asyncio.gather(*(process_item(item) for item in items))
     return JSONResponse({'results': results})
 
+@app.post("/realtime_evaluate/")
+async def realtime_evaluate(
+    text: str = Form(...),
+    image: UploadFile = File(None),
+    image_model: str = Form('EfficientNetB0'),
+    min_trust: str = Form('Trustworthy')
+):
+    """
+    Fast endpoint for chatbot/LLM integration. Returns minimal trust/hallucination result for real-time gating.
+    """
+    discovered_plugins = load_plugins('plugins')
+    img = None
+    try:
+        if image is not None:
+            img_bytes = await image.read()
+            img = np.array(Image.open(io.BytesIO(img_bytes)).convert('RGB'))
+        optimized, plugin_outputs, timings = process_pipeline(text, img, image_model, discovered_plugins)
+        # Minimal response for real-time use
+        halluc_flag = False
+        for v in plugin_outputs.values():
+            if isinstance(v, dict) and v.get('hallucination_flag'):
+                halluc_flag = True
+        trust_score = optimized['optimized_decision']
+        allow = (trust_score == min_trust) and not halluc_flag
+        return {
+            'allow': allow,
+            'trust_score': trust_score,
+            'hallucination': halluc_flag,
+            'plugin_outputs': plugin_outputs
+        }
+    except Exception as e:
+        return {'error': str(e)}
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
