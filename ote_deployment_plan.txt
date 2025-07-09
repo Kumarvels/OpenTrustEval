@@ -1,0 +1,12 @@
+# OTE Deployment Plan
+
+## Hardware Specs
+- CPU: 32-core
+- RAM: 256GB
+- GPU: 4x A100
+
+## Network Config
+- 10Gbps Ethernet
+
+## Scaling
+- Supports 3M queries/day
