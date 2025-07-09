@@ -13,7 +13,7 @@ sra_module = importlib.import_module('src.sra')
 discovered_plugins = load_plugins('plugins')
 
 # Dummy text
-text = "OpenTrustEval is a modular evaluation framework."
+text = "OpenTrustEval is a modular evaluation framework. This result is not fabricated."
 
 # Dummy image (random RGB)
 img = np.random.randint(0, 255, (256, 256, 3), dtype=np.uint8)
@@ -49,6 +49,9 @@ for name, plugin in discovered_plugins.items():
     if hasattr(plugin, 'custom_plugin'):
         plugin_output = plugin.custom_plugin(optimized)
         print(f"Plugin [{name}] Output:", plugin_output.get('plugin_output'))
+    if hasattr(plugin, 'hallucination_detector_plugin'):
+        plugin_output = plugin.hallucination_detector_plugin(optimized)
+        print(f"Plugin [{name}] Hallucination Output:", plugin_output.get('plugin_output'), '| Flag:', plugin_output.get('hallucination_flag'))
 
 print("--- LHEM: Text Only ---")
 embedding_text = process_input({'text': text, 'image': None})
@@ -77,3 +80,6 @@ for name, plugin in discovered_plugins.items():
     if hasattr(plugin, 'custom_plugin'):
         plugin_output_text = plugin.custom_plugin(optimized_text)
         print(f"Plugin [{name}] Output (text only):", plugin_output_text.get('plugin_output'))
+    if hasattr(plugin, 'hallucination_detector_plugin'):
+        plugin_output_text = plugin.hallucination_detector_plugin(optimized_text)
+        print(f"Plugin [{name}] Hallucination Output (text only):", plugin_output_text.get('plugin_output'), '| Flag:', plugin_output_text.get('hallucination_flag'))
