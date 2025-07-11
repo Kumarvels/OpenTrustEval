@@ -1,1 +1,0 @@
-OpenTrustEval is a modular, extensible framework for evaluating trust in multimodal LLMs. This is a sample input for pipeline testing.

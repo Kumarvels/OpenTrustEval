@@ -1,6 +1,0 @@
-llamafactory
-transformers
-torch
-datasets
-scikit-learn
-pyyaml
