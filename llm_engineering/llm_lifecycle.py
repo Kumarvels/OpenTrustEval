@@ -98,6 +98,74 @@ class LLMLifecycleManager:
     def get_security_checks(self):
         return self.security_checks
 
+    def add_model(self, name, provider_type, provider_config, persist=False):
+        """Dynamically add a new model/provider at runtime. Optionally persist to config file."""
+        import importlib
+        module = importlib.import_module(f"llm_engineering.providers.{provider_type}_provider")
+        if provider_type == 'llama_factory':
+            class_name = 'LLaMAFactoryProvider'
+        else:
+            class_name = ''.join([part.capitalize() for part in provider_type.split('_')]) + 'Provider'
+        provider_class = getattr(module, class_name)
+        self.add_llm_provider(name, provider_class(provider_config))
+        if persist:
+            self._persist_model_to_config(name, provider_type, provider_config)
+
+    def remove_model(self, name, persist=False):
+        """Remove a model/provider at runtime. Optionally remove from config file."""
+        self.remove_llm_provider(name)
+        if persist:
+            self._remove_model_from_config(name)
+
+    def update_model(self, name, provider_config, persist=False):
+        """Update config for a model/provider at runtime. Optionally persist to config file."""
+        if name not in self.llm_providers:
+            raise ValueError(f"Model/provider '{name}' not found.")
+        provider = self.llm_providers[name]
+        provider.config = provider_config
+        if persist:
+            self._update_model_in_config(name, provider_config)
+
+    def list_models(self):
+        """List all loaded models/providers."""
+        return list(self.llm_providers.keys())
+
+    def _persist_model_to_config(self, name, provider_type, provider_config):
+        """Helper to add a model to the YAML config file."""
+        import yaml
+        if not os.path.exists(self.config_path):
+            config = {'providers': []}
+        else:
+            with open(self.config_path, 'r') as f:
+                config = yaml.safe_load(f) or {'providers': []}
+        config['providers'].append({'name': name, 'type': provider_type, 'config': provider_config})
+        with open(self.config_path, 'w') as f:
+            yaml.safe_dump(config, f)
+
+    def _remove_model_from_config(self, name):
+        """Helper to remove a model from the YAML config file."""
+        import yaml
+        if not os.path.exists(self.config_path):
+            return
+        with open(self.config_path, 'r') as f:
+            config = yaml.safe_load(f) or {'providers': []}
+        config['providers'] = [p for p in config['providers'] if p['name'] != name]
+        with open(self.config_path, 'w') as f:
+            yaml.safe_dump(config, f)
+
+    def _update_model_in_config(self, name, provider_config):
+        """Helper to update a model's config in the YAML config file."""
+        import yaml
+        if not os.path.exists(self.config_path):
+            return
+        with open(self.config_path, 'r') as f:
+            config = yaml.safe_load(f) or {'providers': []}
+        for p in config['providers']:
+            if p['name'] == name:
+                p['config'] = provider_config
+        with open(self.config_path, 'w') as f:
+            yaml.safe_dump(config, f)
+
 class OpenAIProvider:
     """Example stub for an OpenAI LLM provider."""
     def __init__(self, api_key):
