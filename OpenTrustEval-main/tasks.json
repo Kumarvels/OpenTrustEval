@@ -1,0 +1,14 @@
+{
+  "label": "Run Gemini Prompt",
+  "type": "shell",
+  "command": "python",
+  "args": ["gemini_cli.py", "${input:prompt}"],
+  "problemMatcher": [],
+  "inputs": [
+    {
+      "id": "prompt",
+      "type": "promptString",
+      "description": "Enter Gemini prompt"
+    }
+  ]
+}

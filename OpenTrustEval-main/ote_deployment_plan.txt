@@ -1,0 +1,1 @@
+{'Hardware': {'Server': {'RAM': 16, 'CPU': 8, 'Storage': 'GB'}, 'Edge': {'RAM': 4, 'CPU': 2, 'Storage': 'GB'}}, 'Model Size': '1.88GB', 'Network': 'Local with 10-20 Mbps hybrid sync', 'Support': 'Community forums, generic toolkits, plugin documentation'}

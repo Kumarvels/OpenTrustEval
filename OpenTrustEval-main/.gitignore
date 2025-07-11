@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.env
+.venv
+*.egg-info/
+.DS_Store
+# Jupyter
+.ipynb_checkpoints/
+# VSCode
+.vscode/
+# Data
+ote_generic_metrics.csv
