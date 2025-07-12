@@ -1,0 +1,462 @@
+{
+  "titanic": {
+    "dataset_name": "titanic",
+    "shape": [
+      1000,
+      12
+    ],
+    "memory_mb": 0.2853851318359375,
+    "methods": {
+      "ensemble": {
+        "trust_score": 0.6314134823873512,
+        "method": "ensemble_advanced",
+        "duration_seconds": 2.319566,
+        "success": true,
+        "details": {
+          "trust_score": 0.6314134823873512,
+          "component_scores": {
+            "data_quality": 0.998,
+            "anomaly_detection": 0.9131928347100763,
+            "statistical_robustness": 0.5230035047903205,
+            "distribution_analysis": 0.4184164595539583,
+            "uncertainty_quantification": 0.15985234279081484,
+            "clustering_quality": 0.2918817539878186,
+            "cleanlab_integration": null
+          },
+          "method": "ensemble_advanced",
+          "timestamp": "2025-07-12T15:09:48.833435",
+          "config_used": {
+            "ensemble_methods": {
+              "isolation_forest": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "local_outlier_factor": {
+                "contamination": 0.1,
+                "n_neighbors": 20
+              },
+              "elliptic_envelope": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "one_class_svm": {
+                "nu": 0.1,
+                "gamma": "scale"
+              }
+            },
+            "clustering": {
+              "dbscan": {
+                "eps": 0.5,
+                "min_samples": 5
+              },
+              "kmeans": {
+                "n_clusters": 3,
+                "random_state": 42
+              }
+            },
+            "dimensionality_reduction": {
+              "pca": {
+                "n_components": 0.95
+              }
+            },
+            "scaling": {
+              "method": "robust",
+              "handle_outliers": true
+            },
+            "weights": {
+              "data_quality": 0.25,
+              "anomaly_detection": 0.25,
+              "statistical_robustness": 0.2,
+              "distribution_analysis": 0.15,
+              "uncertainty_quantification": 0.15
+            },
+            "thresholds": {
+              "high_trust": 0.8,
+              "medium_trust": 0.6,
+              "low_trust": 0.4
+            }
+          }
+        }
+      },
+      "robust": {
+        "trust_score": 0.782118094321317,
+        "method": "robust_statistical",
+        "duration_seconds": 0.026281,
+        "success": true,
+        "details": {
+          "trust_score": 0.782118094321317,
+          "robust_components": {
+            "median_based": 0.866396980675923,
+            "mad_based": 0.6309520256671369,
+            "trimmed_mean": 0.9056413355953793,
+            "winsorized": 0.7254820353468285
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T15:09:48.861732"
+        }
+      },
+      "uncertainty": {
+        "trust_score": 0.6665423046928715,
+        "method": "uncertainty_quantification",
+        "duration_seconds": 0.193144,
+        "success": true,
+        "details": {
+          "trust_score": 0.6665423046928715,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.9833941367727228,
+            "confidence_intervals": 0.8694864901938905,
+            "entropy": 0.31328859180487273
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T15:09:49.054876"
+        }
+      }
+    }
+  },
+  "housing": {
+    "dataset_name": "housing",
+    "shape": [
+      1500,
+      81
+    ],
+    "memory_mb": 3.6480255126953125,
+    "methods": {
+      "ensemble": {
+        "trust_score": 0.5763002431642903,
+        "method": "ensemble_advanced",
+        "duration_seconds": 3.960189,
+        "success": true,
+        "details": {
+          "trust_score": 0.5763002431642903,
+          "component_scores": {
+            "data_quality": 1.0,
+            "anomaly_detection": 0.856396603537345,
+            "statistical_robustness": 0.5883462588335336,
+            "distribution_analysis": 0.3211335194960075,
+            "uncertainty_quantification": 0.037987928240546885,
+            "clustering_quality": 0.04227285333916736,
+            "cleanlab_integration": null
+          },
+          "method": "ensemble_advanced",
+          "timestamp": "2025-07-12T15:09:53.347735",
+          "config_used": {
+            "ensemble_methods": {
+              "isolation_forest": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "local_outlier_factor": {
+                "contamination": 0.1,
+                "n_neighbors": 20
+              },
+              "elliptic_envelope": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "one_class_svm": {
+                "nu": 0.1,
+                "gamma": "scale"
+              }
+            },
+            "clustering": {
+              "dbscan": {
+                "eps": 0.5,
+                "min_samples": 5
+              },
+              "kmeans": {
+                "n_clusters": 3,
+                "random_state": 42
+              }
+            },
+            "dimensionality_reduction": {
+              "pca": {
+                "n_components": 0.95
+              }
+            },
+            "scaling": {
+              "method": "robust",
+              "handle_outliers": true
+            },
+            "weights": {
+              "data_quality": 0.25,
+              "anomaly_detection": 0.25,
+              "statistical_robustness": 0.2,
+              "distribution_analysis": 0.15,
+              "uncertainty_quantification": 0.15
+            },
+            "thresholds": {
+              "high_trust": 0.8,
+              "medium_trust": 0.6,
+              "low_trust": 0.4
+            }
+          }
+        }
+      },
+      "robust": {
+        "trust_score": 0.7913547157039494,
+        "method": "robust_statistical",
+        "duration_seconds": 0.113504,
+        "success": true,
+        "details": {
+          "trust_score": 0.7913547157039494,
+          "robust_components": {
+            "median_based": 0.7469382339108578,
+            "mad_based": 0.7281107375527088,
+            "trimmed_mean": 0.8582384567845535,
+            "winsorized": 0.8321314345676779
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T15:09:53.463251"
+        }
+      },
+      "uncertainty": {
+        "trust_score": 0.6760383295979491,
+        "method": "uncertainty_quantification",
+        "duration_seconds": 0.972714,
+        "success": true,
+        "details": {
+          "trust_score": 0.6760383295979491,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.990091151446852,
+            "confidence_intervals": 0.9092671681636055,
+            "entropy": 0.30479499878133864
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T15:09:54.435965"
+        }
+      }
+    }
+  },
+  "credit_card": {
+    "dataset_name": "credit_card",
+    "shape": [
+      2000,
+      31
+    ],
+    "memory_mb": 0.4578895568847656,
+    "methods": {
+      "ensemble": {
+        "trust_score": 0.6077947357042492,
+        "method": "ensemble_advanced",
+        "duration_seconds": 2.91391,
+        "success": true,
+        "details": {
+          "trust_score": 0.6077947357042492,
+          "component_scores": {
+            "data_quality": 0.9975,
+            "anomaly_detection": 0.8509695711227281,
+            "statistical_robustness": 0.42642330589683886,
+            "distribution_analysis": 0.8008717813431506,
+            "uncertainty_quantification": 0.026639628546707192,
+            "clustering_quality": 0.034188468050736796,
+            "cleanlab_integration": null
+          },
+          "method": "ensemble_advanced",
+          "timestamp": "2025-07-12T15:09:57.614421",
+          "config_used": {
+            "ensemble_methods": {
+              "isolation_forest": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "local_outlier_factor": {
+                "contamination": 0.1,
+                "n_neighbors": 20
+              },
+              "elliptic_envelope": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "one_class_svm": {
+                "nu": 0.1,
+                "gamma": "scale"
+              }
+            },
+            "clustering": {
+              "dbscan": {
+                "eps": 0.5,
+                "min_samples": 5
+              },
+              "kmeans": {
+                "n_clusters": 3,
+                "random_state": 42
+              }
+            },
+            "dimensionality_reduction": {
+              "pca": {
+                "n_components": 0.95
+              }
+            },
+            "scaling": {
+              "method": "robust",
+              "handle_outliers": true
+            },
+            "weights": {
+              "data_quality": 0.25,
+              "anomaly_detection": 0.25,
+              "statistical_robustness": 0.2,
+              "distribution_analysis": 0.15,
+              "uncertainty_quantification": 0.15
+            },
+            "thresholds": {
+              "high_trust": 0.8,
+              "medium_trust": 0.6,
+              "low_trust": 0.4
+            }
+          }
+        }
+      },
+      "robust": {
+        "trust_score": 0.7274514976937039,
+        "method": "robust_statistical",
+        "duration_seconds": 0.107298,
+        "success": true,
+        "details": {
+          "trust_score": 0.7274514976937039,
+          "robust_components": {
+            "median_based": 0.4495393481856007,
+            "mad_based": 0.9429063295180801,
+            "trimmed_mean": 0.6326498958621541,
+            "winsorized": 0.8847104172089808
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T15:09:57.721719"
+        }
+      },
+      "uncertainty": {
+        "trust_score": 0.43093560811419973,
+        "method": "uncertainty_quantification",
+        "duration_seconds": 0.598736,
+        "success": true,
+        "details": {
+          "trust_score": 0.43093560811419973,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.988513966236757,
+            "confidence_intervals": 0.0342406870631513,
+            "entropy": 0.20098777915689056
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T15:09:58.328244"
+        }
+      }
+    }
+  },
+  "covid": {
+    "dataset_name": "covid",
+    "shape": [
+      3000,
+      17
+    ],
+    "memory_mb": 0.46396636962890625,
+    "methods": {
+      "ensemble": {
+        "trust_score": 0.7159096640337739,
+        "method": "ensemble_advanced",
+        "duration_seconds": 4.977121,
+        "success": true,
+        "details": {
+          "trust_score": 0.7159096640337739,
+          "component_scores": {
+            "data_quality": 0.9985714285714286,
+            "anomaly_detection": 0.9193382371340488,
+            "statistical_robustness": 0.5315192436799331,
+            "distribution_analysis": 0.6006079914418236,
+            "uncertainty_quantification": 0.057984939497303996,
+            "clustering_quality": 0.9979647971087122,
+            "cleanlab_integration": null
+          },
+          "method": "ensemble_advanced",
+          "timestamp": "2025-07-12T15:10:03.340978",
+          "config_used": {
+            "ensemble_methods": {
+              "isolation_forest": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "local_outlier_factor": {
+                "contamination": 0.1,
+                "n_neighbors": 20
+              },
+              "elliptic_envelope": {
+                "contamination": 0.1,
+                "random_state": 42
+              },
+              "one_class_svm": {
+                "nu": 0.1,
+                "gamma": "scale"
+              }
+            },
+            "clustering": {
+              "dbscan": {
+                "eps": 0.5,
+                "min_samples": 5
+              },
+              "kmeans": {
+                "n_clusters": 3,
+                "random_state": 42
+              }
+            },
+            "dimensionality_reduction": {
+              "pca": {
+                "n_components": 0.95
+              }
+            },
+            "scaling": {
+              "method": "robust",
+              "handle_outliers": true
+            },
+            "weights": {
+              "data_quality": 0.25,
+              "anomaly_detection": 0.25,
+              "statistical_robustness": 0.2,
+              "distribution_analysis": 0.15,
+              "uncertainty_quantification": 0.15
+            },
+            "thresholds": {
+              "high_trust": 0.8,
+              "medium_trust": 0.6,
+              "low_trust": 0.4
+            }
+          }
+        }
+      },
+      "robust": {
+        "trust_score": 0.8841219488819091,
+        "method": "robust_statistical",
+        "duration_seconds": 0.054397,
+        "success": true,
+        "details": {
+          "trust_score": 0.8841219488819091,
+          "robust_components": {
+            "median_based": 0.8831403089577975,
+            "mad_based": 0.8334648737963212,
+            "trimmed_mean": 0.9348186867361561,
+            "winsorized": 0.8850639260373615
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T15:10:03.395375"
+        }
+      },
+      "uncertainty": {
+        "trust_score": 0.6634178275157635,
+        "method": "uncertainty_quantification",
+        "duration_seconds": 0.334187,
+        "success": true,
+        "details": {
+          "trust_score": 0.6634178275157635,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.9705664516779519,
+            "confidence_intervals": 0.9552799694552314,
+            "entropy": 0.2278248889298708
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T15:10:03.729562"
+        }
+      }
+    }
+  }
+}
