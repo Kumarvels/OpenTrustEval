@@ -1,0 +1,12 @@
+{
+  "created_at": "2025-07-12T13:11:54.674315",
+  "rows": 1000,
+  "columns": 4,
+  "size_mb": 0.07350921630859375,
+  "filtered_from": "f349065a_20250712_131154",
+  "min_trust_score": 0.7,
+  "filtering_method": "fallback_trust_scoring",
+  "original_rows": 1000,
+  "filtered_rows": 1000,
+  "retention_rate": 1.0
+}
