@@ -1,21 +1,26 @@
 providers:
-  - name: llama_factory
-    type: llama_factory
-    config:
-      model_name: "Llama-3-8B"
-      model_path: "../models/llama-3-8b"
-  - name: phi_4_mini_flash_reasoning
-    type: llama_factory
-    config:
-      model_name: "phi-4-mini-flash-reasoning"
-      model_path: "../models/phi-4-mini-flash-reasoning"
-  - name: liquid_ai
-    type: llama_factory
-    config:
-      model_name: "liquid-ai-open-source"
-      model_path: "../models/liquid-ai-open-source"
-  - name: smollm3_3b
-    type: llama_factory
-    config:
-      model_name: "SmolLM3-3B"
-      model_path: "../models/smollm3-3b" 
+- config:
+    model_name: Llama-3-8B
+    model_path: ../models/llama-3-8b
+  name: llama_factory
+  type: llama_factory
+- config:
+    model_name: phi-4-mini-flash-reasoning
+    model_path: ../models/phi-4-mini-flash-reasoning
+  name: phi_4_mini_flash_reasoning
+  type: llama_factory
+- config:
+    model_name: liquid-ai-open-source
+    model_path: ../models/liquid-ai-open-source
+  name: liquid_ai
+  type: llama_factory
+- config:
+    model_name: SmolLM3-3B
+    model_path: ../models/smollm3-3b
+  name: smollm3_3b
+  type: llama_factory
+- config:
+    model_name: test-model
+    model_path: ../models/test-model
+  name: test_model
+  type: llama_factory

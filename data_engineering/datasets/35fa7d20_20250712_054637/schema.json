@@ -1,0 +1,62 @@
+{
+  "Unnamed: 0": {
+    "type": "int64",
+    "nullable": false,
+    "unique": true
+  },
+  "work_year": {
+    "type": "int64",
+    "nullable": false,
+    "unique": false
+  },
+  "experience_level": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "employment_type": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "job_title": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "salary": {
+    "type": "int64",
+    "nullable": false,
+    "unique": false
+  },
+  "salary_currency": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "salary_in_usd": {
+    "type": "int64",
+    "nullable": false,
+    "unique": false
+  },
+  "employee_residence": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "remote_ratio": {
+    "type": "int64",
+    "nullable": false,
+    "unique": false
+  },
+  "company_location": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  },
+  "company_size": {
+    "type": "object",
+    "nullable": false,
+    "unique": false
+  }
+}

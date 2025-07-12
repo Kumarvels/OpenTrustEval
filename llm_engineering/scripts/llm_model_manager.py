@@ -1,8 +1,20 @@
 import os
 import sys
 import argparse
+import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from llm_engineering.llm_lifecycle import LLMLifecycleManager
+
+
+def parse_json_config(config_str):
+    """Parse JSON config string with better error handling."""
+    try:
+        return json.loads(config_str)
+    except json.JSONDecodeError as e:
+        print(f"Error parsing JSON config: {e}")
+        print("Make sure to use proper JSON format with double quotes.")
+        print("Example: '{\"model_name\": \"test\", \"model_path\": \"path\"}'")
+        sys.exit(1)
 
 
 def main():
@@ -34,16 +46,14 @@ def main():
     manager = LLMLifecycleManager()
 
     if args.command == 'add':
-        import json
-        provider_config = json.loads(args.config)
+        provider_config = parse_json_config(args.config)
         manager.add_model(args.name, args.type, provider_config, persist=args.persist)
         print(f"Added model/provider '{args.name}' of type '{args.type}'.")
     elif args.command == 'remove':
         manager.remove_model(args.name, persist=args.persist)
         print(f"Removed model/provider '{args.name}'.")
     elif args.command == 'update':
-        import json
-        provider_config = json.loads(args.config)
+        provider_config = parse_json_config(args.config)
         manager.update_model(args.name, provider_config, persist=args.persist)
         print(f"Updated model/provider '{args.name}'.")
     elif args.command == 'list':

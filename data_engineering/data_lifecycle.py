@@ -25,6 +25,13 @@ from data_engineering.connectors.synapse_connector import SynapseConnector
 from data_engineering.connectors.flink_connector import FlinkConnector
 from data_engineering.connectors.hudi_connector import HudiConnector
 
+# Import Easy Dataset integration
+try:
+    from data_engineering.easy_dataset_integration import EasyDatasetConnector
+    EASY_DATASET_AVAILABLE = True
+except ImportError:
+    EASY_DATASET_AVAILABLE = False
+
 class DataLifecycleManager:
     def __init__(self):
         self.metrics = {}
@@ -32,7 +39,13 @@ class DataLifecycleManager:
         self.security_checks = []
         self.connectors = {}
         self.dbs = {}
+        self.easy_dataset = None
         # ...initialize data sources, configs...
+        
+        # Initialize Easy Dataset if available
+        if EASY_DATASET_AVAILABLE:
+            self.easy_dataset = EasyDatasetConnector()
+            self.add_connector('easy_dataset', self.easy_dataset)
 
     def add_connector(self, name, connector):
         self.connectors[name] = connector
@@ -150,6 +163,96 @@ class DataLifecycleManager:
 
     def get_security_checks(self):
         return self.security_checks
+
+    def create_dataset(self, name: str, data, schema=None, metadata=None):
+        """Create a new dataset using Easy Dataset"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        dataset_id = self.easy_dataset.create_dataset(name, data, schema, metadata)
+        self.metrics['datasets_created'] = self.metrics.get('datasets_created', 0) + 1
+        self.log_governance(f'Dataset created: {name} ({dataset_id})')
+        return dataset_id
+
+    def load_dataset(self, dataset_id: str):
+        """Load a dataset by ID"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        df = self.easy_dataset.load_dataset(dataset_id)
+        self.metrics['datasets_loaded'] = self.metrics.get('datasets_loaded', 0) + 1
+        self.log_governance(f'Dataset loaded: {dataset_id}')
+        return df
+
+    def validate_dataset(self, dataset_id: str, validation_rules=None):
+        """Validate a dataset"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        results = self.easy_dataset.validate_dataset(dataset_id, validation_rules)
+        self.metrics['datasets_validated'] = self.metrics.get('datasets_validated', 0) + 1
+        self.log_governance(f'Dataset validated: {dataset_id} ({results["passed"]})')
+        return results
+
+    def process_dataset(self, dataset_id: str, transformations):
+        """Process a dataset with transformations"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        new_dataset_id = self.easy_dataset.process_dataset(dataset_id, transformations)
+        self.metrics['datasets_processed'] = self.metrics.get('datasets_processed', 0) + 1
+        self.log_governance(f'Dataset processed: {dataset_id} -> {new_dataset_id}')
+        return new_dataset_id
+
+    def visualize_dataset(self, dataset_id: str, visualization_config):
+        """Create visualization for dataset"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        viz_path = self.easy_dataset.visualize_dataset(dataset_id, visualization_config)
+        self.metrics['visualizations_created'] = self.metrics.get('visualizations_created', 0) + 1
+        self.log_governance(f'Visualization created: {dataset_id}')
+        return viz_path
+
+    def export_dataset(self, dataset_id: str, format_type, output_path=None):
+        """Export dataset to various formats"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        export_path = self.easy_dataset.export_dataset(dataset_id, format_type, output_path)
+        self.metrics['datasets_exported'] = self.metrics.get('datasets_exported', 0) + 1
+        self.log_governance(f'Dataset exported: {dataset_id} -> {export_path}')
+        return export_path
+
+    def import_dataset(self, file_path: str, name: str, format_type=None):
+        """Import dataset from various formats"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        dataset_id = self.easy_dataset.import_dataset(file_path, name, format_type)
+        self.metrics['datasets_imported'] = self.metrics.get('datasets_imported', 0) + 1
+        self.log_governance(f'Dataset imported: {name} ({dataset_id})')
+        return dataset_id
+
+    def list_datasets(self):
+        """List all available datasets"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        datasets = self.easy_dataset.list_datasets()
+        self.log_governance(f'Datasets listed: {len(datasets)} found')
+        return datasets
+
+    def delete_dataset(self, dataset_id: str):
+        """Delete a dataset"""
+        if not self.easy_dataset:
+            raise RuntimeError("Easy Dataset not available")
+        
+        success = self.easy_dataset.delete_dataset(dataset_id)
+        if success:
+            self.metrics['datasets_deleted'] = self.metrics.get('datasets_deleted', 0) + 1
+            self.log_governance(f'Dataset deleted: {dataset_id}')
+        return success
 
 # Example: Single-tool and multi-tool pipeline
 if __name__ == "__main__":
