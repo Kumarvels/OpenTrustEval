@@ -1,0 +1,46 @@
+[
+  {
+    "prompt":"What is the capital of France?",
+    "response":"Paris"
+  },
+  {
+    "prompt":"Who wrote Hamlet?",
+    "response":"William Shakespeare"
+  },
+  {
+    "prompt":"What is 2+2?",
+    "response":"4"
+  },
+  {
+    "prompt":"What color is the sky?",
+    "response":"Blue"
+  },
+  {
+    "prompt":"Who is the president of the USA?",
+    "response":"Joe Biden"
+  },
+  {
+    "prompt":"What is the boiling point of water?",
+    "response":"100"
+  },
+  {
+    "prompt":"What is the largest planet?",
+    "response":"Jupiter"
+  },
+  {
+    "prompt":"What is the chemical symbol for water?",
+    "response":"H2O"
+  },
+  {
+    "prompt":"What is the speed of light?",
+    "response":"299792458"
+  },
+  {
+    "prompt":"Who painted the Mona Lisa?",
+    "response":"Leonardo da Vinci"
+  },
+  {
+    "prompt":"# ... (add more rows as needed for a few hundred rows in real use) ... ",
+    "response":null
+  }
+]

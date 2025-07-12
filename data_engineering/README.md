@@ -1,6 +1,6 @@
-# Data Engineering with Easy Dataset Integration
+# Data Engineering with Dataset Management
 
-This section provides comprehensive data engineering capabilities with integrated Easy Dataset features for dataset management, validation, processing, visualization, and export/import operations.
+This section provides comprehensive data engineering capabilities with integrated dataset management features for dataset creation, validation, processing, visualization, and export/import operations.
 
 ## 🚀 Quick Start
 
@@ -15,7 +15,7 @@ pip install plotly great-expectations pyarrow openpyxl
 ```python
 from data_engineering.data_lifecycle import DataLifecycleManager
 
-# Initialize manager with Easy Dataset support
+# Initialize manager with dataset management support
 manager = DataLifecycleManager()
 
 # Create a dataset
@@ -35,7 +35,7 @@ viz_config = {'type': 'scatter', 'x': 'id', 'y': 'name', 'save': True}
 viz_path = manager.visualize_dataset(dataset_id, viz_config)
 ```
 
-## 📁 Easy Dataset Features
+## 📁 Dataset Management Features
 
 ### 1. Dataset Management
 - **Create**: Create datasets from various sources (CSV, JSON, Parquet, Excel)
@@ -74,72 +74,72 @@ viz_path = manager.visualize_dataset(dataset_id, viz_config)
 ## 🛠️ Command Line Interface
 
 ### Installation
-The CLI is available at `data_engineering/scripts/easy_dataset_cli.py`
+The CLI is available at `data_engineering/scripts/dataset_cli.py`
 
 ### Usage Examples
 
 #### Create Dataset
 ```bash
 # Create from CSV
-python easy_dataset_cli.py create --name "my_dataset" --input data.csv --format csv
+python dataset_cli.py create --name "my_dataset" --input data.csv --format csv
 
 # Create with schema
-python easy_dataset_cli.py create --name "employees" --input employees.csv --format csv --schema schema.json
+python dataset_cli.py create --name "employees" --input employees.csv --format csv --schema schema.json
 ```
 
 #### Validate Dataset
 ```bash
 # Basic validation
-python easy_dataset_cli.py validate --id dataset_123
+python dataset_cli.py validate --id dataset_123
 
 # With custom rules
-python easy_dataset_cli.py validate --id dataset_123 --rules validation_rules.json --output results.json
+python dataset_cli.py validate --id dataset_123 --rules validation_rules.json --output results.json
 ```
 
 #### Process Dataset
 ```bash
 # Filter data
-python easy_dataset_cli.py process --id dataset_123 --transformations '[{"operation": "filter", "params": {"condition": "age > 30"}}]'
+python dataset_cli.py process --id dataset_123 --transformations '[{"operation": "filter", "params": {"condition": "age > 30"}}]'
 
 # Multiple transformations
-python easy_dataset_cli.py process --id dataset_123 --transformations '[{"operation": "filter", "params": {"condition": "age > 25"}}, {"operation": "sort", "params": {"columns": ["salary"], "ascending": false}}]'
+python dataset_cli.py process --id dataset_123 --transformations '[{"operation": "filter", "params": {"condition": "age > 25"}}, {"operation": "sort", "params": {"columns": ["salary"], "ascending": false}}]'
 ```
 
 #### Visualize Dataset
 ```bash
 # Scatter plot
-python easy_dataset_cli.py visualize --id dataset_123 --type scatter --x age --y salary --save
+python dataset_cli.py visualize --id dataset_123 --type scatter --x age --y salary --save
 
 # Histogram
-python easy_dataset_cli.py visualize --id dataset_123 --type histogram --column age --save
+python dataset_cli.py visualize --id dataset_123 --type histogram --column age --save
 ```
 
 #### Export Dataset
 ```bash
 # Export to JSON
-python easy_dataset_cli.py export --id dataset_123 --format json --output data.json
+python dataset_cli.py export --id dataset_123 --format json --output data.json
 
 # Export to Parquet
-python easy_dataset_cli.py export --id dataset_123 --format parquet --output data.parquet
+python dataset_cli.py export --id dataset_123 --format parquet --output data.parquet
 ```
 
 #### List and Manage
 ```bash
 # List all datasets
-python easy_dataset_cli.py list
+python dataset_cli.py list
 
 # List in JSON format
-python easy_dataset_cli.py list --format json
+python dataset_cli.py list --format json
 
 # Delete dataset
-python easy_dataset_cli.py delete --id dataset_123 --force
+python dataset_cli.py delete --id dataset_123 --force
 ```
 
 ## 🌐 Web User Interface
 
 ### Launch WebUI
 ```bash
-python data_engineering/scripts/easy_dataset_webui.py
+python data_engineering/scripts/dataset_webui.py
 ```
 
 The WebUI will be available at `http://localhost:7861`
@@ -182,7 +182,7 @@ new_dataset_id = manager.process_dataset(dataset_id, transformations)
 
 ### Integration with Data Pipeline
 ```python
-# Use Easy Dataset in data engineering pipeline
+# Use dataset management in data engineering pipeline
 manager = DataLifecycleManager()
 
 # Create dataset from external source
@@ -237,7 +237,7 @@ print("Activity logs:", logs)
 
 ## 🔌 Connector Integration
 
-Easy Dataset integrates with existing data engineering connectors:
+Dataset management integrates with existing data engineering connectors:
 
 ```python
 # Use with Spark
@@ -326,7 +326,6 @@ dataset_id = manager.create_dataset('snowflake_data', snowflake_data)
 
 ## 🔗 Related Documentation
 
-- [Easy Dataset Repository](https://github.com/ConardLi/easy-dataset)
 - [Data Engineering Lifecycle](data_lifecycle.py)
 - [Common Data Loader](common_data_loader.py)
 - [Example Projects](project_*/)

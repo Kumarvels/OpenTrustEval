@@ -1,0 +1,259 @@
+# Security Configuration for OpenTrustEval
+# This file contains all security-related settings
+
+# Authentication Settings
+authentication:
+  jwt_secret: "${JWT_SECRET}"  # Set via environment variable
+  jwt_expiry_hours: 24
+  jwt_algorithm: "HS256"
+  max_failed_attempts: 5
+  lockout_duration_minutes: 30
+  session_timeout_minutes: 60
+  password_min_length: 12
+  require_special_chars: true
+  require_numbers: true
+  require_uppercase: true
+
+# OAuth Providers
+oauth_providers:
+  google:
+    client_id: "${GOOGLE_CLIENT_ID}"
+    client_secret: "${GOOGLE_CLIENT_SECRET}"
+    authorize_url: "https://accounts.google.com/o/oauth2/v2/auth"
+    token_url: "https://oauth2.googleapis.com/token"
+    userinfo_url: "https://www.googleapis.com/oauth2/v2/userinfo"
+    scope: "openid email profile"
+    
+  github:
+    client_id: "${GITHUB_CLIENT_ID}"
+    client_secret: "${GITHUB_CLIENT_SECRET}"
+    authorize_url: "https://github.com/login/oauth/authorize"
+    token_url: "https://github.com/login/oauth/access_token"
+    userinfo_url: "https://api.github.com/user"
+    scope: "read:user user:email"
+    
+  microsoft:
+    client_id: "${MICROSOFT_CLIENT_ID}"
+    client_secret: "${MICROSOFT_CLIENT_SECRET}"
+    authorize_url: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+    token_url: "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    userinfo_url: "https://graph.microsoft.com/v1.0/me"
+    scope: "openid email profile"
+    
+  azure:
+    client_id: "${AZURE_CLIENT_ID}"
+    client_secret: "${AZURE_CLIENT_SECRET}"
+    tenant_id: "${AZURE_TENANT_ID}"
+    authorize_url: "https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/authorize"
+    token_url: "https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token"
+    userinfo_url: "https://graph.microsoft.com/v1.0/me"
+    scope: "openid email profile"
+
+# SAML Providers
+saml_providers:
+  azure:
+    entity_id: "${AZURE_SAML_ENTITY_ID}"
+    acs_url: "${AZURE_SAML_ACS_URL}"
+    slo_url: "${AZURE_SAML_SLO_URL}"
+    idp_entity_id: "${AZURE_SAML_IDP_ENTITY_ID}"
+    sso_url: "${AZURE_SAML_SSO_URL}"
+    idp_slo_url: "${AZURE_SAML_IDP_SLO_URL}"
+    x509cert: "${AZURE_SAML_X509CERT}"
+    name_id_format: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+    
+  okta:
+    entity_id: "${OKTA_SAML_ENTITY_ID}"
+    acs_url: "${OKTA_SAML_ACS_URL}"
+    slo_url: "${OKTA_SAML_SLO_URL}"
+    idp_entity_id: "${OKTA_SAML_IDP_ENTITY_ID}"
+    sso_url: "${OKTA_SAML_SSO_URL}"
+    idp_slo_url: "${OKTA_SAML_IDP_SLO_URL}"
+    x509cert: "${OKTA_SAML_X509CERT}"
+    name_id_format: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+    
+  adfs:
+    entity_id: "${ADFS_SAML_ENTITY_ID}"
+    acs_url: "${ADFS_SAML_ACS_URL}"
+    slo_url: "${ADFS_SAML_SLO_URL}"
+    idp_entity_id: "${ADFS_SAML_IDP_ENTITY_ID}"
+    sso_url: "${ADFS_SAML_SSO_URL}"
+    idp_slo_url: "${ADFS_SAML_IDP_SLO_URL}"
+    x509cert: "${ADFS_SAML_X509CERT}"
+    name_id_format: "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+
+# Security Monitoring
+security_monitoring:
+  max_events: 10000
+  alert_retention_days: 30
+  ip_block_duration_minutes: 30
+  max_failed_attempts: 5
+  suspicious_activity_threshold: 10
+  monitoring_interval_seconds: 60
+  
+  # Rate limiting
+  rate_limits:
+    api_requests_per_minute: 100
+    auth_attempts_per_minute: 10
+    file_uploads_per_hour: 50
+    
+  # Alert thresholds
+  thresholds:
+    authentication_failure: 5
+    rate_limit_exceeded: 100
+    suspicious_activity: 10
+    admin_access: 1
+    data_access: 50
+
+# Secrets Management
+secrets_management:
+  master_key: "${SECRETS_MASTER_KEY}"
+  storage_path: "./secrets.json"
+  max_secret_length: 4096
+  key_rotation_days: 90
+  encryption_enabled: true
+
+# Dependency Scanning
+dependency_scanning:
+  scan_interval_hours: 24
+  vulnerability_db_url: "https://api.osv.dev/v1/query"
+  severity_levels: ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
+  auto_update_critical: false
+  auto_update_high: false
+  
+  # Allowed licenses for compliance
+  allowed_licenses:
+    - "MIT"
+    - "Apache-2.0"
+    - "BSD-3-Clause"
+    - "BSD-2-Clause"
+    - "ISC"
+    - "CC0-1.0"
+    - "Unlicense"
+
+# API Security
+api_security:
+  cors_origins: ["*"]  # Configure for production
+  cors_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+  cors_headers: ["*"]
+  rate_limiting_enabled: true
+  request_size_limit_mb: 10
+  response_cache_seconds: 300
+  
+  # Headers
+  security_headers:
+    X-Content-Type-Options: "nosniff"
+    X-Frame-Options: "DENY"
+    X-XSS-Protection: "1; mode=block"
+    Strict-Transport-Security: "max-age=31536000; includeSubDomains"
+    Content-Security-Policy: "default-src 'self'"
+
+# Data Protection
+data_protection:
+  encryption_at_rest: true
+  encryption_in_transit: true
+  data_retention_days: 365
+  backup_encryption: true
+  anonymization_enabled: false
+  
+  # GDPR compliance
+  gdpr:
+    data_processing_basis: "legitimate_interest"
+    data_subject_rights: true
+    data_portability: true
+    right_to_be_forgotten: true
+    consent_management: true
+
+# Network Security
+network_security:
+  allowed_ips: []  # Empty for all IPs, configure for production
+  blocked_ips: []
+  vpn_required: false
+  ssl_required: true
+  tls_min_version: "1.2"
+  
+  # Firewall rules
+  firewall:
+    allow_inbound_ports: [80, 443, 8000, 8080]
+    allow_outbound_ports: [80, 443, 53]
+    block_suspicious_ips: true
+
+# Logging and Auditing
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: "./logs/security.log"
+  max_file_size_mb: 100
+  backup_count: 5
+  audit_log_enabled: true
+  audit_log_path: "./logs/audit.log"
+  
+  # Sensitive data masking
+  mask_sensitive_data: true
+  sensitive_fields:
+    - "password"
+    - "token"
+    - "api_key"
+    - "secret"
+    - "authorization"
+
+# Incident Response
+incident_response:
+  auto_block_suspicious_ips: true
+  auto_alert_on_critical: true
+  escalation_threshold_minutes: 30
+  notification_channels:
+    - email
+    - slack
+    - webhook
+  
+  # Response playbooks
+  playbooks:
+    authentication_breach:
+      - "Block affected IPs"
+      - "Reset user sessions"
+      - "Notify security team"
+      - "Review access logs"
+      
+    data_breach:
+      - "Isolate affected systems"
+      - "Preserve evidence"
+      - "Notify legal team"
+      - "Assess data exposure"
+      - "Notify affected users"
+
+# Compliance
+compliance:
+  # SOC 2
+  soc2:
+    enabled: true
+    controls:
+      - "Access Control"
+      - "Change Management"
+      - "Incident Response"
+      - "Risk Assessment"
+      
+  # ISO 27001
+  iso27001:
+    enabled: false
+    controls:
+      - "Information Security Policy"
+      - "Asset Management"
+      - "Access Control"
+      - "Cryptography"
+      
+  # HIPAA
+  hipaa:
+    enabled: false
+    phi_handling: false
+    encryption_required: true
+    audit_trails: true
+
+# Backup and Recovery
+backup_recovery:
+  backup_enabled: true
+  backup_frequency_hours: 24
+  backup_retention_days: 30
+  backup_encryption: true
+  disaster_recovery_enabled: false
+  recovery_time_objective_hours: 4
+  recovery_point_objective_hours: 1 

@@ -1,0 +1,12 @@
+{
+  "prompt": {
+    "type": "object",
+    "nullable": false,
+    "unique": true
+  },
+  "response": {
+    "type": "object",
+    "nullable": true,
+    "unique": true
+  }
+}

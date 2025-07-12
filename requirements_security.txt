@@ -1,0 +1,49 @@
+# Security Dependencies for OpenTrustEval
+# Core security libraries
+
+# Authentication and Authorization
+PyJWT==2.8.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# OAuth Support
+authlib==1.2.1
+requests==2.31.0
+
+# SAML Support
+python3-saml==1.16.0
+onelogin==2.0.0
+
+# Encryption and Cryptography
+cryptography==41.0.7
+fernet==1.0.1
+
+# Security Monitoring
+python-json-logger==2.0.7
+
+# Dependency Scanning
+safety==2.3.5
+bandit==1.7.5
+
+# Web Security
+secure==0.3.0
+bleach==6.1.0
+
+# Configuration Management
+PyYAML==6.0.1
+python-dotenv==1.0.0
+
+# Web Interface
+gradio==4.15.0
+
+# Testing and Validation
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Development Tools
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Fix packaging conflict
+packaging>=22.0 
