@@ -36,12 +36,10 @@ try:
 except ImportError:
     PARQUET_AVAILABLE = False
 
-# Import Cleanlab integration
-try:
-    from data_engineering.cleanlab_integration import CleanlabDataQualityManager
-    CLEANLAB_AVAILABLE = True
-except ImportError:
-    CLEANLAB_AVAILABLE = False
+# Remove Cleanlab imports and logic except for benchmarking
+# Remove: from data_engineering.cleanlab_integration import CleanlabDataQualityManager
+# Remove: self.cleanlab_manager and all Cleanlab-based validation/filtering
+# All validation, filtering, and reporting should use fallback or advanced trust scoring only
 
 class DatasetManager:
     """
@@ -58,11 +56,12 @@ class DatasetManager:
         self.logger = self._setup_logger()
         
         # Initialize Cleanlab integration
-        if CLEANLAB_AVAILABLE:
-            self.cleanlab_manager = CleanlabDataQualityManager()
-        else:
-            self.cleanlab_manager = None
-            self.logger.warning("Cleanlab not available. Advanced data quality features disabled.")
+        # self.cleanlab_manager = CleanlabDataQualityManager() # Removed Cleanlab integration
+        # if CLEANLAB_AVAILABLE:
+        #     self.cleanlab_manager = CleanlabDataQualityManager()
+        # else:
+        #     self.cleanlab_manager = None
+        #     self.logger.warning("Cleanlab not available. Advanced data quality features disabled.")
         
         # Load existing datasets from disk
         self._load_existing_datasets()
@@ -236,87 +235,68 @@ class DatasetManager:
         
         return validation_results
     
-    def validate_dataset_with_cleanlab(self, dataset_id: str, labels: Optional[List] = None, 
-                                     features: Optional[List] = None) -> Dict:
-        """
-        Advanced dataset validation using Cleanlab's confident learning
+    def _load_dataset_metadata(self, dataset_id: str) -> Dict:
+        """Load dataset metadata"""
+        if dataset_id not in self.datasets:
+            raise ValueError(f"Dataset {dataset_id} not found")
         
-        Args:
-            dataset_id: Dataset to validate
-            labels: Target labels (if available)
-            features: Feature columns to use
-            
-        Returns:
-            Cleanlab validation results with trust scores
-        """
-        if not self.cleanlab_manager:
-            return {"error": "Cleanlab not available"}
+        dataset_info = self.datasets[dataset_id]
+        metadata_path = Path(dataset_info['path']) / 'metadata.json'
         
-        df = self.load_dataset(dataset_id)
-        
-        # Calculate trust score using Cleanlab
-        trust_result = self.cleanlab_manager.calculate_data_trust_score(df, labels, features)
-        
-        # Generate quality report
-        quality_report = self.cleanlab_manager.generate_quality_report(df)
-        
-        # Automated validation
-        validation_result = self.cleanlab_manager.automated_data_validation(df)
-        
-        cleanlab_results = {
-            'dataset_id': dataset_id,
-            'timestamp': datetime.now().isoformat(),
-            'trust_assessment': trust_result,
-            'quality_report': quality_report,
-            'automated_validation': validation_result,
-            'cleanlab_available': True
-        }
-        
-        # Store in validation results
-        self.validation_results[f"{dataset_id}_cleanlab"] = cleanlab_results
-        
-        self.logger.info(f"Cleanlab validation completed for {dataset_id}")
-        return cleanlab_results
-    
+        if metadata_path.exists():
+            with open(metadata_path, 'r') as f:
+                return json.load(f)
+        else:
+            # Return basic metadata if file doesn't exist
+            return {
+                'name': dataset_info.get('name', 'unknown'),
+                'created_at': dataset_info.get('created_at', datetime.now().isoformat()),
+                'rows': dataset_info.get('rows', 0),
+                'columns': dataset_info.get('columns', 0)
+            }
+
     def create_quality_filtered_dataset(self, dataset_id: str, min_trust_score: float = 0.7,
                                       features: Optional[List] = None) -> str:
         """
-        Create a new dataset filtered by quality using Cleanlab
-        
-        Args:
-            dataset_id: Original dataset ID
-            min_trust_score: Minimum trust score threshold
-            features: Feature columns to use
-            
-        Returns:
-            New dataset ID with high-quality data
+        Create a quality-filtered dataset using fallback trust scoring
         """
-        if not self.cleanlab_manager:
-            raise RuntimeError("Cleanlab not available")
-        
-        df = self.load_dataset(dataset_id)
-        original_dataset = self.datasets[dataset_id]
-        
-        # Apply quality-based filtering
-        filtered_df = self.cleanlab_manager.create_quality_based_filter(
-            df, min_trust_score, features
-        )
-        
-        # Create new dataset
-        new_name = f"{original_dataset['name']}_quality_filtered"
-        new_dataset_id = self.create_dataset(new_name, filtered_df)
-        
-        # Record processing history
-        self.processing_history.append({
-            'original_dataset': dataset_id,
-            'new_dataset': new_dataset_id,
-            'operation': 'quality_filtering',
-            'min_trust_score': min_trust_score,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-        self.logger.info(f"Quality filtering completed: {dataset_id} -> {new_dataset_id}")
-        return new_dataset_id
+        try:
+            df = self.load_dataset(dataset_id)
+            
+            # Use fallback quality manager
+            from cleanlab_integration import FallbackDataQualityManager
+            quality_manager = FallbackDataQualityManager()
+            
+            # Apply quality filtering
+            filtered_df = quality_manager.create_quality_based_filter(
+                df, min_trust_score=min_trust_score, features=features
+            )
+            
+            # Create new dataset with filtered data
+            original_metadata = self._load_dataset_metadata(dataset_id)
+            new_name = f"{original_metadata.get('name', 'dataset')}_quality_filtered"
+            
+            new_dataset_id = self.create_dataset(
+                name=new_name,
+                data=filtered_df,
+                schema=original_metadata.get('schema'),
+                metadata={
+                    **original_metadata,
+                    'filtered_from': dataset_id,
+                    'min_trust_score': min_trust_score,
+                    'filtering_method': 'fallback_trust_scoring',
+                    'original_rows': len(df),
+                    'filtered_rows': len(filtered_df),
+                    'retention_rate': len(filtered_df) / len(df) if len(df) > 0 else 0
+                }
+            )
+            
+            self.logger.info(f"Created quality-filtered dataset: {new_dataset_id}")
+            return new_dataset_id
+            
+        except Exception as e:
+            self.logger.error(f"Error creating quality-filtered dataset: {e}")
+            raise
     
     def process_dataset(self, dataset_id: str, transformations: List[Dict]) -> str:
         """
@@ -605,10 +585,6 @@ class DatasetConnector:
     def validate_dataset(self, dataset_id: str, validation_rules: Optional[Dict] = None) -> Dict:
         return self.dataset_manager.validate_dataset(dataset_id, validation_rules)
     
-    def validate_dataset_with_cleanlab(self, dataset_id: str, labels: Optional[List] = None, 
-                                     features: Optional[List] = None) -> Dict:
-        return self.dataset_manager.validate_dataset_with_cleanlab(dataset_id, labels, features)
-    
     def create_quality_filtered_dataset(self, dataset_id: str, min_trust_score: float = 0.7,
                                       features: Optional[List] = None) -> str:
         return self.dataset_manager.create_quality_filtered_dataset(dataset_id, min_trust_score, features)
@@ -657,25 +633,25 @@ def example_dataset_integration():
         print("Warnings:", validation_results['warnings'])
     
     # Cleanlab validation (if available)
-    if dataset_manager.cleanlab_manager:
-        print("\n=== Cleanlab Data Quality Assessment ===")
-        cleanlab_results = dataset_manager.validate_dataset_with_cleanlab(dataset_id)
+    # if dataset_manager.cleanlab_manager: # Removed Cleanlab integration
+    #     print("\n=== Cleanlab Data Quality Assessment ===") # Removed Cleanlab integration
+    #     cleanlab_results = dataset_manager.validate_dataset_with_cleanlab(dataset_id) # Removed Cleanlab integration
         
-        if 'error' not in cleanlab_results:
-            trust_score = cleanlab_results.get('trust_assessment', {}).get('trust_score', 0)
-            print(f"Data Trust Score: {trust_score:.3f}")
+    #     if 'error' not in cleanlab_results: # Removed Cleanlab integration
+    #         trust_score = cleanlab_results.get('trust_score', 0) # Removed Cleanlab integration
+    #         print(f"Data Trust Score: {trust_score:.3f}") # Removed Cleanlab integration
             
-            # Create quality-filtered dataset
-            if trust_score < 0.8:  # If trust score is low
-                print("Creating quality-filtered dataset...")
-                filtered_dataset_id = dataset_manager.create_quality_filtered_dataset(
-                    dataset_id, min_trust_score=0.7
-                )
-                print(f"Quality-filtered dataset: {filtered_dataset_id}")
-        else:
-            print(f"Cleanlab error: {cleanlab_results['error']}")
-    else:
-        print("Cleanlab not available for advanced data quality assessment")
+    #         # Create quality-filtered dataset # Removed Cleanlab integration
+    #         if trust_score < 0.8:  # If trust score is low # Removed Cleanlab integration
+    #             print("Creating quality-filtered dataset...") # Removed Cleanlab integration
+    #             filtered_dataset_id = dataset_manager.create_quality_filtered_dataset( # Removed Cleanlab integration
+    #                 dataset_id, min_trust_score=0.7 # Removed Cleanlab integration
+    #             ) # Removed Cleanlab integration
+    #             print(f"Quality-filtered dataset: {filtered_dataset_id}") # Removed Cleanlab integration
+    #     else: # Removed Cleanlab integration
+    #         print(f"Cleanlab error: {cleanlab_results['error']}") # Removed Cleanlab integration
+    # else: # Removed Cleanlab integration
+    #     print("Cleanlab not available for advanced data quality assessment") # Removed Cleanlab integration
     
     # Process dataset
     transformations = [

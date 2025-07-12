@@ -9,7 +9,7 @@ This section provides comprehensive data engineering capabilities with integrate
 pip install pandas numpy pyyaml
 # Optional for advanced features
 pip install plotly great-expectations pyarrow openpyxl
-# Optional for Cleanlab-powered features (with fallback support)
+# Optional for Cleanlab benchmarking comparison only
 pip install cleanlab scikit-learn
 ```
 
@@ -73,40 +73,45 @@ viz_path = manager.visualize_dataset(dataset_id, viz_config)
 - **Custom Paths**: Specify output locations
 - **Batch Operations**: Process multiple datasets
 
-## 🎯 **Advanced Quality Assessment (Cleanlab Integration)**
+## 🎯 **Advanced Quality Assessment (Fallback System)**
 
 ### **Quality Assessment Features**
-The system now includes advanced data quality assessment with **automatic fallback support**:
+The system includes advanced data quality assessment with **automatic fallback support**:
 
-#### **With Cleanlab (Recommended)**
-- **Confident Learning**: Advanced label quality assessment
-- **Trust Scoring**: Comprehensive data trust evaluation
-- **Quality Filtering**: Filter datasets by trust scores
-- **Automated Validation**: Cleanlab-powered validation rules
-
-#### **Without Cleanlab (Fallback System)**
+#### **Core System (Always Available)**
 - **Statistical Quality Metrics**: Missing values, duplicates, outliers
-- **Trust Scoring**: Basic statistical trust assessment
+- **Trust Scoring**: Advanced statistical trust assessment
 - **Quality Filtering**: Row-wise quality filtering
 - **Automated Validation**: Statistical validation rules
 
+#### **Cleanlab Benchmarking (Optional)**
+- **Trust Score Comparison**: Compare our trust scores against Cleanlab's
+- **Validation**: Validate our advanced methods against industry standard
+- **Benchmarking**: Performance comparison and analysis
+
 ### **Quality Assessment Methods**
 ```python
-from data_engineering.cleanlab_integration import CleanlabDataQualityManager
+from data_engineering.cleanlab_integration import FallbackDataQualityManager
 
-# Initialize manager (automatically uses fallback if Cleanlab unavailable)
-manager = CleanlabDataQualityManager()
+# Initialize fallback quality manager (always works)
+manager = FallbackDataQualityManager()
 
-# Calculate trust score (works with or without Cleanlab)
+# Calculate trust score
 trust_result = manager.calculate_data_trust_score(dataset)
 print(f"Trust Score: {trust_result['trust_score']:.3f}")
-print(f"Method: {trust_result['method']}")  # 'cleanlab_confident_learning' or 'fallback_statistical'
+print(f"Method: {trust_result['method']}")  # 'fallback_statistical'
 
 # Quality-based filtering
 filtered_data = manager.create_quality_based_filter(dataset, min_trust_score=0.8)
 
 # Generate quality report
 report = manager.generate_quality_report(dataset)
+
+# Optional: Benchmark against Cleanlab (if installed)
+from data_engineering.cleanlab_integration import benchmark_vs_cleanlab
+benchmark_results = benchmark_vs_cleanlab(dataset, labels)
+print(f"Our Score: {benchmark_results['our_trust_score']:.3f}")
+print(f"Cleanlab Score: {benchmark_results['cleanlab_trust_score']:.3f}")
 ```
 
 ## 🛠️ Command Line Interface

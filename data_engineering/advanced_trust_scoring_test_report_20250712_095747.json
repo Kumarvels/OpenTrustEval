@@ -1,0 +1,294 @@
+{
+  "test_timestamp": "2025-07-12T09:57:47.740210",
+  "summary": {
+    "total_tests": 4,
+    "passed_tests": 3,
+    "failed_tests": 1,
+    "success_rate": 0.75
+  },
+  "detailed_results": {
+    "advanced_trust_scoring": [
+      true,
+      {
+        "high_quality_ensemble": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "high_quality_robust": {
+          "trust_score": 0.7220475497545897,
+          "robust_components": {
+            "median_based": 0.39543133745014725,
+            "mad_based": 0.9815188700104654,
+            "trimmed_mean": 0.5993164823271211,
+            "winsorized": 0.9119235092306254
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T09:57:16.690440"
+        },
+        "high_quality_uncertainty": {
+          "trust_score": 0.21978793495053692,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.22783403663500323,
+            "confidence_intervals": 0.0,
+            "entropy": 0.1513177031671444
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T09:57:16.763590"
+        },
+        "medium_quality_ensemble": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "medium_quality_robust": {
+          "trust_score": 0.7916399244328094,
+          "robust_components": {
+            "median_based": 0.4552161009170429,
+            "mad_based": 0.9465219819955707,
+            "trimmed_mean": 0.8552193249858653,
+            "winsorized": 0.9096022898327587
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T09:57:19.042417"
+        },
+        "medium_quality_uncertainty": {
+          "trust_score": 0.18053463548089402,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.055995153139926535,
+            "confidence_intervals": 0.0,
+            "entropy": 0.1661433887836495
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T09:57:20.158407"
+        },
+        "low_quality_ensemble": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "low_quality_robust": {
+          "trust_score": 0.4948991900220433,
+          "robust_components": {
+            "median_based": 0.0991845857584091,
+            "mad_based": 0.5729316401966065,
+            "trimmed_mean": 0.45278353981516817,
+            "winsorized": 0.8546969943179893
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T09:57:24.812169"
+        },
+        "low_quality_uncertainty": {
+          "trust_score": 0.46509263635697806,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.8655503526984979,
+            "confidence_intervals": 0.11526307000923025,
+            "entropy": 0.37955712272018405
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T09:57:24.963266"
+        },
+        "correlated_ensemble": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "correlated_robust": {
+          "trust_score": 0.7322586725891607,
+          "robust_components": {
+            "median_based": 0.280234245116763,
+            "mad_based": 0.9778910938058536,
+            "trimmed_mean": 0.7653314119246784,
+            "winsorized": 0.9055779395093477
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T09:57:26.504302"
+        },
+        "correlated_uncertainty": {
+          "trust_score": 0.16365372574851056,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0,
+            "confidence_intervals": 0.0,
+            "entropy": 0.15461490299404218
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T09:57:26.584075"
+        },
+        "skewed_ensemble": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "skewed_robust": {
+          "trust_score": 0.7271170398916524,
+          "robust_components": {
+            "median_based": 0.5041528529590025,
+            "mad_based": 0.7506417988280472,
+            "trimmed_mean": 0.8386600842835799,
+            "winsorized": 0.8150134234959803
+          },
+          "method": "robust_statistical",
+          "timestamp": "2025-07-12T09:57:27.795985"
+        },
+        "skewed_uncertainty": {
+          "trust_score": 0.5467816482193522,
+          "uncertainty_components": {
+            "bayesian": 0.5,
+            "bootstrap": 0.9636606669798609,
+            "confidence_intervals": 0.4263669319712186,
+            "entropy": 0.2970989939263293
+          },
+          "method": "uncertainty_quantification",
+          "timestamp": "2025-07-12T09:57:27.895406"
+        }
+      }
+    ],
+    "cleanlab_benchmarking": [
+      false,
+      {}
+    ],
+    "dataset_integration": [
+      true,
+      {
+        "high_quality_created": "dfe79c9b_20250712_095728",
+        "high_quality_validation": {
+          "dataset_id": "dfe79c9b_20250712_095728",
+          "timestamp": "2025-07-12T09:57:28.062112",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "stats": {
+            "rows": 1000,
+            "columns": 4,
+            "null_counts": {
+              "feature1": 0,
+              "feature2": 0,
+              "feature3": 0,
+              "feature4": 0
+            },
+            "duplicate_rows": 0
+          }
+        },
+        "high_quality_filtered": "Error: 'DatasetManager' object has no attribute '_load_dataset_metadata'",
+        "medium_quality_created": "407aa643_20250712_095728",
+        "medium_quality_validation": {
+          "dataset_id": "407aa643_20250712_095728",
+          "timestamp": "2025-07-12T09:57:28.117112",
+          "passed": true,
+          "errors": [],
+          "warnings": [
+            "Column feature1: 101 null values found"
+          ],
+          "stats": {
+            "rows": 1000,
+            "columns": 4,
+            "null_counts": {
+              "feature1": 101,
+              "feature2": 0,
+              "feature3": 0,
+              "feature4": 0
+            },
+            "duplicate_rows": 0
+          }
+        },
+        "medium_quality_filtered": "Error: 'DatasetManager' object has no attribute '_load_dataset_metadata'",
+        "low_quality_created": "403d16a5_20250712_095728",
+        "low_quality_validation": {
+          "dataset_id": "403d16a5_20250712_095728",
+          "timestamp": "2025-07-12T09:57:28.168640",
+          "passed": true,
+          "errors": [],
+          "warnings": [
+            "Column feature1: 301 null values found"
+          ],
+          "stats": {
+            "rows": 1000,
+            "columns": 4,
+            "null_counts": {
+              "feature1": 301,
+              "feature2": 0,
+              "feature3": 0,
+              "feature4": 0
+            },
+            "duplicate_rows": 0
+          }
+        },
+        "low_quality_filtered": "Error: 'DatasetManager' object has no attribute '_load_dataset_metadata'",
+        "correlated_created": "0fe63290_20250712_095728",
+        "correlated_validation": {
+          "dataset_id": "0fe63290_20250712_095728",
+          "timestamp": "2025-07-12T09:57:28.220169",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "stats": {
+            "rows": 1000,
+            "columns": 4,
+            "null_counts": {
+              "feature1": 0,
+              "feature2": 0,
+              "feature3": 0,
+              "feature4": 0
+            },
+            "duplicate_rows": 0
+          }
+        },
+        "correlated_filtered": "Error: 'DatasetManager' object has no attribute '_load_dataset_metadata'",
+        "skewed_created": "f349065a_20250712_095728",
+        "skewed_validation": {
+          "dataset_id": "f349065a_20250712_095728",
+          "timestamp": "2025-07-12T09:57:28.288309",
+          "passed": true,
+          "errors": [],
+          "warnings": [],
+          "stats": {
+            "rows": 1000,
+            "columns": 4,
+            "null_counts": {
+              "feature1": 0,
+              "feature2": 0,
+              "feature3": 0,
+              "feature4": 0
+            },
+            "duplicate_rows": 0
+          }
+        },
+        "skewed_filtered": "Error: 'DatasetManager' object has no attribute '_load_dataset_metadata'"
+      }
+    ],
+    "advanced_features": [
+      true,
+      {
+        "empty_trust": {
+          "trust_score": 0,
+          "method": "basic_statistical",
+          "timestamp": "2025-07-12T09:57:28.307306"
+        },
+        "empty_quality": "N/A (Cleanlab removed)",
+        "single_column_trust": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "single_column_quality": "N/A (Cleanlab removed)",
+        "all_nan_trust": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "all_nan_quality": "N/A (Cleanlab removed)",
+        "all_zero_trust": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "all_zero_quality": "N/A (Cleanlab removed)",
+        "large_dataset_trust": {
+          "error": "name 'CLEANLAB_AVAILABLE' is not defined",
+          "method": "advanced_trust_scoring"
+        },
+        "large_dataset_quality": "N/A (Cleanlab removed)"
+      }
+    ]
+  },
+  "recommendations": [
+    "Some tests failed. Check dependencies and configuration.",
+    "Core functionality is working. Consider installing optional dependencies for enhanced features."
+  ]
+}

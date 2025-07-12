@@ -1,0 +1,22 @@
+{
+  "feature1": {
+    "type": "float64",
+    "nullable": true,
+    "unique": false
+  },
+  "feature2": {
+    "type": "float64",
+    "nullable": false,
+    "unique": false
+  },
+  "feature3": {
+    "type": "float64",
+    "nullable": false,
+    "unique": true
+  },
+  "feature4": {
+    "type": "float64",
+    "nullable": false,
+    "unique": true
+  }
+}

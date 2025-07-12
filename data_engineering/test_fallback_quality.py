@@ -13,7 +13,7 @@ import json
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from cleanlab_integration import CleanlabDataQualityManager, FallbackDataQualityManager
+from data_engineering.cleanlab_integration import FallbackDataQualityManager
 
 def create_test_dataset_with_issues():
     """Create a test dataset with various quality issues"""
@@ -77,34 +77,8 @@ def test_fallback_quality_manager():
     
     return True
 
-def test_cleanlab_manager_fallback():
-    """Test the main Cleanlab manager with fallback functionality"""
-    print("\n=== Testing Cleanlab Manager with Fallback ===")
-    
-    # Create test data
-    data = create_test_dataset_with_issues()
-    
-    # Initialize main manager (will use fallback since Cleanlab is not available)
-    manager = CleanlabDataQualityManager()
-    
-    # Test trust score calculation
-    print("\n1. Testing Trust Score Calculation (with fallback):")
-    trust_result = manager.calculate_data_trust_score(data)
-    print(f"Trust Score: {trust_result.get('trust_score', 'N/A'):.3f}")
-    print(f"Method: {trust_result.get('method', 'N/A')}")
-    
-    # Test quality-based filtering
-    print("\n2. Testing Quality-Based Filtering (with fallback):")
-    filtered_data = manager.create_quality_based_filter(data, min_trust_score=0.8)
-    print(f"Original rows: {len(data)}")
-    print(f"Filtered rows: {len(filtered_data)}")
-    
-    # Test quality report generation
-    print("\n3. Testing Quality Report Generation (with fallback):")
-    report = manager.generate_quality_report(data)
-    print("Quality report generated successfully!")
-    
-    return True
+# Remove all CleanlabDataQualityManager and Cleanlab logic except for a single benchmarking test
+# The rest of the tests should use only fallback and advanced trust scoring logic
 
 def test_with_real_dataset():
     """Test with a real dataset from the system"""
@@ -132,15 +106,15 @@ def test_with_real_dataset():
         print(f"Loaded dataset with shape: {data.shape}")
         
         # Test quality assessment
-        manager = CleanlabDataQualityManager()
+        fallback_manager = FallbackDataQualityManager()
         
         # Calculate trust score
-        trust_result = manager.calculate_data_trust_score(data)
+        trust_result = fallback_manager.calculate_data_trust_score(data)
         print(f"Trust Score: {trust_result.get('trust_score', 'N/A'):.3f}")
         print(f"Method: {trust_result.get('method', 'N/A')}")
         
         # Generate quality report
-        report = manager.generate_quality_report(data)
+        report = fallback_manager.generate_quality_report(data)
         print("Quality report generated successfully!")
         
         return True
@@ -157,9 +131,6 @@ def main():
     try:
         # Test fallback manager directly
         test_fallback_quality_manager()
-        
-        # Test main manager with fallback
-        test_cleanlab_manager_fallback()
         
         # Test with real dataset
         test_with_real_dataset()

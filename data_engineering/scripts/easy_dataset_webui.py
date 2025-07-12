@@ -160,14 +160,16 @@ def quality_filter_dataset(dataset_id, min_trust, features):
 def generate_quality_report(dataset_id, output_path):
     try:
         df = dataset_manager.load_dataset(dataset_id)
-        if hasattr(dataset_manager, 'cleanlab_manager') and dataset_manager.cleanlab_manager:
-            report = dataset_manager.cleanlab_manager.generate_quality_report(df, output_path)
-            if output_path:
-                return f"Quality report saved to: {output_path}"
-            else:
-                return report
+        
+        # Use fallback quality manager for reporting
+        from data_engineering.cleanlab_integration import FallbackDataQualityManager
+        quality_manager = FallbackDataQualityManager()
+        report = quality_manager.generate_quality_report(df, output_path)
+        
+        if output_path:
+            return f"Quality report saved to: {output_path}"
         else:
-            return "Cleanlab not available for quality reporting."
+            return report
     except Exception as e:
         return f"Error generating quality report: {e}"
 

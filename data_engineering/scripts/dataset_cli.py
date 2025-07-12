@@ -237,16 +237,21 @@ def main():
             print(f"Created quality-filtered dataset: {new_dataset_id}")
 
         elif args.command == 'quality-report':
-            df = dataset_manager.load_dataset(args.id)
-            if hasattr(dataset_manager, 'cleanlab_manager') and dataset_manager.cleanlab_manager:
-                report = dataset_manager.cleanlab_manager.generate_quality_report(df, args.output)
+            # Quality report generation
+            try:
+                df = dataset_manager.load_dataset(args.id)
+                
+                # Use fallback quality manager for reporting
+                from data_engineering.cleanlab_integration import FallbackDataQualityManager
+                quality_manager = FallbackDataQualityManager()
+                report = quality_manager.generate_quality_report(df, args.output)
+                
                 if args.output:
                     print(f"Quality report saved to: {args.output}")
                 else:
-                    print("Quality Report:")
                     print(report)
-            else:
-                print("Cleanlab not available for quality reporting.")
+            except Exception as e:
+                print(f"Error generating quality report: {e}")
                 
     except Exception as e:
         print(f"Error: {e}")
