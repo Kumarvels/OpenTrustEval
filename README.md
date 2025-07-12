@@ -396,7 +396,7 @@ EXPOSE 8000
 CMD ["python", "mcp_server/server.py"]
 ```
 
-```bash
+   ```bash
 # Build and run
 docker build -t opentrusteval .
 docker run -p 8000:8000 opentrusteval
@@ -404,7 +404,7 @@ docker run -p 8000:8000 opentrusteval
 
 ### Kubernetes Deployment
 
-```yaml
+   ```yaml
 # k8s-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -446,14 +446,14 @@ aws ecs create-service \
 ```
 
 #### Azure Deployment
-```bash
+   ```bash
 # Deploy to Azure Container Instances
 az container create \
   --resource-group opentrusteval-rg \
   --name mcp-server \
   --image opentrusteval:latest \
   --ports 8000
-```
+   ```
 
 ---
 
