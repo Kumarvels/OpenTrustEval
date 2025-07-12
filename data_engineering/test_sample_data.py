@@ -6,7 +6,7 @@ Verifies that the sample CSV data works with the trust scoring system
 
 import pandas as pd
 import numpy as np
-from advanced_trust_scoring import AdvancedTrustScoringEngine
+from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
 
 def test_sample_data():
     """Test the sample data with the trust scoring system"""

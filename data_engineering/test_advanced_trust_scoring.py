@@ -69,7 +69,7 @@ def test_advanced_trust_scoring_engine():
     
     try:
         # Import the advanced trust scoring engine
-        from advanced_trust_scoring import AdvancedTrustScoringEngine
+        from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
         
         # Create test datasets
         test_datasets = create_test_datasets()
@@ -113,7 +113,7 @@ def test_cleanlab_benchmarking():
     
     try:
         # Import the benchmarking function
-        from cleanlab_integration import benchmark_vs_cleanlab
+        from data_engineering.cleanlab_integration import benchmark_vs_cleanlab
         
         # Create test datasets
         test_datasets = create_test_datasets()
@@ -147,7 +147,7 @@ def test_dataset_integration():
     
     try:
         # Import the dataset integration
-        from dataset_integration import DatasetManager
+        from data_engineering.dataset_integration import DatasetManager
         
         # Create test datasets
         test_datasets = create_test_datasets()
@@ -192,7 +192,7 @@ def test_advanced_features():
     
     try:
         # Import required modules
-        from advanced_trust_scoring import AdvancedTrustScoringEngine
+        from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
         # from cleanlab_integration import CleanlabDataQualityManager # Removed as per edit hint
         
         # Create edge case datasets

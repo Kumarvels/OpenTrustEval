@@ -13,7 +13,7 @@ import json
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from dataset_integration import DatasetManager
+from data_engineering.dataset_integration import DatasetManager
 # Remove all CleanlabDataQualityManager and Cleanlab logic except for a single benchmarking test
 # The rest of the tests should use only fallback and advanced trust scoring logic
 

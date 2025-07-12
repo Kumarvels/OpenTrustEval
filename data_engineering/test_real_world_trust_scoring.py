@@ -22,7 +22,7 @@ warnings.filterwarnings('ignore')
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 # Import directly from local modules
-from advanced_trust_scoring import AdvancedTrustScoringEngine
+from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
 
 class RealWorldTrustScoringEvaluator:
     """

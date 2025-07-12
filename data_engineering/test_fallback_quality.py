@@ -14,6 +14,7 @@ import json
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from data_engineering.cleanlab_integration import FallbackDataQualityManager
+from data_engineering.dataset_integration import DatasetManager
 
 def create_test_dataset_with_issues():
     """Create a test dataset with various quality issues"""
@@ -85,8 +86,6 @@ def test_with_real_dataset():
     print("\n=== Testing with Real Dataset ===")
     
     try:
-        from dataset_integration import DatasetManager
-        
         # Initialize dataset manager
         dataset_manager = DatasetManager()
         

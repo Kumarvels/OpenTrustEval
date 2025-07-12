@@ -1,0 +1,31 @@
+2025-07-12 16:47:48,897 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 16:47:48,897 - __main__ - INFO - SSL enabled: False
+2025-07-12 16:47:48,899 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:05:10,406 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:05:10,408 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:05:10,408 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:10:13,203 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:10:13,203 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:10:13,205 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:12:11,190 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:12:11,190 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:12:11,190 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:12:59,338 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:12:59,338 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:12:59,338 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:13:17,880 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:13:17,880 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:13:17,880 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:13:53,120 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:13:53,134 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:13:53,165 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:21:04,133 - __main__ - ERROR - Trust scoring error: 1 validation error for TrustScoreResponse
+component_scores.cleanlab_integration
+  Input should be a valid number [type=float_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/float_type
+2025-07-12 17:21:50,728 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:21:50,731 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:21:50,732 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs
+2025-07-12 17:23:28,491 - __main__ - INFO - Starting OpenTrustEval MCP Server on 0.0.0.0:8000
+2025-07-12 17:23:28,492 - __main__ - INFO - SSL enabled: False
+2025-07-12 17:23:28,492 - __main__ - INFO - Documentation available at: http://0.0.0.0:8000/docs

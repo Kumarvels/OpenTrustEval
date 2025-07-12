@@ -109,9 +109,9 @@ def run_quick_test():
     
     try:
         # Test basic imports
-        from advanced_trust_scoring import AdvancedTrustScoringEngine
-        from cleanlab_integration import FallbackDataQualityManager
-        from dataset_integration import DatasetManager
+        from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
+        from data_engineering.cleanlab_integration import FallbackDataQualityManager
+        from data_engineering.dataset_integration import DatasetManager
         
         print("✅ All components imported successfully")
         

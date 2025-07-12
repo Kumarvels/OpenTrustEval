@@ -264,7 +264,7 @@ class DatasetManager:
             df = self.load_dataset(dataset_id)
             
             # Use fallback quality manager
-            from cleanlab_integration import FallbackDataQualityManager
+            from data_engineering.cleanlab_integration import FallbackDataQualityManager
             quality_manager = FallbackDataQualityManager()
             
             # Apply quality filtering
