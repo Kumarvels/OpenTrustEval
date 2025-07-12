@@ -19,10 +19,10 @@ import logging
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import all trust scoring components
-from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
-from data_engineering.cleanlab_integration import FallbackDataQualityManager, benchmark_vs_cleanlab
-from data_engineering.dataset_integration import DatasetManager
-from data_engineering.test_real_world_trust_scoring import RealWorldTrustScoringEvaluator
+from advanced_trust_scoring import AdvancedTrustScoringEngine
+from cleanlab_integration import FallbackDataQualityManager, benchmark_vs_cleanlab
+from dataset_integration import DatasetManager
+from test_real_world_trust_scoring import RealWorldTrustScoringEvaluator
 
 class BatchTrustScoringTestSuite:
     """

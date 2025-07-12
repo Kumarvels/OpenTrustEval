@@ -45,7 +45,7 @@ def run_batch_test_suite():
     
     try:
         # Import and run the batch test suite
-        from data_engineering.batch_trust_scoring_test_suite import BatchTrustScoringTestSuite
+        from batch_trust_scoring_test_suite import BatchTrustScoringTestSuite
         
         test_suite = BatchTrustScoringTestSuite()
         results = test_suite.run_complete_test_suite()
@@ -109,9 +109,9 @@ def run_quick_test():
     
     try:
         # Test basic imports
-        from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
-        from data_engineering.cleanlab_integration import FallbackDataQualityManager
-        from data_engineering.dataset_integration import DatasetManager
+        from advanced_trust_scoring import AdvancedTrustScoringEngine
+        from cleanlab_integration import FallbackDataQualityManager
+        from dataset_integration import DatasetManager
         
         print("✅ All components imported successfully")
         
