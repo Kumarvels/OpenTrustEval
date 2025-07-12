@@ -149,6 +149,28 @@ def delete_dataset(dataset_id):
     except Exception as e:
         return f"Error deleting dataset: {e}"
 
+def quality_filter_dataset(dataset_id, min_trust, features):
+    try:
+        features_list = [f.strip() for f in features.split(',')] if features else None
+        new_dataset_id = dataset_manager.create_quality_filtered_dataset(dataset_id, min_trust, features_list)
+        return f"Created quality-filtered dataset: {new_dataset_id}"
+    except Exception as e:
+        return f"Error in quality-based filtering: {e}"
+
+def generate_quality_report(dataset_id, output_path):
+    try:
+        df = dataset_manager.load_dataset(dataset_id)
+        if hasattr(dataset_manager, 'cleanlab_manager') and dataset_manager.cleanlab_manager:
+            report = dataset_manager.cleanlab_manager.generate_quality_report(df, output_path)
+            if output_path:
+                return f"Quality report saved to: {output_path}"
+            else:
+                return report
+        else:
+            return "Cleanlab not available for quality reporting."
+    except Exception as e:
+        return f"Error generating quality report: {e}"
+
 # Create Gradio interface
 with gr.Blocks(title="Dataset Management WebUI") as demo:
     gr.Markdown("# Dataset Management WebUI")
@@ -264,6 +286,23 @@ with gr.Blocks(title="Dataset Management WebUI") as demo:
         delete_btn = gr.Button("Delete Dataset", variant="stop")
         delete_output = gr.Textbox(label="Result", lines=3)
         delete_btn.click(delete_dataset, inputs=delete_id, outputs=delete_output)
+
+    with gr.Tab("Quality-Based Filtering (Cleanlab)"):
+        gr.Markdown("## Filter Dataset by Cleanlab Trust Score")
+        qf_id = gr.Textbox(label="Dataset ID", placeholder="Enter dataset ID")
+        qf_min_trust = gr.Number(label="Min Trust Score", value=0.7)
+        qf_features = gr.Textbox(label="Feature Columns (comma-separated, optional)", placeholder="e.g., age,salary")
+        qf_btn = gr.Button("Filter Dataset")
+        qf_output = gr.Textbox(label="Result", lines=3)
+        qf_btn.click(quality_filter_dataset, inputs=[qf_id, qf_min_trust, qf_features], outputs=qf_output)
+
+    with gr.Tab("Quality Report (Cleanlab)"):
+        gr.Markdown("## Generate Cleanlab Quality Report")
+        qr_id = gr.Textbox(label="Dataset ID", placeholder="Enter dataset ID")
+        qr_output_path = gr.Textbox(label="Output Path (optional)", placeholder="Leave empty for JSON output")
+        qr_btn = gr.Button("Generate Report")
+        qr_output = gr.Textbox(label="Report / Result", lines=10)
+        qr_btn.click(generate_quality_report, inputs=[qr_id, qr_output_path], outputs=qr_output)
 
 if __name__ == "__main__":
     demo.launch(server_name="0.0.0.0", server_port=7861) 

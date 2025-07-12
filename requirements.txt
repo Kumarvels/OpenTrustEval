@@ -5,3 +5,8 @@ numpy==1.26.4
 pandas==2.2.2
 tensorflow==2.16.1
 datasets==2.19.0
+cleanlab==2.6.0
+scikit-learn==1.4.0
+matplotlib==3.8.0
+seaborn==0.13.0
+plotly==5.18.0

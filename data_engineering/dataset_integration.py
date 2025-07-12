@@ -36,6 +36,13 @@ try:
 except ImportError:
     PARQUET_AVAILABLE = False
 
+# Import Cleanlab integration
+try:
+    from data_engineering.cleanlab_integration import CleanlabDataQualityManager
+    CLEANLAB_AVAILABLE = True
+except ImportError:
+    CLEANLAB_AVAILABLE = False
+
 class DatasetManager:
     """
     Dataset Manager - Integrates dataset management features into data engineering workflow
@@ -49,6 +56,14 @@ class DatasetManager:
         self.validation_results = {}
         self.processing_history = []
         self.logger = self._setup_logger()
+        
+        # Initialize Cleanlab integration
+        if CLEANLAB_AVAILABLE:
+            self.cleanlab_manager = CleanlabDataQualityManager()
+        else:
+            self.cleanlab_manager = None
+            self.logger.warning("Cleanlab not available. Advanced data quality features disabled.")
+        
         # Load existing datasets from disk
         self._load_existing_datasets()
         
@@ -220,6 +235,88 @@ class DatasetManager:
         self.logger.info(f"Validation completed for {dataset_id}: {'PASSED' if validation_results['passed'] else 'FAILED'}")
         
         return validation_results
+    
+    def validate_dataset_with_cleanlab(self, dataset_id: str, labels: Optional[List] = None, 
+                                     features: Optional[List] = None) -> Dict:
+        """
+        Advanced dataset validation using Cleanlab's confident learning
+        
+        Args:
+            dataset_id: Dataset to validate
+            labels: Target labels (if available)
+            features: Feature columns to use
+            
+        Returns:
+            Cleanlab validation results with trust scores
+        """
+        if not self.cleanlab_manager:
+            return {"error": "Cleanlab not available"}
+        
+        df = self.load_dataset(dataset_id)
+        
+        # Calculate trust score using Cleanlab
+        trust_result = self.cleanlab_manager.calculate_data_trust_score(df, labels, features)
+        
+        # Generate quality report
+        quality_report = self.cleanlab_manager.generate_quality_report(df)
+        
+        # Automated validation
+        validation_result = self.cleanlab_manager.automated_data_validation(df)
+        
+        cleanlab_results = {
+            'dataset_id': dataset_id,
+            'timestamp': datetime.now().isoformat(),
+            'trust_assessment': trust_result,
+            'quality_report': quality_report,
+            'automated_validation': validation_result,
+            'cleanlab_available': True
+        }
+        
+        # Store in validation results
+        self.validation_results[f"{dataset_id}_cleanlab"] = cleanlab_results
+        
+        self.logger.info(f"Cleanlab validation completed for {dataset_id}")
+        return cleanlab_results
+    
+    def create_quality_filtered_dataset(self, dataset_id: str, min_trust_score: float = 0.7,
+                                      features: Optional[List] = None) -> str:
+        """
+        Create a new dataset filtered by quality using Cleanlab
+        
+        Args:
+            dataset_id: Original dataset ID
+            min_trust_score: Minimum trust score threshold
+            features: Feature columns to use
+            
+        Returns:
+            New dataset ID with high-quality data
+        """
+        if not self.cleanlab_manager:
+            raise RuntimeError("Cleanlab not available")
+        
+        df = self.load_dataset(dataset_id)
+        original_dataset = self.datasets[dataset_id]
+        
+        # Apply quality-based filtering
+        filtered_df = self.cleanlab_manager.create_quality_based_filter(
+            df, min_trust_score, features
+        )
+        
+        # Create new dataset
+        new_name = f"{original_dataset['name']}_quality_filtered"
+        new_dataset_id = self.create_dataset(new_name, filtered_df)
+        
+        # Record processing history
+        self.processing_history.append({
+            'original_dataset': dataset_id,
+            'new_dataset': new_dataset_id,
+            'operation': 'quality_filtering',
+            'min_trust_score': min_trust_score,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+        self.logger.info(f"Quality filtering completed: {dataset_id} -> {new_dataset_id}")
+        return new_dataset_id
     
     def process_dataset(self, dataset_id: str, transformations: List[Dict]) -> str:
         """
@@ -508,6 +605,14 @@ class DatasetConnector:
     def validate_dataset(self, dataset_id: str, validation_rules: Optional[Dict] = None) -> Dict:
         return self.dataset_manager.validate_dataset(dataset_id, validation_rules)
     
+    def validate_dataset_with_cleanlab(self, dataset_id: str, labels: Optional[List] = None, 
+                                     features: Optional[List] = None) -> Dict:
+        return self.dataset_manager.validate_dataset_with_cleanlab(dataset_id, labels, features)
+    
+    def create_quality_filtered_dataset(self, dataset_id: str, min_trust_score: float = 0.7,
+                                      features: Optional[List] = None) -> str:
+        return self.dataset_manager.create_quality_filtered_dataset(dataset_id, min_trust_score, features)
+    
     def process_dataset(self, dataset_id: str, transformations: List[Dict]) -> str:
         return self.dataset_manager.process_dataset(dataset_id, transformations)
     
@@ -527,28 +632,50 @@ class DatasetConnector:
         return self.dataset_manager.delete_dataset(dataset_id)
 
 def example_dataset_integration():
-    """Example usage of dataset management features"""
+    """Example usage of dataset management features with Cleanlab integration"""
     
     # Initialize dataset manager
     dataset_manager = DatasetManager()
     
-    # Create sample data
+    # Create sample data with some quality issues
     sample_data = {
-        'id': [1, 2, 3, 4, 5],
-        'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],
-        'age': [25, 30, 35, 28, 32],
-        'salary': [50000, 60000, 70000, 55000, 65000]
+        'id': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank', 'Grace', 'Henry', 'Ivy', 'Jack'],
+        'age': [25, 30, 35, 28, 32, 45, 29, 38, 27, 33],
+        'salary': [50000, 60000, 70000, 55000, 65000, 80000, 52000, 72000, 48000, 68000],
+        'department': ['IT', 'HR', 'IT', 'Finance', 'IT', 'HR', 'Finance', 'IT', 'HR', 'IT']
     }
     
     # Create dataset
     dataset_id = dataset_manager.create_dataset('employees', sample_data)
     print(f"Created dataset: {dataset_id}")
     
-    # Validate dataset
+    # Standard validation
     validation_results = dataset_manager.validate_dataset(dataset_id)
-    print(f"Validation: {'PASSED' if validation_results['passed'] else 'FAILED'}")
+    print(f"Standard Validation: {'PASSED' if validation_results['passed'] else 'FAILED'}")
     if validation_results['warnings']:
         print("Warnings:", validation_results['warnings'])
+    
+    # Cleanlab validation (if available)
+    if dataset_manager.cleanlab_manager:
+        print("\n=== Cleanlab Data Quality Assessment ===")
+        cleanlab_results = dataset_manager.validate_dataset_with_cleanlab(dataset_id)
+        
+        if 'error' not in cleanlab_results:
+            trust_score = cleanlab_results.get('trust_assessment', {}).get('trust_score', 0)
+            print(f"Data Trust Score: {trust_score:.3f}")
+            
+            # Create quality-filtered dataset
+            if trust_score < 0.8:  # If trust score is low
+                print("Creating quality-filtered dataset...")
+                filtered_dataset_id = dataset_manager.create_quality_filtered_dataset(
+                    dataset_id, min_trust_score=0.7
+                )
+                print(f"Quality-filtered dataset: {filtered_dataset_id}")
+        else:
+            print(f"Cleanlab error: {cleanlab_results['error']}")
+    else:
+        print("Cleanlab not available for advanced data quality assessment")
     
     # Process dataset
     transformations = [

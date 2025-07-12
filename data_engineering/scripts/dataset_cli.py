@@ -107,6 +107,17 @@ def main():
     delete_parser.add_argument('--id', required=True, help='Dataset ID')
     delete_parser.add_argument('--force', action='store_true', help='Force deletion without confirmation')
     
+    # Quality-based filtering (Cleanlab)
+    quality_filter_parser = subparsers.add_parser('quality-filter', help='Filter dataset by Cleanlab trust score')
+    quality_filter_parser.add_argument('--id', required=True, help='Dataset ID')
+    quality_filter_parser.add_argument('--min-trust', type=float, default=0.7, help='Minimum trust score threshold')
+    quality_filter_parser.add_argument('--features', help='Feature columns (comma-separated, optional)')
+
+    # Quality report (Cleanlab)
+    quality_report_parser = subparsers.add_parser('quality-report', help='Generate Cleanlab quality report')
+    quality_report_parser.add_argument('--id', required=True, help='Dataset ID')
+    quality_report_parser.add_argument('--output', help='Output file path (optional)')
+    
     args = parser.parse_args()
     
     # Initialize dataset manager
@@ -219,6 +230,23 @@ def main():
                 print(f"Deleted dataset {args.id}")
             else:
                 print(f"Failed to delete dataset {args.id}")
+                
+        elif args.command == 'quality-filter':
+            features = args.features.split(',') if args.features else None
+            new_dataset_id = dataset_manager.create_quality_filtered_dataset(args.id, args.min_trust, features)
+            print(f"Created quality-filtered dataset: {new_dataset_id}")
+
+        elif args.command == 'quality-report':
+            df = dataset_manager.load_dataset(args.id)
+            if hasattr(dataset_manager, 'cleanlab_manager') and dataset_manager.cleanlab_manager:
+                report = dataset_manager.cleanlab_manager.generate_quality_report(df, args.output)
+                if args.output:
+                    print(f"Quality report saved to: {args.output}")
+                else:
+                    print("Quality Report:")
+                    print(report)
+            else:
+                print("Cleanlab not available for quality reporting.")
                 
     except Exception as e:
         print(f"Error: {e}")

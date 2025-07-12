@@ -9,6 +9,8 @@ This section provides comprehensive data engineering capabilities with integrate
 pip install pandas numpy pyyaml
 # Optional for advanced features
 pip install plotly great-expectations pyarrow openpyxl
+# Optional for Cleanlab-powered features (with fallback support)
+pip install cleanlab scikit-learn
 ```
 
 ### Basic Usage
@@ -70,6 +72,42 @@ viz_path = manager.visualize_dataset(dataset_id, viz_config)
 - **Auto-detection**: Automatic format detection
 - **Custom Paths**: Specify output locations
 - **Batch Operations**: Process multiple datasets
+
+## 🎯 **Advanced Quality Assessment (Cleanlab Integration)**
+
+### **Quality Assessment Features**
+The system now includes advanced data quality assessment with **automatic fallback support**:
+
+#### **With Cleanlab (Recommended)**
+- **Confident Learning**: Advanced label quality assessment
+- **Trust Scoring**: Comprehensive data trust evaluation
+- **Quality Filtering**: Filter datasets by trust scores
+- **Automated Validation**: Cleanlab-powered validation rules
+
+#### **Without Cleanlab (Fallback System)**
+- **Statistical Quality Metrics**: Missing values, duplicates, outliers
+- **Trust Scoring**: Basic statistical trust assessment
+- **Quality Filtering**: Row-wise quality filtering
+- **Automated Validation**: Statistical validation rules
+
+### **Quality Assessment Methods**
+```python
+from data_engineering.cleanlab_integration import CleanlabDataQualityManager
+
+# Initialize manager (automatically uses fallback if Cleanlab unavailable)
+manager = CleanlabDataQualityManager()
+
+# Calculate trust score (works with or without Cleanlab)
+trust_result = manager.calculate_data_trust_score(dataset)
+print(f"Trust Score: {trust_result['trust_score']:.3f}")
+print(f"Method: {trust_result['method']}")  # 'cleanlab_confident_learning' or 'fallback_statistical'
+
+# Quality-based filtering
+filtered_data = manager.create_quality_based_filter(dataset, min_trust_score=0.8)
+
+# Generate quality report
+report = manager.generate_quality_report(dataset)
+```
 
 ## 🛠️ Command Line Interface
 
@@ -135,11 +173,29 @@ python dataset_cli.py list --format json
 python dataset_cli.py delete --id dataset_123 --force
 ```
 
+#### Quality-Based Filtering (Works with/without Cleanlab)
+```bash
+# Filter by trust score (uses fallback if Cleanlab unavailable)
+python dataset_cli.py quality-filter --id dataset_123 --min-trust 0.8
+
+# Optionally specify features
+python dataset_cli.py quality-filter --id dataset_123 --min-trust 0.8 --features age,salary
+```
+
+#### Generate Quality Report (Works with/without Cleanlab)
+```bash
+# Generate quality report (uses fallback if Cleanlab unavailable)
+python dataset_cli.py quality-report --id dataset_123
+
+# Save to file
+python dataset_cli.py quality-report --id dataset_123 --output report.json
+```
+
 ## 🌐 Web User Interface
 
 ### Launch WebUI
 ```bash
-python data_engineering/scripts/dataset_webui.py
+python data_engineering/scripts/easy_dataset_webui.py
 ```
 
 The WebUI will be available at `http://localhost:7861`
@@ -152,6 +208,8 @@ The WebUI will be available at `http://localhost:7861`
 - **Visualization**: Create charts and graphs with interactive controls
 - **Export/Import**: Export datasets to various formats
 - **Delete**: Remove datasets with confirmation
+- **Quality-Based Filtering (Cleanlab)**: Filter datasets by trust score (new tab) - **Works with fallback system**
+- **Quality Report (Cleanlab)**: Generate and download a comprehensive quality report (new tab) - **Works with fallback system**
 
 ## 🔧 Advanced Usage
 
@@ -180,28 +238,36 @@ transformations = [
 new_dataset_id = manager.process_dataset(dataset_id, transformations)
 ```
 
-### Integration with Data Pipeline
+### Quality Assessment Integration
 ```python
-# Use dataset management in data engineering pipeline
+# Use quality assessment in data engineering pipeline
 manager = DataLifecycleManager()
 
 # Create dataset from external source
 dataset_id = manager.import_dataset('external_data.csv', 'external_data')
+
+# Assess data quality (works with/without Cleanlab)
+if hasattr(manager.dataset_manager, 'cleanlab_manager'):
+    trust_result = manager.dataset_manager.cleanlab_manager.calculate_data_trust_score(
+        manager.load_dataset(dataset_id)
+    )
+    print(f"Data Trust Score: {trust_result['trust_score']:.3f}")
+    print(f"Assessment Method: {trust_result['method']}")
 
 # Validate data quality
 validation_results = manager.validate_dataset(dataset_id)
 if not validation_results['passed']:
     print("Data quality issues found:", validation_results['errors'])
 
-# Process data
-transformations = [
-    {'operation': 'filter', 'params': {'condition': 'quality_score > 0.8'}},
-    {'operation': 'sort', 'params': {'columns': ['timestamp'], 'ascending': True}}
-]
-processed_dataset_id = manager.process_dataset(dataset_id, transformations)
+# Process data with quality filtering
+if hasattr(manager.dataset_manager, 'cleanlab_manager'):
+    filtered_dataset_id = manager.dataset_manager.create_quality_filtered_dataset(
+        dataset_id, min_trust_score=0.8
+    )
+    print(f"Quality-filtered dataset: {filtered_dataset_id}")
 
 # Export for downstream processing
-export_path = manager.export_dataset(processed_dataset_id, 'parquet', 'processed_data.parquet')
+export_path = manager.export_dataset(dataset_id, 'parquet', 'processed_data.parquet')
 
 # Create visualization for monitoring
 viz_config = {
@@ -210,7 +276,7 @@ viz_config = {
     'y': 'value',
     'save': True
 }
-viz_path = manager.visualize_dataset(processed_dataset_id, viz_config)
+viz_path = manager.visualize_dataset(dataset_id, viz_config)
 ```
 
 ## 📊 Metrics and Monitoring
@@ -323,10 +389,13 @@ dataset_id = manager.create_dataset('snowflake_data', snowflake_data)
 5. **Document transformations** for audit trails
 6. **Use appropriate formats** for different use cases
 7. **Backup important datasets** before major operations
+8. **Leverage quality assessment** for data filtering and validation
+9. **Use fallback systems** when advanced dependencies are unavailable
 
 ## 🔗 Related Documentation
 
 - [Data Engineering Lifecycle](data_lifecycle.py)
 - [Common Data Loader](common_data_loader.py)
+- [Cleanlab Integration](cleanlab_integration.py) - **New: Quality assessment with fallback support**
 - [Example Projects](project_*/)
 - [Connectors](connectors/) 
