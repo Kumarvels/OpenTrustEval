@@ -15,24 +15,59 @@ from typing import Dict, Any
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from security.auth_manager import AuthManager, UserRole
-from security.oauth_provider import OAuthProvider
-from security.saml_provider import SAMLProvider
-from security.security_monitor import SecurityMonitor, ThreatLevel, AlertType
-from security.dependency_scanner import DependencyScanner
-from security.secrets_manager import SecretsManager, SecretType
+# Initialize security components with error handling
+auth_manager = None
+oauth_provider = None
+saml_provider = None
+security_monitor = None
+dependency_scanner = None
+secrets_manager = None
 
-# Initialize security components
-auth_manager = AuthManager()
-oauth_provider = OAuthProvider()
-saml_provider = SAMLProvider()
-security_monitor = SecurityMonitor()
-dependency_scanner = DependencyScanner()
-secrets_manager = SecretsManager()
+try:
+    from security.auth_manager import AuthManager, UserRole
+    auth_manager = AuthManager()
+    SECURITY_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Security modules not available: {e}")
+    SECURITY_AVAILABLE = False
+
+if SECURITY_AVAILABLE:
+    try:
+        from security.oauth_provider import OAuthProvider
+        oauth_provider = OAuthProvider()
+    except Exception as e:
+        print(f"Warning: OAuth provider not available: {e}")
+    
+    try:
+        from security.saml_provider import SAMLProvider
+        saml_provider = SAMLProvider()
+    except Exception as e:
+        print(f"Warning: SAML provider not available: {e}")
+    
+    try:
+        from security.security_monitor import SecurityMonitor, ThreatLevel, AlertType
+        security_monitor = SecurityMonitor()
+    except Exception as e:
+        print(f"Warning: Security monitor not available: {e}")
+    
+    try:
+        from security.dependency_scanner import DependencyScanner
+        dependency_scanner = DependencyScanner()
+    except Exception as e:
+        print(f"Warning: Dependency scanner not available: {e}")
+    
+    try:
+        from security.secrets_manager import SecretsManager, SecretType
+        secrets_manager = SecretsManager()
+    except Exception as e:
+        print(f"Warning: Secrets manager not available: {e}")
 
 # --- Authentication Management Functions ---
 def list_users():
     """List all users"""
+    if not auth_manager:
+        return "Authentication manager not available. Check dependencies and configuration."
+    
     try:
         users = auth_manager.list_users()
         result = "Users:\n\n"
@@ -50,7 +85,13 @@ def list_users():
 
 def create_user(username, email, role, permissions):
     """Create a new user"""
+    if not auth_manager:
+        return "Authentication manager not available. Check dependencies and configuration."
+    
     try:
+        if not username or not email:
+            return "Error: Username and email are required."
+        
         user_role = UserRole(role)
         user = auth_manager.create_user(username, email, user_role, permissions.split(','))
         return f"User created successfully!\nID: {user.id}\nUsername: {user.username}\nEmail: {user.email}\nRole: {user.role.value}"
@@ -59,7 +100,13 @@ def create_user(username, email, role, permissions):
 
 def delete_user(user_id):
     """Delete a user"""
+    if not auth_manager:
+        return "Authentication manager not available. Check dependencies and configuration."
+    
     try:
+        if not user_id:
+            return "Error: User ID is required."
+        
         success = auth_manager.delete_user(user_id)
         if success:
             return f"User {user_id} deleted successfully"
@@ -70,6 +117,9 @@ def delete_user(user_id):
 
 def list_oauth_providers():
     """List OAuth providers"""
+    if not oauth_provider:
+        return "OAuth provider not available. Check dependencies and configuration."
+    
     try:
         providers = oauth_provider.get_supported_providers()
         result = "OAuth Providers:\n\n"
@@ -83,6 +133,9 @@ def list_oauth_providers():
 
 def list_saml_providers():
     """List SAML providers"""
+    if not saml_provider:
+        return "SAML provider not available. Check dependencies and configuration."
+    
     try:
         providers = saml_provider.get_supported_providers()
         result = "SAML Providers:\n\n"
@@ -97,6 +150,9 @@ def list_saml_providers():
 # --- Security Monitoring Functions ---
 def get_security_summary():
     """Get security summary"""
+    if not security_monitor:
+        return "Security monitor not available. Check dependencies and configuration."
+    
     try:
         summary = security_monitor.get_security_summary()
         result = "Security Summary:\n\n"
@@ -113,6 +169,9 @@ def get_security_summary():
 
 def get_recent_alerts(hours, severity):
     """Get recent alerts"""
+    if not security_monitor:
+        return "Security monitor not available. Check dependencies and configuration."
+    
     try:
         alerts = security_monitor.get_recent_alerts(int(hours))
         if severity and severity != "all":
@@ -133,6 +192,9 @@ def get_recent_alerts(hours, severity):
 
 def get_blocked_ips():
     """Get blocked IPs"""
+    if not security_monitor:
+        return "Security monitor not available. Check dependencies and configuration."
+    
     try:
         blocked_ips = security_monitor.get_blocked_ips()
         result = "Blocked IPs:\n\n"
@@ -147,7 +209,13 @@ def get_blocked_ips():
 
 def unblock_ip(ip_address):
     """Unblock an IP"""
+    if not security_monitor:
+        return "Security monitor not available. Check dependencies and configuration."
+    
     try:
+        if not ip_address:
+            return "Error: IP address is required."
+        
         security_monitor.unblock_ip(ip_address)
         return f"IP {ip_address} unblocked successfully"
     except Exception as e:
@@ -156,7 +224,13 @@ def unblock_ip(ip_address):
 # --- Dependency Scanning Functions ---
 def scan_dependencies(requirements_path, output_format):
     """Scan dependencies"""
+    if not dependency_scanner:
+        return "Dependency scanner not available. Check dependencies and configuration."
+    
     try:
+        if not os.path.exists(requirements_path):
+            return f"Error: Requirements file not found: {requirements_path}"
+        
         results = dependency_scanner.scan_requirements_file(requirements_path)
         
         result = "Dependency Scan Results:\n\n"
@@ -181,6 +255,9 @@ def scan_dependencies(requirements_path, output_format):
 
 def scan_installed_packages():
     """Scan installed packages"""
+    if not dependency_scanner:
+        return "Dependency scanner not available. Check dependencies and configuration."
+    
     try:
         results = dependency_scanner.scan_installed_packages()
         
@@ -206,7 +283,13 @@ def scan_installed_packages():
 
 def check_license_compliance(requirements_path, allowed_licenses):
     """Check license compliance"""
+    if not dependency_scanner:
+        return "Dependency scanner not available. Check dependencies and configuration."
+    
     try:
+        if not os.path.exists(requirements_path):
+            return f"Error: Requirements file not found: {requirements_path}"
+        
         allowed_list = [license.strip() for license in allowed_licenses.split(',')]
         compliance = dependency_scanner.check_license_compliance(requirements_path, allowed_list)
         
@@ -227,6 +310,9 @@ def check_license_compliance(requirements_path, allowed_licenses):
 # --- Secrets Management Functions ---
 def list_secrets(secret_type, include_expired):
     """List secrets"""
+    if not secrets_manager:
+        return "Secrets manager not available. Check dependencies and configuration."
+    
     try:
         secrets = secrets_manager.list_secrets(
             SecretType(secret_type) if secret_type and secret_type != "all" else None,
@@ -252,7 +338,13 @@ def list_secrets(secret_type, include_expired):
 
 def create_secret(name, value, secret_type, description, tags, expires_in_days):
     """Create a secret"""
+    if not secrets_manager:
+        return "Secrets manager not available. Check dependencies and configuration."
+    
     try:
+        if not name or not value:
+            return "Error: Secret name and value are required."
+        
         secret_type_enum = SecretType(secret_type)
         tags_list = [tag.strip() for tag in tags.split(',')] if tags else []
         expires_days = int(expires_in_days) if expires_in_days else None
@@ -266,7 +358,13 @@ def create_secret(name, value, secret_type, description, tags, expires_in_days):
 
 def get_secret_value(name):
     """Get secret value"""
+    if not secrets_manager:
+        return "Secrets manager not available. Check dependencies and configuration."
+    
     try:
+        if not name:
+            return "Error: Secret name is required."
+        
         value = secrets_manager.get_secret_by_name(name)
         if value:
             return f"Secret value for {name}: {value}"
@@ -277,7 +375,13 @@ def get_secret_value(name):
 
 def delete_secret(name):
     """Delete a secret"""
+    if not secrets_manager:
+        return "Secrets manager not available. Check dependencies and configuration."
+    
     try:
+        if not name:
+            return "Error: Secret name is required."
+        
         success = secrets_manager.delete_secret(name)
         if success:
             return f"Secret {name} deleted successfully"
@@ -288,6 +392,9 @@ def delete_secret(name):
 
 def get_secrets_statistics():
     """Get secrets statistics"""
+    if not secrets_manager:
+        return "Secrets manager not available. Check dependencies and configuration."
+    
     try:
         stats = secrets_manager.get_statistics()
         
@@ -313,7 +420,7 @@ def show_security_config():
             with open(config_path, 'r') as f:
                 return f.read()
         else:
-            return "Configuration file not found"
+            return "Configuration file not found. Create security/security_config.yaml"
     except Exception as e:
         return f"Error reading configuration: {e}"
 
@@ -321,6 +428,9 @@ def validate_security_config():
     """Validate security configuration"""
     try:
         config_path = 'security/security_config.yaml'
+        if not os.path.exists(config_path):
+            return "Configuration file not found. Create security/security_config.yaml"
+        
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
         
@@ -341,6 +451,10 @@ def validate_security_config():
 # --- Gradio Interface ---
 with gr.Blocks(title="OpenTrustEval Security Management") as demo:
     gr.Markdown("# 🔒 OpenTrustEval Security Management")
+    
+    if not SECURITY_AVAILABLE:
+        gr.Markdown("⚠️ **Security modules not available.** Please install required dependencies.")
+        gr.Markdown("Required: `security` module with proper configuration")
     
     with gr.Tab("Authentication"):
         gr.Markdown("## User Management")
@@ -488,5 +602,15 @@ with gr.Blocks(title="OpenTrustEval Security Management") as demo:
         validate_output = gr.Textbox(label="Validation Results", lines=10)
         validate_btn.click(validate_security_config, outputs=validate_output)
 
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="OpenTrustEval Security WebUI")
+    parser.add_argument("--server_port", type=int, default=7863, help="Server port")
+    parser.add_argument("--server_name", type=str, default="0.0.0.0", help="Server name")
+    args = parser.parse_args()
+    
+    print(f"Starting Security WebUI on http://{args.server_name}:{args.server_port}")
+    demo.launch(server_name=args.server_name, server_port=args.server_port)
+
 if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7862) 
+    main() 
