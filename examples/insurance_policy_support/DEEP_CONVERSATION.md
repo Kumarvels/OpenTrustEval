@@ -1,14 +1,14 @@
 # 🏢 Insurance Policy & Raiders Support System – Deep Conversation Example
 
 ## Scenario Overview
-A customer or agent interacts with the insurance support system for policy details, claims, and raider (underwriting) queries. Each response is evaluated for trust, hallucination risk, and compliance, with XAI-style justifications and community notes.
+A customer or agent interacts with the insurance support system for policy details, claims, and raider (underwriting) queries. Each response is evaluated for trust, hallucination risk, and compliance, with OpenTrustEval Justifications and OTE Notes.
 
 ---
 
 ## 1. Conversation Flow (20 Steps)
 
-| Step | User Input | System Response | Trust Score | Hallucination Risk | XAI Justification | Community Notes |
-|------|------------|-----------------|-------------|--------------------|-------------------|----------------|
+| Step | User Input | System Response | Trust Score | Hallucination Risk | OpenTrustEval Justification | OTE Notes |
+|------|------------|-----------------|-------------|--------------------|----------------------------|-----------|
 | 1 | Hi, I want to know about my policy. | Please provide your policy number. | 0.99 | 0.01 | Intent match, no ambiguity. | 👍 |
 | 2 | Policy #P456 | Your policy covers fire, theft, and flood. | 0.98 | 0.01 | Policy details from DB. | 👍 |
 | 3 | What is the sum insured? | ₹10,00,000 is your sum insured. | 0.98 | 0.01 | Value from policy DB. | 👍 |
@@ -86,7 +86,7 @@ flowchart TD
   - Lower if answer is DB-backed or policy-based
   - Detected via fact-checking, retrieval-augmented generation, and semantic similarity
 
-- **XAI Justification:**
+- **OpenTrustEval Justification:**
   - Each score is accompanied by a rationale (e.g., “DB-verified”, “Policy-based”, “LLM-generated with low confidence”)
 
 ---

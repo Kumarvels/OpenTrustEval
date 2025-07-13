@@ -1,14 +1,14 @@
 # 👩‍💼 HR SaaS Chat Support Operations – Deep Conversation Example
 
 ## Scenario Overview
-HR professionals and employees interact with the SaaS chat support system for HR policies, payroll, and benefits. Each response is evaluated for trust, hallucination risk, and policy compliance, with XAI-style justifications and community notes.
+HR professionals and employees interact with the SaaS chat support system for HR policies, payroll, and benefits. Each response is evaluated for trust, hallucination risk, and policy compliance, with OpenTrustEval Justifications and OTE Notes.
 
 ---
 
 ## 1. Conversation Flow (20 Steps)
 
-| Step | User Input | System Response | Trust Score | Hallucination Risk | XAI Justification | Community Notes |
-|------|------------|-----------------|-------------|--------------------|-------------------|----------------|
+| Step | User Input | System Response | Trust Score | Hallucination Risk | OpenTrustEval Justification | OTE Notes |
+|------|------------|-----------------|-------------|--------------------|----------------------------|-----------|
 | 1 | Hi, how do I apply for leave? | Go to the HR portal, click 'Apply Leave'. | 0.99 | 0.01 | Policy-based, clear. | 👍 |
 | 2 | How many leaves do I have left? | You have 12 annual leaves remaining. | 0.98 | 0.01 | Data from HR DB. | 👍 |
 | 3 | Can I take half-day leave? | Yes, half-day leave is allowed. | 0.98 | 0.01 | Policy check. | 👍 |
@@ -85,7 +85,7 @@ flowchart TD
   - Lower if answer is DB-backed or policy-based
   - Detected via fact-checking, retrieval-augmented generation, and semantic similarity
 
-- **XAI Justification:**
+- **OpenTrustEval Justification:**
   - Each score is accompanied by a rationale (e.g., “Policy-verified”, “HR DB-based”, “LLM-generated with low confidence”)
 
 ---

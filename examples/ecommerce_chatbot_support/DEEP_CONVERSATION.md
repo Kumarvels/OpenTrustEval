@@ -1,14 +1,14 @@
 # 🛒 E-commerce Chatbot Support System – Deep Conversation Example
 
 ## Scenario Overview
-A customer interacts with the e-commerce chatbot for product search, order status, returns, and support. The system evaluates every response for trust and hallucination risk, providing XAI-style justifications and community notes.
+A customer interacts with the e-commerce chatbot for product search, order status, returns, and support. The system evaluates every response for trust and hallucination risk, providing OpenTrustEval Justifications and OTE Notes.
 
 ---
 
 ## 1. Conversation Flow (20 Steps)
 
-| Step | User Input | Chatbot Response | Trust Score | Hallucination Risk | XAI Justification | Community Notes |
-|------|------------|------------------|-------------|--------------------|-------------------|----------------|
+| Step | User Input | Chatbot Response | Trust Score | Hallucination Risk | OpenTrustEval Justification | OTE Notes |
+|------|------------|------------------|-------------|--------------------|----------------------------|-----------|
 | 1 | Hi, I want to buy a phone. | Sure! What brand are you interested in? | 0.99 | 0.01 | Simple intent match, no ambiguity. | 👍 Clear, safe response. |
 | 2 | Show me Samsung phones. | Here are our top Samsung models: Galaxy S23, S22, A54... | 0.98 | 0.02 | Product list from live catalog. | 👍 Data-backed, up-to-date. |
 | 3 | What’s the price of Galaxy S23? | The Galaxy S23 is ₹69,999. | 0.97 | 0.01 | Price fetched from inventory API. | 👍 Accurate, verifiable. |
@@ -81,7 +81,7 @@ flowchart TD
   - Lower if answer is API-backed or policy-based
   - Detected via fact-checking, retrieval-augmented generation, and semantic similarity
 
-- **XAI Justification:**
+- **OpenTrustEval Justification:**
   - Each score is accompanied by a rationale (e.g., “API-verified”, “Policy-based”, “LLM-generated with low confidence”)
 
 ---
@@ -90,5 +90,5 @@ flowchart TD
 
 - Always use live data for transactional queries.
 - Escalate to human agents for ambiguous or high-risk cases.
-- Provide XAI-style explanations for every response.
-- Use community notes to flag or endorse responses. 
+- Provide OpenTrustEval Justifications for every response.
+- Use OTE Notes to flag or endorse responses. 

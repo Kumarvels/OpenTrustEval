@@ -1,14 +1,14 @@
 # 🏥 Hospital Daily Operations & Support Chat System – Deep Conversation Example
 
 ## Scenario Overview
-Hospital staff and patients interact with the support system for scheduling, clinical queries, and operational support. Each response is evaluated for trust, hallucination risk, and HIPAA compliance, with XAI-style justifications and community notes.
+Hospital staff and patients interact with the support system for scheduling, clinical queries, and operational support. Each response is evaluated for trust, hallucination risk, and HIPAA compliance, with OpenTrustEval Justifications and OTE Notes.
 
 ---
 
 ## 1. Conversation Flow (20 Steps)
 
-| Step | User Input | System Response | Trust Score | Hallucination Risk | XAI Justification | Community Notes |
-|------|------------|-----------------|-------------|--------------------|-------------------|----------------|
+| Step | User Input | System Response | Trust Score | Hallucination Risk | OpenTrustEval Justification | OTE Notes |
+|------|------------|-----------------|-------------|--------------------|----------------------------|-----------|
 | 1 | Hi, I need to check my appointment. | Please provide your patient ID. | 0.99 | 0.01 | Intent match, no ambiguity. | 👍 |
 | 2 | Patient ID: JD123 | Your next appointment is at 2pm with Dr. Smith. | 0.98 | 0.01 | Schedule from EHR. | 👍 |
 | 3 | What is Dr. Smith's specialty? | Dr. Smith is a cardiologist. | 0.98 | 0.01 | Staff DB lookup. | 👍 |
@@ -83,7 +83,7 @@ flowchart TD
   - Lower if answer is DB-backed or policy-based
   - Detected via fact-checking, retrieval-augmented generation, and semantic similarity
 
-- **XAI Justification:**
+- **OpenTrustEval Justification:**
   - Each score is accompanied by a rationale (e.g., “EHR-verified”, “Policy-based”, “LLM-generated with low confidence”)
 
 ---
