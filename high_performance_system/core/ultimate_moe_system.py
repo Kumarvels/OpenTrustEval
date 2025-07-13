@@ -269,7 +269,7 @@ class UltimateMoESystem:
             self.logger.warning(f"Multi-agent verification failed: {e}")
             return {"multi_agent_score": 0.8, "error": str(e)}
     
-    async def _run_uncertainty_analysis(self, text: str) -> Dict[str, Any]:
+    async def _run_uncertainty_analysis(self, text: str, context: str) -> Dict[str, Any]:
         """Run uncertainty-aware system analysis"""
         try:
             # For now, return a placeholder - this will be implemented in Phase 3
