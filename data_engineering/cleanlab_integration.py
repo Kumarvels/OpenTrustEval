@@ -3,6 +3,30 @@ Cleanlab Integration for OpenTrustEval
 Implements confident learning and data quality assessment features
 Enhanced with advanced trust scoring methods
 """
+# High-Performance System Integration
+try:
+    from high_performance_system.core.ultimate_moe_system import UltimateMoESystem
+    from high_performance_system.core.advanced_expert_ensemble import AdvancedExpertEnsemble
+    
+    # Initialize high-performance components
+    moe_system = UltimateMoESystem()
+    expert_ensemble = AdvancedExpertEnsemble()
+    
+    HIGH_PERFORMANCE_AVAILABLE = True
+    print(f"✅ Cleanlab Integration integrated with high-performance system")
+except ImportError as e:
+    HIGH_PERFORMANCE_AVAILABLE = False
+    print(f"⚠️ High-performance system not available for Cleanlab Integration: {e}")
+
+def get_high_performance_status():
+    """Get high-performance system status"""
+    return {
+        'available': HIGH_PERFORMANCE_AVAILABLE,
+        'moe_system': 'active' if HIGH_PERFORMANCE_AVAILABLE and moe_system else 'inactive',
+        'trust_scorer': 'active' if HIGH_PERFORMANCE_AVAILABLE and expert_ensemble else 'inactive',
+        'dataset_profiler': 'active' if HIGH_PERFORMANCE_AVAILABLE and dataset_profiler else 'inactive'
+    }
+
 
 import os
 import sys

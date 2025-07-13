@@ -1,7 +1,7 @@
 {
   "domains": {
-    "new_patterns": 5,
-    "updated_expertise": 1
+    "new_patterns": 8,
+    "updated_expertise": 3
   },
   "patterns": {
     "pattern_0": "new_pattern_data_0",
@@ -12,5 +12,5 @@
     "expertise_0": "new_expertise_data_0",
     "expertise_1": "new_expertise_data_1"
   },
-  "last_updated": "2025-07-13T01:12:28.737330"
+  "last_updated": "2025-07-13T08:25:30.429380"
 }

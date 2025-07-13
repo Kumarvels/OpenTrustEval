@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class HighPerformanceSystemTester:
     """Comprehensive tester for the high-performance hallucination detection system"""
     
-    def __init__(self, base_url: str = "http://localhost:8002"):
+    def __init__(self, base_url: str = "http://localhost:8003"):
         self.base_url = base_url
         self.test_results = []
         

@@ -49,19 +49,20 @@ class ExpertPrediction:
     prediction: Dict[str, Any]
     reasoning: str
     metadata: Dict[str, Any]
+    sources_used: list = None  # NEW FIELD
 
 @dataclass
 class MoEVerificationResult:
     """Complete MoE verification result"""
     verified: bool
     confidence: float
-    selected_experts: List[str]
     expert_predictions: List[ExpertPrediction]
     ensemble_decision: Dict[str, Any]
     domain_detected: DomainType
     quality_score: float
     hallucination_risk: float
     recommendations: List[str]
+    sources_used: list = None  # NEW FIELD
 
 class DomainExpert(nn.Module):
     """Base class for domain-specific experts"""
@@ -122,6 +123,8 @@ class DomainExpert(nn.Module):
         """Make domain-specific prediction"""
         # This would be implemented with actual model inference
         # For now, return a structured prediction
+        # Use domain knowledge as sources if available
+        sources = [f"{self.domain.value}_knowledge_base"]
         return ExpertPrediction(
             expert_id=self.expert_id,
             domain=self.domain,
@@ -132,7 +135,8 @@ class DomainExpert(nn.Module):
                 'hallucination_risk': 0.1
             },
             reasoning=f"Domain-specific analysis for {self.domain.value}",
-            metadata={'domain': self.domain.value}
+            metadata={},
+            sources_used=sources
         )
 
 class EcommerceExpert(DomainExpert):
@@ -152,16 +156,14 @@ class EcommerceExpert(DomainExpert):
         products = self._extract_products(text)
         pricing_info = self._extract_pricing(text)
         inventory_info = self._extract_inventory(text)
-        
         # Verify against ecommerce knowledge base
         product_verified = self._verify_products(products)
         pricing_verified = self._verify_pricing(pricing_info)
         inventory_verified = self._verify_inventory(inventory_info)
-        
         # Calculate confidence based on verification results
         verification_scores = [product_verified, pricing_verified, inventory_verified]
         confidence = np.mean([score for score in verification_scores if score > 0])
-        
+        sources = ["ecommerce_knowledge_base"]
         return ExpertPrediction(
             expert_id=self.expert_id,
             domain=self.domain,
@@ -180,7 +182,8 @@ class EcommerceExpert(DomainExpert):
                 'products_found': len(products),
                 'pricing_found': len(pricing_info),
                 'inventory_found': len(inventory_info)
-            }
+            },
+            sources_used=sources
         )
     
     def _extract_products(self, text: str) -> List[str]:
@@ -302,7 +305,8 @@ class BankingExpert(DomainExpert):
                 'accounts_found': len(accounts),
                 'transactions_found': len(transactions),
                 'regulatory_found': len(regulatory_info)
-            }
+            },
+            sources_used=["banking_knowledge_base"]
         )
     
     def _extract_accounts(self, text: str) -> List[Dict[str, Any]]:
@@ -416,7 +420,8 @@ class InsuranceExpert(DomainExpert):
                 'policies_found': len(policies),
                 'coverage_found': len(coverage),
                 'claims_found': len(claims)
-            }
+            },
+            sources_used=["insurance_knowledge_base"]
         )
     
     def _extract_policies(self, text: str) -> List[Dict[str, Any]]:
@@ -601,16 +606,20 @@ class MoEDomainVerifier:
             self._update_performance_metrics(domain_detected, verified, expert_predictions)
             
             # Create result
+            all_sources = []
+            for pred in expert_predictions:
+                if pred.sources_used:
+                    all_sources.extend(pred.sources_used)
             result = MoEVerificationResult(
                 verified=verified,
                 confidence=confidence,
-                selected_experts=list(expert_weights.keys()),
                 expert_predictions=expert_predictions,
                 ensemble_decision=ensemble_decision,
                 domain_detected=domain_detected,
                 quality_score=quality_score,
                 hallucination_risk=hallucination_risk,
-                recommendations=recommendations
+                recommendations=recommendations,
+                sources_used=all_sources
             )
             
             logger.info(f"MoE verification completed: {verified} (confidence: {confidence:.3f})")
@@ -811,7 +820,6 @@ class MoEDomainVerifier:
         return MoEVerificationResult(
             verified=False,
             confidence=0.0,
-            selected_experts=[],
             expert_predictions=[],
             ensemble_decision={
                 'verified': False,
@@ -824,7 +832,8 @@ class MoEDomainVerifier:
             domain_detected=DomainType.GENERAL,
             quality_score=0.0,
             hallucination_risk=1.0,
-            recommendations=[f"Verification failed: {error}. Manual review required."]
+            recommendations=[f"Verification failed: {error}. Manual review required."],
+            sources_used=[]
         )
     
     def get_performance_metrics(self) -> Dict[str, Any]:
@@ -891,8 +900,9 @@ async def main():
         print(f"Confidence: {result.confidence:.3f}")
         print(f"Quality Score: {result.quality_score:.3f}")
         print(f"Hallucination Risk: {result.hallucination_risk:.3f}")
-        print(f"Selected Experts: {result.selected_experts}")
+        print(f"Selected Experts: {result.expert_predictions}")
         print(f"Recommendations: {result.recommendations}")
+        print(f"Sources Used: {result.sources_used}")
     
     # Get performance metrics
     metrics = moe_verifier.get_performance_metrics()

@@ -3,6 +3,29 @@ Advanced Trust Scoring System for OpenTrustEval
 Implements innovative, practical, and advanced statistical methods for calculating trust scores
 Based on research of Cleanlab's confident learning approach and enhanced with cutting-edge techniques
 """
+# High-Performance System Integration
+try:
+    from high_performance_system.core.ultimate_moe_system import UltimateMoESystem
+    from high_performance_system.core.advanced_expert_ensemble import AdvancedExpertEnsemble
+    
+    # Initialize high-performance components
+    moe_system = UltimateMoESystem()
+    expert_ensemble = AdvancedExpertEnsemble()
+    
+    HIGH_PERFORMANCE_AVAILABLE = True
+    print(f"✅ Advanced Trust Scoring integrated with high-performance system")
+except ImportError as e:
+    HIGH_PERFORMANCE_AVAILABLE = False
+    print(f"⚠️ High-performance system not available for Advanced Trust Scoring: {e}")
+
+def get_high_performance_status():
+    """Get high-performance system status"""
+    return {
+        'available': HIGH_PERFORMANCE_AVAILABLE,
+        'moe_system': 'active' if HIGH_PERFORMANCE_AVAILABLE and moe_system else 'inactive',
+        'expert_ensemble': 'active' if HIGH_PERFORMANCE_AVAILABLE and expert_ensemble else 'inactive'
+    }
+
 
 import os
 import sys

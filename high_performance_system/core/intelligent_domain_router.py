@@ -9,7 +9,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class RoutingResult:
@@ -19,6 +19,7 @@ class RoutingResult:
     confidence: float
     routing_strategy: str
     metadata: Dict[str, Any]
+    domain_weights: Dict[str, float] = field(default_factory=dict)
 
 class KeywordBasedRouter:
     """Keyword-based routing strategy"""
@@ -574,5 +575,6 @@ class IntelligentDomainRouter:
                 "entity_analysis": entity_analysis,
                 "expert_weights": expert_weights,
                 "balanced_weights": balanced_weights
-            }
+            },
+            domain_weights=final_weights
         ) 

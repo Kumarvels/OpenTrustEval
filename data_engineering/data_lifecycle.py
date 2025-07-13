@@ -91,7 +91,7 @@ class DataLifecycleManager:
             if tool in self.connectors:
                 connector = self.connectors[tool]
                 if hasattr(connector, action):
-                getattr(connector, action)(**args)
+                    getattr(connector, action)(**args)
                 else:
                     self.logger.warning(f"Action {action} not found in connector {tool}")
             else:

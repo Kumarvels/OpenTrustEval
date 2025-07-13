@@ -62,6 +62,41 @@ if SECURITY_AVAILABLE:
     except Exception as e:
         print(f"Warning: Secrets manager not available: {e}")
 
+
+# High-Performance System Integration
+try:
+    from high_performance_system.core.ultimate_moe_system import UltimateMoESystem
+    from high_performance_system.core.independent_safety_layer import IndependentSafetyLayer
+    from high_performance_system.core.human_in_the_loop_remediation import HumanInTheLoopRemediation
+    
+    # Initialize high-performance components
+    moe_system = UltimateMoESystem()
+    safety_layer = IndependentSafetyLayer()
+    remediation_system = HumanInTheLoopRemediation()
+    
+    HIGH_PERFORMANCE_AVAILABLE = True
+    print("✅ Security system integrated with high-performance components")
+except ImportError as e:
+    HIGH_PERFORMANCE_AVAILABLE = False
+    print(f"⚠️ High-performance system not available: {e}")
+
+def get_high_performance_security_status():
+    """Get high-performance system security status"""
+    if not HIGH_PERFORMANCE_AVAILABLE:
+        return "High-performance system not available"
+    
+    try:
+        # Get security status from high-performance system
+        status = {
+            'moe_system': 'active' if moe_system else 'inactive',
+            'safety_layer': 'active' if safety_layer else 'inactive',
+            'remediation_system': 'active' if remediation_system else 'inactive'
+        }
+        return json.dumps(status, indent=2)
+    except Exception as e:
+        return f"Error getting security status: {e}"
+
+
 # --- Authentication Management Functions ---
 def list_users():
     """List all users"""

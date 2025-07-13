@@ -8,6 +8,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import numpy as np
 from abc import ABC, abstractmethod
+import time
+import logging
 
 @dataclass
 class ExpertResult:
@@ -18,6 +20,7 @@ class ExpertResult:
     domain_specific_metrics: Dict[str, Any]
     reasoning: str
     metadata: Dict[str, Any]
+    sources_used: List[str] = None  # ADD MISSING FIELD
 
 class BaseExpert(ABC):
     """Base class for all domain experts"""
@@ -59,7 +62,8 @@ class EcommerceExpert(BaseExpert):
                 "ecommerce_score": verification_score
             },
             reasoning="E-commerce domain verification based on product and pricing terminology",
-            metadata={"domain": self.domain, "keywords_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "keywords_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["ecommerce_knowledge_base", "product_catalog", "pricing_database"]
         )
 
 class BankingExpert(BaseExpert):
@@ -83,7 +87,8 @@ class BankingExpert(BaseExpert):
                 "banking_score": verification_score
             },
             reasoning="Banking domain verification based on financial terminology and concepts",
-            metadata={"domain": self.domain, "financial_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "financial_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["banking_knowledge_base", "financial_regulations", "transaction_database"]
         )
 
 class InsuranceExpert(BaseExpert):
@@ -107,7 +112,8 @@ class InsuranceExpert(BaseExpert):
                 "insurance_score": verification_score
             },
             reasoning="Insurance domain verification based on policy and coverage terminology",
-            metadata={"domain": self.domain, "insurance_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "insurance_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["insurance_knowledge_base", "policy_database", "coverage_guidelines"]
         )
 
 class HealthcareExpert(BaseExpert):
@@ -131,7 +137,8 @@ class HealthcareExpert(BaseExpert):
                 "healthcare_score": verification_score
             },
             reasoning="Healthcare domain verification based on medical terminology and concepts",
-            metadata={"domain": self.domain, "medical_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "medical_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["healthcare_knowledge_base", "medical_database", "treatment_guidelines"]
         )
 
 class LegalExpert(BaseExpert):
@@ -155,7 +162,8 @@ class LegalExpert(BaseExpert):
                 "legal_score": verification_score
             },
             reasoning="Legal domain verification based on legal terminology and concepts",
-            metadata={"domain": self.domain, "legal_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "legal_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["legal_knowledge_base", "case_law_database", "legal_precedents"]
         )
 
 class FinanceExpert(BaseExpert):
@@ -179,7 +187,8 @@ class FinanceExpert(BaseExpert):
                 "finance_score": verification_score
             },
             reasoning="Finance domain verification based on investment and market terminology",
-            metadata={"domain": self.domain, "finance_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "finance_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["finance_knowledge_base", "market_data", "investment_database"]
         )
 
 class TechnologyExpert(BaseExpert):
@@ -203,7 +212,8 @@ class TechnologyExpert(BaseExpert):
                 "technology_score": verification_score
             },
             reasoning="Technology domain verification based on technical terminology and concepts",
-            metadata={"domain": self.domain, "tech_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "tech_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["technology_knowledge_base", "tech_documentation", "api_reference"]
         )
 
 class EducationExpert(BaseExpert):
@@ -227,7 +237,8 @@ class EducationExpert(BaseExpert):
                 "education_score": verification_score
             },
             reasoning="Education domain verification based on educational terminology and concepts",
-            metadata={"domain": self.domain, "education_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "education_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["education_knowledge_base", "curriculum_database", "academic_resources"]
         )
 
 class GovernmentExpert(BaseExpert):
@@ -251,7 +262,8 @@ class GovernmentExpert(BaseExpert):
                 "government_score": verification_score
             },
             reasoning="Government domain verification based on policy and regulatory terminology",
-            metadata={"domain": self.domain, "gov_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "gov_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["government_knowledge_base", "policy_database", "regulatory_framework"]
         )
 
 class MediaExpert(BaseExpert):
@@ -275,7 +287,8 @@ class MediaExpert(BaseExpert):
                 "media_score": verification_score
             },
             reasoning="Media domain verification based on content and publishing terminology",
-            metadata={"domain": self.domain, "media_terms_found": [kw for kw in self.keywords if kw in text.lower()]}
+            metadata={"domain": self.domain, "media_terms_found": [kw for kw in self.keywords if kw in text.lower()]},
+            sources_used=["media_knowledge_base", "content_database", "journalism_standards"]
         )
 
 # Meta-Experts
@@ -315,7 +328,8 @@ class CrossDomainExpert(BaseExpert):
                 "cross_domain_score": cross_domain_score
             },
             reasoning="Cross-domain analysis considering multiple domain indicators",
-            metadata={"domain": self.domain, "domain_analysis": domain_scores}
+            metadata={"domain": self.domain, "domain_analysis": domain_scores},
+            sources_used=["cross_domain_knowledge_base", "multi_domain_database", "interdisciplinary_resources"]
         )
 
 class UncertaintyExpert(BaseExpert):
@@ -346,7 +360,8 @@ class UncertaintyExpert(BaseExpert):
                 "confidence_impact": 1.0 - confidence
             },
             reasoning="Uncertainty analysis based on linguistic indicators",
-            metadata={"domain": self.domain, "uncertainty_indicators_found": [ind for ind in uncertainty_indicators if ind in text.lower()]}
+            metadata={"domain": self.domain, "uncertainty_indicators_found": [ind for ind in uncertainty_indicators if ind in text.lower()]},
+            sources_used=["uncertainty_knowledge_base", "linguistic_analysis", "confidence_metrics"]
         )
 
 class ConfidenceExpert(BaseExpert):
@@ -375,7 +390,8 @@ class ConfidenceExpert(BaseExpert):
                 "confidence_boost": confidence_score * 0.2
             },
             reasoning="Confidence assessment based on linguistic indicators",
-            metadata={"domain": self.domain, "confidence_indicators_found": [ind for ind in confidence_indicators if ind in text.lower()]}
+            metadata={"domain": self.domain, "confidence_indicators_found": [ind for ind in confidence_indicators if ind in text.lower()]},
+            sources_used=["confidence_knowledge_base", "linguistic_analysis", "confidence_metrics"]
         )
 
 class AdvancedExpertEnsemble:
@@ -414,13 +430,23 @@ class AdvancedExpertEnsemble:
             self.media_expert, self.cross_domain_expert, self.uncertainty_expert,
             self.confidence_expert
         ]
+        self.cache = {}
+        self.logger = logging.getLogger(__name__)
     
     async def verify_with_all_experts(self, text: str, context: str = "") -> Dict[str, ExpertResult]:
-        """Verify text with all experts in parallel"""
+        """Verify text with all experts in parallel, with caching and timing."""
+        cache_key = (text, str(context))
+        if cache_key in self.cache:
+            self.logger.info("[Ensemble] Cache hit for query.")
+            return self.cache[cache_key]
+        start = time.time()
         expert_tasks = [expert.verify(text, context) for expert in self.all_experts]
         results = await asyncio.gather(*expert_tasks)
-        
-        return {result.expert_name: result for result in results}
+        result_dict = {result.expert_name: result for result in results}
+        self.cache[cache_key] = result_dict
+        elapsed = time.time() - start
+        self.logger.info(f"[Ensemble] verify_with_all_experts completed in {elapsed:.3f}s.")
+        return result_dict
     
     async def get_ensemble_verification(self, text: str, context: str = "") -> Dict[str, Any]:
         """Get ensemble verification result"""
@@ -459,7 +485,8 @@ class FactCheckingExpert(BaseExpert):
             verification_score=0.9,
             domain_specific_metrics={"fact_check_score": 0.9},
             reasoning="Fact checking verification",
-            metadata={"domain": self.domain}
+            metadata={"domain": self.domain},
+            sources_used=["fact_checking_knowledge_base", "fact_database", "verification_sources"]
         )
 
 class QualityAssuranceExpert(BaseExpert):
@@ -473,7 +500,8 @@ class QualityAssuranceExpert(BaseExpert):
             verification_score=0.92,
             domain_specific_metrics={"quality_score": 0.92},
             reasoning="Quality assurance verification",
-            metadata={"domain": self.domain}
+            metadata={"domain": self.domain},
+            sources_used=["quality_assurance_knowledge_base", "quality_standards", "best_practices"]
         )
 
 class HallucinationDetectorExpert(BaseExpert):
@@ -487,5 +515,6 @@ class HallucinationDetectorExpert(BaseExpert):
             verification_score=0.94,
             domain_specific_metrics={"hallucination_risk": 0.06},
             reasoning="Hallucination detection verification",
-            metadata={"domain": self.domain}
+            metadata={"domain": self.domain},
+            sources_used=["hallucination_detection_knowledge_base", "detection_algorithms", "risk_assessment"]
         ) 

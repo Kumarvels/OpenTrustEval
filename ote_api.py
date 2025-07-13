@@ -4,17 +4,69 @@ from fastapi import Body
 import numpy as np
 from PIL import Image
 import io
-from src.lhem import process_input
-from src.tee import extract_evidence
+from high_performance_system.legacy_compatibility import process_input
+from high_performance_system.legacy_compatibility import extract_evidence
 import importlib
 from plugins.plugin_loader import load_plugins
 import time
 from typing import List, Optional
 import asyncio
 import psutil
-from src.pipeline_logger import init_db, log_pipeline
+from high_performance_system.legacy_compatibility import init_db, log_pipeline
+
+# Import LLM manager router
+try:
+    from cloudscale_apis.endpoints.llm_manager import router as llm_router
+    LLM_ROUTER_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: LLM router not available: {e}")
+    LLM_ROUTER_AVAILABLE = False
+
+# Import Data manager router
+try:
+    from cloudscale_apis.endpoints.data_manager import router as data_router
+    DATA_ROUTER_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Data router not available: {e}")
+    DATA_ROUTER_AVAILABLE = False
+
+# Import Security manager router
+try:
+    from cloudscale_apis.endpoints.security_manager import router as security_router
+    SECURITY_ROUTER_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Security router not available: {e}")
+    SECURITY_ROUTER_AVAILABLE = False
+
+# Import Research Platform router
+try:
+    from cloudscale_apis.endpoints.research_platform import router as research_router
+    RESEARCH_ROUTER_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Research router not available: {e}")
+    RESEARCH_ROUTER_AVAILABLE = False
 
 app = FastAPI(title="OpenTrustEval API")
+
+# Include LLM router if available
+if LLM_ROUTER_AVAILABLE:
+    app.include_router(llm_router)
+    print("✅ LLM Management API endpoints included")
+
+# Include Data router if available
+if DATA_ROUTER_AVAILABLE:
+    app.include_router(data_router)
+    print("✅ Data Management API endpoints included")
+
+# Include Security router if available
+if SECURITY_ROUTER_AVAILABLE:
+    app.include_router(security_router)
+    print("✅ Security Management API endpoints included")
+
+# Include Research router if available
+if RESEARCH_ROUTER_AVAILABLE:
+    app.include_router(research_router)
+    print("✅ Research Platform API endpoints included")
 
 # Model cache
 distilbert_tokenizer = None

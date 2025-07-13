@@ -10,6 +10,7 @@ from dataclasses import dataclass
 import numpy as np
 import logging
 from datetime import datetime
+import traceback
 
 # Import all core components
 from .advanced_expert_ensemble import AdvancedExpertEnsemble, ExpertResult
@@ -59,8 +60,21 @@ class UltimateVerificationResult:
     fact_check_score: float = 0.0
     consistency_score: float = 0.0
     
+    # Aggregated sources used
+    sources_used: list = None  # NEW FIELD
+    
     # Metadata
     metadata: Dict[str, Any] = None
+
+    @property
+    def all_sources_used(self) -> list:
+        """Aggregate all sources_used from expert_results."""
+        sources = set()
+        if self.expert_results:
+            for expert in self.expert_results.values():
+                if hasattr(expert, 'sources_used') and expert.sources_used:
+                    sources.update(expert.sources_used)
+        return list(sources)
 
 class UltimateMoESystem:
     """Ultimate MoE solution with all integrated features"""
@@ -141,54 +155,63 @@ class UltimateMoESystem:
     
     async def verify_text(self, text: str, context: str = "", 
                          enable_advanced_features: bool = True) -> UltimateVerificationResult:
-        """Complete text verification with all integrated approaches"""
-        
+        self.logger.info(f"[MoE] verify_text called with text: {text[:60]}...")
         start_time = time.time()
         self.request_count += 1
-        
         try:
-            # Step 1: Intelligent Domain Routing
+            self.logger.info("[MoE] Step 1: Intelligent Domain Routing...")
             routing_result = await self.intelligent_router.route_to_experts(text, context)
-            
-            # Step 2: Expert Ensemble Verification
+            self.logger.info(f"[MoE] Routing result: {routing_result}")
+
+            self.logger.info("[MoE] Step 2: Expert Ensemble Verification...")
             expert_results = await self.expert_ensemble.verify_with_all_experts(text, context)
+            self.logger.info(f"[MoE] Expert results: {list(expert_results.keys())}")
             ensemble_verification = await self.expert_ensemble.get_ensemble_verification(text, context)
-            
-            # Step 3: Cleanlab Integration
+            self.logger.info(f"[MoE] Ensemble verification: {ensemble_verification}")
+
+            self.logger.info("[MoE] Step 3: Cleanlab Integration...")
             cleanlab_results = await self._run_cleanlab_verification(text, context)
-            
-            # Step 4: Advanced Features (if enabled)
+            self.logger.info(f"[MoE] Cleanlab results: {cleanlab_results}")
+
             rag_verification = None
             multi_agent_verification = None
             uncertainty_analysis = None
-            
             if enable_advanced_features:
+                self.logger.info("[MoE] Step 4: Advanced Features...")
                 rag_verification = await self._run_rag_verification(text, context)
                 multi_agent_verification = await self._run_multi_agent_verification(text, context)
                 uncertainty_analysis = await self._run_uncertainty_analysis(text, context)
-            
-            # Step 5: Calculate Final Scores
+                self.logger.info(f"[MoE] Advanced features done.")
+
+            self.logger.info("[MoE] Step 5: Calculate Final Scores...")
             final_scores = self._calculate_final_scores(
                 ensemble_verification, cleanlab_results, 
                 rag_verification, multi_agent_verification, uncertainty_analysis
             )
-            
-            # Step 6: Performance Monitoring
+            self.logger.info(f"[MoE] Final scores: {final_scores}")
+
             latency_ms = (time.time() - start_time) * 1000
             self.total_latency += latency_ms
             throughput_req_s = self.request_count / ((time.time() - self.start_time) / 3600)
-            
-            # Update performance monitor
             self.performance_monitor.update_metrics({
                 "latency_ms": latency_ms,
                 "throughput_req_s": throughput_req_s,
                 "verification_score": final_scores["verification_score"],
                 "confidence": final_scores["confidence"]
             })
-            
-            # Step 7: Continuous Learning
             await self._update_learning_system(text, final_scores, expert_results)
-            
+            self.logger.info("[MoE] Step 6: Returning UltimateVerificationResult.")
+            # Aggregate sources_used from MoE and expert results
+            moe_sources = []
+            if hasattr(routing_result, 'sources_used') and routing_result.sources_used:
+                moe_sources.extend(routing_result.sources_used)
+            # Also check expert_results for sources_used
+            for expert in expert_results.values():
+                if hasattr(expert, 'sources_used') and expert.sources_used:
+                    moe_sources.extend(expert.sources_used)
+            # Also check ensemble_verification if present
+            if 'sources_used' in ensemble_verification:
+                moe_sources.extend(ensemble_verification['sources_used'])
             return UltimateVerificationResult(
                 verification_score=final_scores["verification_score"],
                 confidence=final_scores["confidence"],
@@ -204,6 +227,7 @@ class UltimateMoESystem:
                 hallucination_risk=final_scores["hallucination_risk"],
                 fact_check_score=final_scores["fact_check_score"],
                 consistency_score=final_scores["consistency_score"],
+                sources_used=moe_sources,
                 metadata={
                     "cleanlab_results": cleanlab_results,
                     "final_scores": final_scores,
@@ -211,35 +235,42 @@ class UltimateMoESystem:
                     "request_id": self.request_count
                 }
             )
-            
         except Exception as e:
-            self.logger.error(f"Error in ultimate verification: {e}")
-            # Return fallback result
-            return self._create_fallback_result(text, str(e))
+            tb = traceback.format_exc()
+            self.logger.error(f"[MoE] Error in ultimate verification: {e}\n{tb}")
+            return self._create_fallback_result(text, f"{e}\n{tb}")
     
     async def _run_cleanlab_verification(self, text: str, context: str) -> Dict[str, Any]:
-        """Run Cleanlab integration verification"""
         try:
-            # Dataset profiling
+            self.logger.info("[MoE] Cleanlab: Profiling text...")
             profile_result = await self.dataset_profiler.profile_text(text)
-            
-            # PII detection
+            self.logger.info(f"[MoE] Cleanlab: profile_result: {profile_result}")
+            self.logger.info("[MoE] Cleanlab: PII detection...")
             pii_result = await self.pii_detector.detect_pii(text)
-            
-            # Trust scoring
+            self.logger.info(f"[MoE] Cleanlab: pii_result: {pii_result}")
+            self.logger.info("[MoE] Cleanlab: Trust scoring...")
             trust_result = await self.trust_scorer.score_trust(text, context)
-            
+            self.logger.info(f"[MoE] Cleanlab: trust_result: {trust_result}")
+            def get_attr(obj, key, default=0.0):
+                if hasattr(obj, key):
+                    return getattr(obj, key)
+                if isinstance(obj, dict):
+                    return obj.get(key, default)
+                return default
             return {
                 "profile_result": profile_result,
                 "pii_result": pii_result,
                 "trust_result": trust_result,
-                "cleanlab_score": (profile_result.quality_score + 
-                                 (1.0 - pii_result.pii_score) + 
-                                 trust_result.trust_score) / 3
+                "cleanlab_score": (
+                    get_attr(profile_result, 'quality_score') +
+                    (1.0 - get_attr(pii_result, 'pii_score')) +
+                    get_attr(trust_result, 'trust_score')
+                ) / 3
             }
         except Exception as e:
-            self.logger.warning(f"Cleanlab verification failed: {e}")
-            return {"cleanlab_score": 0.8, "error": str(e)}
+            tb = traceback.format_exc()
+            self.logger.warning(f"[MoE] Cleanlab verification failed: {e}\n{tb}")
+            return {"cleanlab_score": 0.8, "error": f"{e}\n{tb}"}
     
     async def _run_rag_verification(self, text: str, context: str) -> Dict[str, Any]:
         """Run enhanced RAG pipeline verification"""
@@ -440,6 +471,10 @@ class UltimateMoESystem:
             "hallucination_rates": {},
             "confidence_calibration": {}
         }
+
+    def get_sources_used(self, result: UltimateVerificationResult) -> list:
+        """Expose all sources used from the result object."""
+        return result.all_sources_used if hasattr(result, 'all_sources_used') else []
 
 # Placeholder classes for components to be implemented in later phases
 class EnhancedMoEDomainVerifier:

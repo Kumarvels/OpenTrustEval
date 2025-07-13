@@ -4,8 +4,8 @@ import google.generativeai as genai
 import numpy as np
 from PIL import Image
 import sys
-from src.lhem import process_input
-from src.tee import extract_evidence
+from high_performance_system.legacy_compatibility import process_input
+from high_performance_system.legacy_compatibility import extract_evidence
 import importlib
 from plugins.plugin_loader import load_plugins
 import os
