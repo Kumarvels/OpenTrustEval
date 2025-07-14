@@ -173,6 +173,25 @@ def generate_quality_report(dataset_id, output_path):
     except Exception as e:
         return f"Error generating quality report: {e}"
 
+# --- Cleanlab Datalab Plugin Integration ---
+def run_cleanlab_on_dataset(dataset_id, label_column, save_output):
+    try:
+        df = dataset_manager.load_dataset(dataset_id)
+        labels = df[label_column].tolist() if label_column and label_column in df.columns else None
+        # Use DataLifecycleManager for plugin logic
+        from data_engineering.data_lifecycle import DataLifecycleManager
+        config = {'enable_cleanlab': True, 'cleanlab_label_column': label_column}
+        manager = DataLifecycleManager(config=config)
+        result = manager.run_cleanlab_plugin(df, labels=labels)
+        if save_output and result:
+            import json
+            with open('cleanlab_issues_webui.json', 'w', encoding='utf-8') as f:
+                json.dump(result, f, ensure_ascii=False, indent=2)
+            return f"Output saved to cleanlab_issues_webui.json\n\n{result}"
+        return result
+    except Exception as e:
+        return f"Error running Cleanlab plugin: {e}"
+
 # Create Gradio interface
 with gr.Blocks(title="Dataset Management WebUI") as demo:
     gr.Markdown("# Dataset Management WebUI")
@@ -305,6 +324,15 @@ with gr.Blocks(title="Dataset Management WebUI") as demo:
         qr_btn = gr.Button("Generate Report")
         qr_output = gr.Textbox(label="Report / Result", lines=10)
         qr_btn.click(generate_quality_report, inputs=[qr_id, qr_output_path], outputs=qr_output)
+
+    with gr.Tab("Data Issue Detection (Cleanlab)"):
+        gr.Markdown("## Run Cleanlab Datalab Plugin on Dataset\n- Select a dataset and (optionally) label column.\n- Requires Cleanlab to be installed and licensed.")
+        cleanlab_id = gr.Textbox(label="Dataset ID", placeholder="Enter dataset ID")
+        cleanlab_label = gr.Textbox(label="Label Column (optional)", placeholder="e.g. job_title")
+        cleanlab_save = gr.Checkbox(label="Save output to file", value=True)
+        cleanlab_btn = gr.Button("Run Cleanlab Plugin")
+        cleanlab_output = gr.Textbox(label="Plugin Output", lines=10)
+        cleanlab_btn.click(run_cleanlab_on_dataset, inputs=[cleanlab_id, cleanlab_label, cleanlab_save], outputs=cleanlab_output)
 
 if __name__ == "__main__":
     demo.launch(server_name="0.0.0.0", server_port=7861) 

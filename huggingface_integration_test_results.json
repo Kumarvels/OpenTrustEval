@@ -1,0 +1,107 @@
+{
+  "colbert_retrieval": {
+    "What is OpenTrustEval?": {
+      "error": "Retrieval model not loaded."
+    },
+    "How does ColBERT work?": {
+      "error": "Retrieval model not loaded."
+    },
+    "What are the main components?": {
+      "error": "Retrieval model not loaded."
+    },
+    "How fast is the system?": {
+      "error": "Retrieval model not loaded."
+    },
+    "What is trust scoring?": {
+      "error": "Retrieval model not loaded."
+    }
+  },
+  "text_generation": {
+    "gpt2": {
+      "prompt": "The future of artificial intelligence is",
+      "generated": "uncertain,\" said Dr. J.M. Bose, an assistant professor of physics and astronomy at Harvard University and co-author of the paper.\n\nThe study is the latest in a series of papers that have",
+      "time": 4.9621741771698
+    },
+    "microsoft/DialoGPT-medium": {
+      "prompt": "Hello, how are you today?",
+      "generated": "",
+      "time": 0.8069109916687012
+    }
+  },
+  "seq2seq": {
+    "t5-small": {
+      "input": "translate English to French: Hello world",
+      "output": "Bonjour monde",
+      "time": 1.1287117004394531
+    },
+    "facebook/bart-base": {
+      "input": "summarize: OpenTrustEval is a comprehensive AI evaluation platform that provides advanced trust scoring and hallucination detection capabilities for large language models.",
+      "output": "",
+      "time": 12.618331670761108
+    }
+  },
+  "classification": {
+    "I love this product, it's amazing!": {
+      "confidence": 0.6407623887062073,
+      "time": 2.653470039367676
+    },
+    "This is terrible, I hate it.": {
+      "confidence": 0.6103041172027588,
+      "time": 0.2473917007446289
+    },
+    "The weather is nice today.": {
+      "confidence": 0.6284030079841614,
+      "time": 0.22456622123718262
+    },
+    "The movie was okay, nothing special.": {
+      "confidence": 0.6140762567520142,
+      "time": 0.20050835609436035
+    }
+  },
+  "model_info": {
+    "gpt2": {
+      "model_name": "gpt2",
+      "model_path": null,
+      "model_type": "causal",
+      "device": "cpu",
+      "loaded": true,
+      "tokenizer_loaded": true,
+      "pipeline_loaded": false,
+      "model_parameters": 124439808,
+      "model_trainable_parameters": 124439808
+    },
+    "t5-small": {
+      "model_name": "t5-small",
+      "model_path": null,
+      "model_type": "seq2seq",
+      "device": "cpu",
+      "loaded": true,
+      "tokenizer_loaded": true,
+      "pipeline_loaded": false,
+      "model_parameters": 60506624,
+      "model_trainable_parameters": 60506624
+    },
+    "bert-base-uncased": {
+      "model_name": "bert-base-uncased",
+      "model_path": null,
+      "model_type": "classification",
+      "device": "cpu",
+      "loaded": true,
+      "tokenizer_loaded": true,
+      "pipeline_loaded": false,
+      "model_parameters": 109483778,
+      "model_trainable_parameters": 109483778
+    }
+  },
+  "lifecycle_integration": {
+    "colbert_v2_retrieval": {
+      "model_name": "LinWeizheDragon/ColBERT-v2",
+      "model_path": null,
+      "model_type": "retrieval",
+      "device": "cpu",
+      "loaded": false,
+      "tokenizer_loaded": false,
+      "pipeline_loaded": false
+    }
+  }
+}
