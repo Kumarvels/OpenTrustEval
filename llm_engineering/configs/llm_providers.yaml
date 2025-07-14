@@ -67,3 +67,22 @@ providers:
     trust_remote_code: true
   name: bart_summarization
   type: huggingface
+
+# LangChain Provider Example
+- config:
+    model_name: gpt-3.5-turbo
+    openai_api_key: "sk-..."
+  name: langchain_llm
+  type: langchain
+
+# LangGraph Provider Example
+- config:
+    graph_config: path/to/graph.yaml
+  name: langgraph_orchestrator
+  type: langgraph
+
+# LlamaIndex Provider Example
+- config:
+    index_path: path/to/index
+  name: llamaindex_rag
+  type: llamaindex
