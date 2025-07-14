@@ -59,9 +59,11 @@ class LLMLifecycleManager:
             provider_type = entry['type']
             provider_config = entry.get('config', {})
             module = importlib.import_module(f"llm_engineering.providers.{provider_type}_provider")
-            # Patch: Use correct class name for llama_factory
+            # Patch: Use correct class name for different provider types
             if provider_type == 'llama_factory':
                 class_name = 'LLaMAFactoryProvider'
+            elif provider_type == 'huggingface':
+                class_name = 'HuggingFaceProvider'
             else:
                 class_name = ''.join([part.capitalize() for part in provider_type.split('_')]) + 'Provider'
             provider_class = getattr(module, class_name)
@@ -128,6 +130,8 @@ class LLMLifecycleManager:
         module = importlib.import_module(f"llm_engineering.providers.{provider_type}_provider")
         if provider_type == 'llama_factory':
             class_name = 'LLaMAFactoryProvider'
+        elif provider_type == 'huggingface':
+            class_name = 'HuggingFaceProvider'
         else:
             class_name = ''.join([part.capitalize() for part in provider_type.split('_')]) + 'Provider'
         provider_class = getattr(module, class_name)

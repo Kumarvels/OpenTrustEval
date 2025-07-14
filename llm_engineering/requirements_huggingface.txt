@@ -1,20 +1,20 @@
 # Hugging Face Integration Requirements for OpenTrustEval
-# Core Hugging Face libraries
-transformers>=4.35.0
+# Core Hugging Face libraries - Updated for compatibility
+transformers>=4.40.0
 datasets>=2.14.0
-tokenizers>=0.14.0
+tokenizers>=0.21.0
 huggingface-hub>=0.19.0
 
 # FLMR for ColBERT-v2
-flmr>=0.1.0
+# flmr>=0.1.0
 
 # PyTorch and related
 torch>=2.0.0
 torchvision>=0.15.0
 torchaudio>=2.0.0
 
-# Fine-tuning and optimization
-peft>=0.6.0
+# Fine-tuning and optimization - Updated versions
+peft>=0.8.0
 accelerate>=0.24.0
 bitsandbytes>=0.41.0
 

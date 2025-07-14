@@ -36,16 +36,22 @@ try:
     from transformers import (
         AutoTokenizer, AutoModel, AutoModelForSequenceClassification,
         AutoModelForCausalLM, AutoModelForSeq2SeqLM, pipeline,
-        TrainingArguments, Trainer, DataCollatorWithPadding,
-        PreTrainedTokenizer, PreTrainedModel
+        TrainingArguments, Trainer, DataCollatorWithPadding
     )
     from datasets import Dataset, load_dataset
     from peft import LoraConfig, get_peft_model, TaskType
     from accelerate import Accelerator
     from huggingface_hub import login, HfApi
     TRANSFORMERS_AVAILABLE = True
+    PEFT_AVAILABLE = True
+    ACCELERATE_AVAILABLE = True
+    TRAINING_AVAILABLE = True
+    print("✅ All Hugging Face components available")
 except ImportError as e:
     TRANSFORMERS_AVAILABLE = False
+    PEFT_AVAILABLE = False
+    ACCELERATE_AVAILABLE = False
+    TRAINING_AVAILABLE = False
     print(f"⚠️ Transformers not available: {e}")
 
 # Try to import FLMR for ColBERT-v2
@@ -116,43 +122,88 @@ class HuggingFaceProvider(BaseLLMProvider):
             raise
     
     def _load_colbert_model(self):
-        """Load ColBERT-v2 retrieval model"""
+        """Load ColBERT-v2 retrieval model with fallback handling"""
         if not FLMR_AVAILABLE:
             raise ImportError("FLMR not available. Install with: pip install flmr")
         
         try:
             checkpoint_path = self.model_path or self.model_name
             
-            # Load tokenizers
-            self.query_tokenizer = FLMRQueryEncoderTokenizer.from_pretrained(
-                checkpoint_path, 
-                subfolder="query_tokenizer",
-                trust_remote_code=self.trust_remote_code,
-                use_auth_token=self.use_auth_token
-            )
-            
-            self.context_tokenizer = FLMRContextEncoderTokenizer.from_pretrained(
-                checkpoint_path, 
-                subfolder="context_tokenizer",
-                trust_remote_code=self.trust_remote_code,
-                use_auth_token=self.use_auth_token
-            )
-            
-            # Load model
-            self.retrieval_model = FLMRModelForRetrieval.from_pretrained(
-                checkpoint_path,
-                query_tokenizer=self.query_tokenizer,
-                context_tokenizer=self.context_tokenizer,
-                trust_remote_code=self.trust_remote_code,
-                use_auth_token=self.use_auth_token
-            )
-            
-            self.retrieval_model.to(self.device)
-            print(f"✅ ColBERT-v2 model loaded: {checkpoint_path}")
+            # Try loading with FLMR first
+            try:
+                # Load tokenizers
+                self.query_tokenizer = FLMRQueryEncoderTokenizer.from_pretrained(
+                    checkpoint_path, 
+                    subfolder="query_tokenizer",
+                    trust_remote_code=self.trust_remote_code,
+                    use_auth_token=self.use_auth_token
+                )
+                
+                self.context_tokenizer = FLMRContextEncoderTokenizer.from_pretrained(
+                    checkpoint_path, 
+                    subfolder="context_tokenizer",
+                    trust_remote_code=self.trust_remote_code,
+                    use_auth_token=self.use_auth_token
+                )
+                
+                # Load model
+                self.retrieval_model = FLMRModelForRetrieval.from_pretrained(
+                    checkpoint_path,
+                    query_tokenizer=self.query_tokenizer,
+                    context_tokenizer=self.context_tokenizer,
+                    trust_remote_code=self.trust_remote_code,
+                    use_auth_token=self.use_auth_token
+                )
+                
+                self.retrieval_model.to(self.device)
+                print(f"✅ ColBERT-v2 model loaded with FLMR: {checkpoint_path}")
+                return
+                
+            except Exception as flmr_error:
+                logging.warning(f"FLMR loading failed: {flmr_error}")
+                
+                # Fallback: Try loading as a regular BERT model for basic functionality
+                if "'NoneType' object has no attribute 'text_encoder_base_model'" in str(flmr_error):
+                    logging.info("Attempting fallback to BERT-based retrieval model")
+                    
+                    # Load as a regular BERT model for basic retrieval functionality
+                    from transformers import AutoTokenizer, AutoModel
+                    
+                    self.tokenizer = AutoTokenizer.from_pretrained(
+                        checkpoint_path,
+                        trust_remote_code=self.trust_remote_code,
+                        use_auth_token=self.use_auth_token
+                    )
+                    
+                    self.model = AutoModel.from_pretrained(
+                        checkpoint_path,
+                        trust_remote_code=self.trust_remote_code,
+                        use_auth_token=self.use_auth_token,
+                        torch_dtype=torch.float16 if self.device == 'cuda' else torch.float32
+                    )
+                    
+                    self.model.to(self.device)
+                    
+                    # Set up basic retrieval functionality
+                    self.retrieval_model = self.model
+                    self.query_tokenizer = self.tokenizer
+                    self.context_tokenizer = self.tokenizer
+                    
+                    print(f"⚠️ ColBERT-v2 loaded as fallback BERT model: {checkpoint_path}")
+                    print("Note: Advanced ColBERT features may not be available")
+                    return
+                else:
+                    raise flmr_error
             
         except Exception as e:
             logging.error(f"Failed to load ColBERT model: {e}")
-            raise
+            # Don't raise the error, just log it and continue
+            print(f"⚠️ ColBERT-v2 model loading failed: {e}")
+            print("Continuing with other models...")
+            # Set a flag to indicate the model is not fully loaded
+            self.retrieval_model = None
+            self.query_tokenizer = None
+            self.context_tokenizer = None
     
     def _load_generation_model(self):
         """Load text generation model"""
@@ -333,7 +384,7 @@ class HuggingFaceProvider(BaseLLMProvider):
     
     def _retrieve(self, query: str, documents: List[str] = None, top_k: int = 5, **kwargs) -> Dict[str, Any]:
         """
-        Perform retrieval using ColBERT-v2 or other retrieval models.
+        Perform retrieval using ColBERT-v2 or fallback BERT model.
         
         Args:
             query: Search query
@@ -348,51 +399,127 @@ class HuggingFaceProvider(BaseLLMProvider):
             raise ValueError("Retrieval model not loaded.")
         
         try:
-            # Encode query
-            Q_encoding = self.query_tokenizer([query])
-            
-            # Encode documents (if provided)
-            if documents:
-                D_encoding = self.context_tokenizer(documents)
+            # Check if we have full ColBERT functionality or fallback BERT
+            if hasattr(self.retrieval_model, 'forward') and hasattr(self.retrieval_model, 'scores'):
+                # Full ColBERT functionality
+                return self._retrieve_with_colbert(query, documents, top_k, **kwargs)
             else:
-                # Use default documents or raise error
-                raise ValueError("Documents must be provided for retrieval.")
+                # Fallback BERT-based retrieval
+                return self._retrieve_with_bert_fallback(query, documents, top_k, **kwargs)
+                
+        except Exception as e:
+            logging.error(f"Retrieval failed: {e}")
+            raise
+    
+    def _retrieve_with_colbert(self, query: str, documents: List[str], top_k: int, **kwargs) -> Dict[str, Any]:
+        """Perform retrieval using full ColBERT functionality"""
+        # Encode query
+        Q_encoding = self.query_tokenizer([query])
+        
+        # Encode documents (if provided)
+        if documents:
+            D_encoding = self.context_tokenizer(documents)
+        else:
+            # Use default documents or raise error
+            raise ValueError("Documents must be provided for retrieval.")
+        
+        # Prepare inputs
+        inputs = {
+            'query_input_ids': Q_encoding['input_ids'],
+            'query_attention_mask': Q_encoding['attention_mask'],
+            'context_input_ids': D_encoding['input_ids'],
+            'context_attention_mask': D_encoding['attention_mask'],
+            'use_in_batch_negatives': kwargs.get('use_in_batch_negatives', True),
+        }
+        
+        # Get retrieval scores
+        with torch.no_grad():
+            results = self.retrieval_model.forward(**inputs)
+        
+        # Process results
+        scores = results.scores.cpu().numpy()
+        
+        # Get top-k results
+        top_indices = np.argsort(scores[0])[-top_k:][::-1]
+        
+        retrieval_results = {
+            'query': query,
+            'results': []
+        }
+        
+        for i, idx in enumerate(top_indices):
+            retrieval_results['results'].append({
+                'rank': i + 1,
+                'document': documents[idx],
+                'score': float(scores[0][idx])
+            })
+        
+        return retrieval_results
+    
+    def _retrieve_with_bert_fallback(self, query: str, documents: List[str], top_k: int, **kwargs) -> Dict[str, Any]:
+        """Perform retrieval using BERT fallback (cosine similarity on embeddings)"""
+        if not documents:
+            raise ValueError("Documents must be provided for retrieval.")
+        
+        try:
+            # Encode query
+            query_inputs = self.tokenizer(
+                query, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True,
+                max_length=512
+            ).to(self.device)
             
-            # Prepare inputs
-            inputs = {
-                'query_input_ids': Q_encoding['input_ids'],
-                'query_attention_mask': Q_encoding['attention_mask'],
-                'context_input_ids': D_encoding['input_ids'],
-                'context_attention_mask': D_encoding['attention_mask'],
-                'use_in_batch_negatives': kwargs.get('use_in_batch_negatives', True),
-            }
-            
-            # Get retrieval scores
+            # Get query embedding
             with torch.no_grad():
-                results = self.retrieval_model.forward(**inputs)
+                query_outputs = self.retrieval_model(**query_inputs)
+                query_embedding = query_outputs.last_hidden_state.mean(dim=1)  # Average pooling
             
-            # Process results
-            scores = results.scores.cpu().numpy()
+            # Encode documents and calculate similarities
+            document_embeddings = []
+            for doc in documents:
+                doc_inputs = self.tokenizer(
+                    doc, 
+                    return_tensors="pt", 
+                    padding=True, 
+                    truncation=True,
+                    max_length=512
+                ).to(self.device)
+                
+                with torch.no_grad():
+                    doc_outputs = self.retrieval_model(**doc_inputs)
+                    doc_embedding = doc_outputs.last_hidden_state.mean(dim=1)  # Average pooling
+                    document_embeddings.append(doc_embedding)
+            
+            # Calculate cosine similarities
+            similarities = []
+            for doc_emb in document_embeddings:
+                # Cosine similarity
+                cos_sim = torch.nn.functional.cosine_similarity(query_embedding, doc_emb, dim=1)
+                similarities.append(cos_sim.item())
             
             # Get top-k results
-            top_indices = np.argsort(scores[0])[-top_k:][::-1]
+            similarities = np.array(similarities)
+            top_indices = np.argsort(similarities)[-top_k:][::-1]
             
             retrieval_results = {
                 'query': query,
-                'results': []
+                'results': [],
+                'method': 'bert_fallback'
             }
             
             for i, idx in enumerate(top_indices):
                 retrieval_results['results'].append({
                     'rank': i + 1,
                     'document': documents[idx],
-                    'score': float(scores[0][idx])
+                    'score': float(similarities[idx])
                 })
             
             return retrieval_results
             
         except Exception as e:
-            logging.error(f"Retrieval failed: {e}")
+            logging.error(f"BERT fallback retrieval failed: {e}")
             raise
     
     def fine_tune(self, dataset_path: str, **kwargs) -> str:
@@ -408,6 +535,9 @@ class HuggingFaceProvider(BaseLLMProvider):
         """
         if not TRANSFORMERS_AVAILABLE:
             raise ImportError("Transformers not available for fine-tuning.")
+        
+        if not TRAINING_AVAILABLE:
+            raise ImportError("Training components not available. Install with: pip install transformers[torch]")
         
         try:
             # Load dataset
@@ -476,6 +606,9 @@ class HuggingFaceProvider(BaseLLMProvider):
         """
         if not TRANSFORMERS_AVAILABLE:
             raise ImportError("Transformers not available for evaluation.")
+        
+        if not TRAINING_AVAILABLE:
+            raise ImportError("Training components not available. Install with: pip install transformers[torch]")
         
         try:
             # Load evaluation dataset
