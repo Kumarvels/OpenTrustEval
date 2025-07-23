@@ -1,0 +1,78 @@
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - ================================================================================
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - STARTING COMPREHENSIVE BATCH TRUST SCORING TEST SUITE
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - ================================================================================
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - PHASE 1: COMPONENT INITIALIZATION TESTS
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO - Testing component initialization...
+2025-07-23 22:55:36,272 - BatchTrustScoringTestSuite - INFO -   - Testing Advanced Trust Scoring Engine...
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   ✓ Advanced Trust Scoring Engine initialized successfully
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   - Testing Fallback Quality Manager...
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   ✓ Fallback Quality Manager initialized successfully
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   - Testing Dataset Manager...
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   ✓ Dataset Manager initialized successfully
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   - Testing Real-World Evaluator...
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -   ✓ Real-World Evaluator initialized successfully
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO - PHASE 2: SYNTHETIC DATA GENERATION TESTS
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,273 - BatchTrustScoringTestSuite - INFO - Testing synthetic data generation...
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - ERROR -   ✗ Synthetic data generation failed: setting an array element with a sequence.
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO - PHASE 3: ADVANCED TRUST SCORING TESTS
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO - Testing advanced trust scoring methods...
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO -   ✓ Advanced trust scoring completed successfully
+2025-07-23 22:55:36,277 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - PHASE 4: FALLBACK QUALITY MANAGER TESTS
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - Testing fallback quality manager...
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO -   ✓ Fallback quality manager completed successfully
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - PHASE 5: DATASET INTEGRATION TESTS
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - Testing dataset integration features...
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO -   ✓ Dataset integration completed successfully
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - PHASE 6: REAL-WORLD TRUST SCORING TESTS
+2025-07-23 22:55:36,278 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:36,279 - BatchTrustScoringTestSuite - INFO - Testing real-world trust scoring...
+2025-07-23 22:55:48,224 - BatchTrustScoringTestSuite - INFO -   ✓ Real-world trust scoring completed successfully
+2025-07-23 22:55:48,224 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:48,224 - BatchTrustScoringTestSuite - INFO - PHASE 7: CLEANLAB BENCHMARKING TESTS
+2025-07-23 22:55:48,224 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:48,224 - BatchTrustScoringTestSuite - INFO - Testing Cleanlab benchmarking...
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO -   ✓ Cleanlab benchmarking completed successfully
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO - PHASE 8: PERFORMANCE AND STRESS TESTS
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO - Testing performance and stress scenarios...
+2025-07-23 22:55:48,225 - BatchTrustScoringTestSuite - INFO -   - Testing with large dataset...
+2025-07-23 22:55:58,205 - BatchTrustScoringTestSuite - INFO -   - Testing edge cases...
+2025-07-23 22:55:58,700 - BatchTrustScoringTestSuite - INFO -   ✓ Performance and stress testing completed successfully
+2025-07-23 22:55:58,700 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:58,700 - BatchTrustScoringTestSuite - INFO - PHASE 9: INTEGRATION AND END-TO-END TESTS
+2025-07-23 22:55:58,700 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO - Testing integration and end-to-end scenarios...
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO -   - Testing complete pipeline...
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - ERROR -   ✗ Integration and end-to-end testing failed: 'high_quality'
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO - PHASE 10: REPORT GENERATION
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO - Generating comprehensive test report...
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - ERROR -   ✗ Report generation failed: 'NoneType' object has no attribute 'isoformat'
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO -
+================================================================================
+2025-07-23 22:55:58,701 - BatchTrustScoringTestSuite - INFO - BATCH TRUST SCORING TEST SUITE COMPLETED
+2025-07-23 22:55:58,702 - BatchTrustScoringTestSuite - INFO - Duration: 0:00:22.429785
+2025-07-23 22:55:58,702 - BatchTrustScoringTestSuite - INFO - ================================================================================

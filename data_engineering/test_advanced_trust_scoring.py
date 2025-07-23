@@ -328,4 +328,182 @@ def main():
     return report["summary"]["success_rate"] >= 0.5
 
 if __name__ == "__main__":
-    main() 
+    main()
+
+import unittest
+from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
+
+class TestAdvancedTrustScoringEngine(unittest.TestCase):
+    def setUp(self):
+        self.engine = AdvancedTrustScoringEngine()
+        self.test_data = pd.DataFrame({
+            'feature1': np.random.normal(0, 1, 100),
+            'feature2': np.random.normal(0, 1, 100),
+            'feature3': np.random.normal(0, 1, 100)
+        })
+
+    def test_calculate_advanced_trust_score_ensemble(self):
+        result = self.engine.calculate_advanced_trust_score(self.test_data, method="ensemble")
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)
+
+    def test_handle_missing_values(self):
+        data_with_missing = self.test_data.copy()
+        data_with_missing.loc[0, 'feature1'] = np.nan
+        processed_data = self.engine._handle_missing_values(data_with_missing)
+        self.assertFalse(processed_data.isnull().values.any())
+
+    def test_scale_data(self):
+        scaled_data = self.engine._scale_data(self.test_data)
+        self.assertIsInstance(scaled_data, pd.DataFrame)
+        self.assertEqual(self.test_data.shape, scaled_data.shape)
+
+    def test_assess_data_quality(self):
+        score = self.engine._assess_data_quality(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_create_synthetic_labels(self):
+        labels = self.engine._create_synthetic_labels(self.test_data)
+        self.assertIsInstance(labels, np.ndarray)
+        self.assertEqual(len(labels), len(self.test_data))
+
+    def test_quantify_uncertainty(self):
+        score = self.engine._quantify_uncertainty(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_bootstrap_uncertainty(self):
+        score = self.engine._calculate_bootstrap_uncertainty(self.test_data)
+        self.assertIsInstance(score, (float, int))
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_confidence_interval_uncertainty(self):
+        score = self.engine._calculate_confidence_interval_uncertainty(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_assess_clustering_quality(self):
+        score = self.engine._assess_clustering_quality(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_robust_trust_score(self):
+        result = self.engine._calculate_robust_trust_score(self.test_data, self.test_data)
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)
+
+    def test_calculate_uncertainty_trust_score(self):
+        result = self.engine._calculate_uncertainty_trust_score(self.test_data, self.test_data)
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)
+
+    def test_calculate_basic_trust_score(self):
+        result = self.engine._calculate_basic_trust_score(self.test_data)
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)
+
+    def test_calculate_median_based_trust(self):
+        score = self.engine._calculate_median_based_trust(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_mad_based_trust(self):
+        score = self.engine._calculate_mad_based_trust(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_trimmed_mean_trust(self):
+        score = self.engine._calculate_trimmed_mean_trust(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_winsorized_trust(self):
+        score = self.engine._calculate_winsorized_trust(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_entropy_uncertainty(self):
+        score = self.engine._calculate_entropy_uncertainty(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_bayesian_uncertainty(self):
+        score = self.engine._calculate_bayesian_uncertainty(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_detect_correlation_issues(self):
+        score = self.engine._detect_correlation_issues(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_assess_type_consistency(self):
+        score = self.engine._assess_type_consistency(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_ensemble_anomaly_detection(self):
+        score = self.engine._ensemble_anomaly_detection(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_mahalanobis_scores(self):
+        score = self.engine._calculate_mahalanobis_scores(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_assess_statistical_robustness(self):
+        score = self.engine._assess_statistical_robustness(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_outlier_resistance(self):
+        score = self.engine._calculate_outlier_resistance(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_analyze_distributions(self):
+        score = self.engine._analyze_distributions(self.test_data)
+        self.assertIsInstance(score, float)
+        self.assertGreaterEqual(score, 0)
+        self.assertLessEqual(score, 1)
+
+    def test_calculate_advanced_trust_score_robust(self):
+        result = self.engine.calculate_advanced_trust_score(self.test_data, method="robust")
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)
+
+    def test_calculate_advanced_trust_score_uncertainty(self):
+        result = self.engine.calculate_advanced_trust_score(self.test_data, method="uncertainty")
+        self.assertIn('trust_score', result)
+        self.assertIsInstance(result['trust_score'], float)
+        self.assertGreaterEqual(result['trust_score'], 0)
+        self.assertLessEqual(result['trust_score'], 1)

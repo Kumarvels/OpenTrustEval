@@ -449,7 +449,7 @@ class AdvancedTrustScoringEngine:
                 regular_means.append(X[col].mean())
             
             if robust_means and regular_means:
-                mean_agreement = 1 - np.mean(np.abs(np.array(robust_means) - np.array(regular_means)) / np.array(regular_means))
+                mean_agreement = 1 - np.mean(np.abs(np.array(robust_means) - np.array(regular_means)) / np.abs(np.array(regular_means)))
                 robustness_scores.append(max(0, mean_agreement))
             
             # Outlier resistance
@@ -594,7 +594,7 @@ class AdvancedTrustScoringEngine:
                 uncertainty = 1 - (bootstrap_std / abs(bootstrap_mean))
                 return max(0, uncertainty)
             
-            return None
+            return 1e-9
             
         except Exception as e:
             self.logger.error(f"Error in bootstrap uncertainty calculation: {e}")

@@ -1,0 +1,45 @@
+2025-07-23 22:52:49,281 - BatchTrustScoringTestSuite - INFO - ================================================================================
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - STARTING COMPREHENSIVE BATCH TRUST SCORING TEST SUITE
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - ================================================================================
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - PHASE 1: COMPONENT INITIALIZATION TESTS
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - Testing component initialization...
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   - Testing Advanced Trust Scoring Engine...
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   ✓ Advanced Trust Scoring Engine initialized successfully
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   - Testing Fallback Quality Manager...
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   ✓ Fallback Quality Manager initialized successfully
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   - Testing Dataset Manager...
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   ✓ Dataset Manager initialized successfully
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   - Testing Real-World Evaluator...
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -   ✓ Real-World Evaluator initialized successfully
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - PHASE 2: SYNTHETIC DATA GENERATION TESTS
+2025-07-23 22:52:49,282 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,283 - BatchTrustScoringTestSuite - INFO - Testing synthetic data generation...
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - ERROR -   ✗ Synthetic data generation failed: setting an array element with a sequence.
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - PHASE 3: ADVANCED TRUST SCORING TESTS
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - Testing advanced trust scoring methods...
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO -   ✓ Advanced trust scoring completed successfully
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - PHASE 4: FALLBACK QUALITY MANAGER TESTS
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO - Testing fallback quality manager...
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO -   ✓ Fallback quality manager completed successfully
+2025-07-23 22:52:49,286 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - PHASE 5: DATASET INTEGRATION TESTS
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - Testing dataset integration features...
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO -   ✓ Dataset integration completed successfully
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO -
+==================================================
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - PHASE 6: REAL-WORLD TRUST SCORING TESTS
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - ==================================================
+2025-07-23 22:52:49,287 - BatchTrustScoringTestSuite - INFO - Testing real-world trust scoring...

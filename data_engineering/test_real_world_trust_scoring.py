@@ -35,16 +35,19 @@ class RealWorldTrustScoringEvaluator:
         
     def download_kaggle_dataset(self, dataset_name: str, filename: str) -> pd.DataFrame:
         """
-        Download a dataset from Kaggle (simulated with sample data)
-        In real usage, you would use kaggle API or manual download
+        Download a dataset from Kaggle
         """
         print(f"📥 Downloading {dataset_name}...")
         
-        # For demonstration, we'll create realistic synthetic datasets
-        # In production, you would download actual Kaggle datasets
-        
         if dataset_name == "titanic":
-            return self._create_titanic_like_dataset()
+            url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
+            try:
+                df = pd.read_csv(url)
+                return df
+            except Exception as e:
+                print(f"Error downloading titanic dataset: {e}")
+                return self._create_titanic_like_dataset()
+
         elif dataset_name == "housing":
             return self._create_housing_like_dataset()
         elif dataset_name == "credit_card":
@@ -439,6 +442,13 @@ class RealWorldTrustScoringEvaluator:
                 end_time = datetime.now()
                 duration = (end_time - start_time).total_seconds()
                 
+                # Add assertions
+                assert 'trust_score' in trust_result
+                assert isinstance(trust_result['trust_score'], float)
+                assert 0 <= trust_result['trust_score'] <= 1
+                assert 'method' in trust_result
+                assert trust_result['method'] in ['ensemble_advanced', 'robust_statistical', 'uncertainty_quantification']
+
                 results['methods'][method] = {
                     'trust_score': trust_result.get('trust_score', 0),
                     'method': trust_result.get('method', 'unknown'),
