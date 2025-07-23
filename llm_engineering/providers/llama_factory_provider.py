@@ -1,4 +1,28 @@
 from .base_provider import BaseLLMProvider
+# High-Performance System Integration
+try:
+    from high_performance_system.core.ultimate_moe_system import UltimateMoESystem
+    from high_performance_system.core.advanced_expert_ensemble import AdvancedExpertEnsemble
+    
+    # Initialize high-performance components
+    moe_system = UltimateMoESystem()
+    expert_ensemble = AdvancedExpertEnsemble()
+    
+    HIGH_PERFORMANCE_AVAILABLE = True
+    print(f"✅ LLaMA Factory Provider integrated with high-performance system")
+except ImportError as e:
+    HIGH_PERFORMANCE_AVAILABLE = False
+    print(f"⚠️ High-performance system not available for LLaMA Factory Provider: {e}")
+
+def get_high_performance_llm_status():
+    """Get high-performance LLM system status"""
+    global moe_system, expert_ensemble
+    return {
+        'available': HIGH_PERFORMANCE_AVAILABLE,
+        'moe_system': 'active' if HIGH_PERFORMANCE_AVAILABLE and 'moe_system' in globals() and moe_system else 'inactive',
+        'expert_ensemble': 'active' if HIGH_PERFORMANCE_AVAILABLE and 'expert_ensemble' in globals() and expert_ensemble else 'inactive'
+    }
+
 
 # Import LLaMA-Factory APIs (assuming llamafactory is installed)
 try:

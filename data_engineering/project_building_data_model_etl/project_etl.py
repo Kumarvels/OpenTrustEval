@@ -60,13 +60,34 @@ def build_data_model(df):
 
 def etl_pipeline():
     download_project1_data()
-    manager = DataLifecycleManager()
+    # Add config to enable Cleanlab plugin and advanced options
+    config = {
+        'enable_cleanlab': True,  # Set to False to disable
+        'cleanlab_label_column': 'job_title',  # Example: specify label column for Cleanlab
+        # 'cleanlab_issue_types': ['label_error', 'outlier'],  # Only include these types
+        # 'cleanlab_confidence_threshold': 0.8,  # Only include issues with confidence >= 0.8
+        # 'cleanlab_datalab_kwargs': {'some_option': 'value'},  # Extra kwargs for Datalab
+    }
+    print("\n[INFO] You can use advanced Cleanlab config options: 'cleanlab_issue_types', 'cleanlab_confidence_threshold', 'cleanlab_datalab_kwargs'. See code comments for examples.")
+    manager = DataLifecycleManager(config=config)
     # Step 1: Load raw data
     if not os.path.exists(DATA_PATH):
         print(f"Dataset not found: {DATA_PATH}\nPlease download from Kaggle and place in the 'data/' folder.")
         sys.exit(1)
     df = pd.read_csv(DATA_PATH)
     print("Loaded raw data:", df.head())
+    # Step 1.5: Run Cleanlab plugin if enabled
+    label_col = config.get('cleanlab_label_column')
+    labels = df[label_col].tolist() if label_col and label_col in df.columns else None
+    cleanlab_result = manager.run_cleanlab_plugin(df, labels=labels)
+    if cleanlab_result:
+        print("\n[Cleanlab Datalab Plugin Output]")
+        print(cleanlab_result)
+        # Save output to file
+        import json
+        with open('cleanlab_issues.json', 'w', encoding='utf-8') as f:
+            json.dump(cleanlab_result, f, ensure_ascii=False, indent=2)
+            print("Cleanlab plugin output saved to cleanlab_issues.json")
     # Step 2: Build data model
     schema = build_data_model(df)
     print("Inferred schema:", schema)
@@ -109,9 +130,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--local-path', type=str, help='Path to local Building Data Model CSV file')
     parser.add_argument('--gdrive-path', type=str, help='Path to CSV file on Google Drive (Colab only)')
+    parser.add_argument('--enable-cleanlab', action='store_true', help='Enable Cleanlab Datalab plugin for data issue detection')
+    parser.add_argument('--cleanlab-label-column', type=str, help='Column to use as label for Cleanlab plugin')
+    parser.add_argument('--save-cleanlab-output', action='store_true', help='Save Cleanlab plugin output to cleanlab_issues.json')
     args, _ = parser.parse_known_args()
     download_project1_data()
-    manager = DataLifecycleManager()
+    config = {
+        'enable_cleanlab': args.enable_cleanlab,
+        'cleanlab_label_column': args.cleanlab_label_column
+    }
+    manager = DataLifecycleManager(config=config)
     # Step 1: Load raw data
     data_path = resolve_data_path(DATA_PATH, args)
     if not os.path.exists(data_path):
@@ -119,6 +147,18 @@ def main():
         sys.exit(1)
     df = robust_read_csv(data_path)
     print("Loaded Building Data Model data:", df.head())
+    # Step 1.5: Run Cleanlab plugin if enabled
+    label_col = config.get('cleanlab_label_column')
+    labels = df[label_col].tolist() if label_col and label_col in df.columns else None
+    cleanlab_result = manager.run_cleanlab_plugin(df, labels=labels)
+    if cleanlab_result:
+        print("\n[Cleanlab Datalab Plugin Output]")
+        print(cleanlab_result)
+        if args.save_cleanlab_output:
+            import json
+            with open('cleanlab_issues.json', 'w', encoding='utf-8') as f:
+                json.dump(cleanlab_result, f, ensure_ascii=False, indent=2)
+                print("Cleanlab plugin output saved to cleanlab_issues.json")
     # Step 2: Build data model
     schema = build_data_model(df)
     print("Inferred schema:", schema)

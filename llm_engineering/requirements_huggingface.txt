@@ -1,0 +1,33 @@
+# Hugging Face Integration Requirements for OpenTrustEval
+# Core Hugging Face libraries - Updated for compatibility
+transformers>=4.40.0
+datasets>=2.14.0
+tokenizers>=0.21.0
+huggingface-hub>=0.19.0
+
+# FLMR for ColBERT-v2
+# flmr>=0.1.0
+
+# PyTorch and related
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# Fine-tuning and optimization - Updated versions
+peft>=0.8.0
+accelerate>=0.24.0
+bitsandbytes>=0.41.0
+
+# Additional utilities
+numpy>=1.24.0
+scipy>=1.10.0
+scikit-learn>=1.3.0
+
+# Optional: For advanced features
+# sentence-transformers>=2.2.0  # For embedding models
+# faiss-cpu>=1.7.0  # For vector search (CPU version)
+# faiss-gpu>=1.7.0  # For vector search (GPU version)
+
+# Development and testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0 

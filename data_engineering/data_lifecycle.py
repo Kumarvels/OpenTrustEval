@@ -45,18 +45,19 @@ class DataLifecycleManager:
     - Metrics collection
     """
     
-    def __init__(self):
+    def __init__(self, config: Optional[Dict] = None):
         self.connectors = {}
         self.databases = {}
         self.metrics = {}
         self.governance_logs = []
         self.dataset_manager = None
-        
+        self.config = config or {}
+        # Cleanlab plugin activation flag
+        self.enable_cleanlab = self.config.get('enable_cleanlab', False)
         # Initialize dataset management if available
         if DATASET_AVAILABLE:
             self.dataset_manager = DatasetConnector()
             self.add_connector('dataset', self.dataset_manager)
-        
         # Initialize logging
         self.logger = self._setup_logger()
     
@@ -91,7 +92,7 @@ class DataLifecycleManager:
             if tool in self.connectors:
                 connector = self.connectors[tool]
                 if hasattr(connector, action):
-                getattr(connector, action)(**args)
+                    getattr(connector, action)(**args)
                 else:
                     self.logger.warning(f"Action {action} not found in connector {tool}")
             else:
@@ -250,3 +251,21 @@ class DataLifecycleManager:
             self.metrics['datasets_deleted'] = self.metrics.get('datasets_deleted', 0) + 1
             self.log_governance(f'Dataset deleted: {dataset_id}')
         return success
+
+    def run_cleanlab_plugin(self, df, labels=None):
+        """
+        Run Cleanlab Datalab plugin on a DataFrame if enabled.
+        Returns plugin output dict or None.
+        """
+        if not self.enable_cleanlab:
+            self.logger.info("Cleanlab plugin not enabled; skipping data issue detection.")
+            return None
+        try:
+            from plugins import cleanlab_datalab_plugin
+        except ImportError:
+            self.logger.warning("Cleanlab Datalab plugin not found in plugins directory.")
+            return None
+        result = cleanlab_datalab_plugin.cleanlab_datalab_plugin(df, labels=labels, config={'enable_cleanlab': True})
+        self.log_governance('Cleanlab Datalab plugin run')
+        self.metrics['cleanlab_runs'] = self.metrics.get('cleanlab_runs', 0) + 1
+        return result

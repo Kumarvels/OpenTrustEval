@@ -1,1 +1,0 @@
-python3 gemini_cli.py --text sample.txt --image sample.jpg

@@ -1,1 +1,2 @@
 # Plugin-specific dependencies
+cleanlab  # Optional, for plugins/cleanlab_datalab_plugin.py (commercial/consent required)

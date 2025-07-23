@@ -58,9 +58,16 @@ def covid_etl_pipeline():
     parser = argparse.ArgumentParser()
     parser.add_argument('--local-path', type=str, help='Path to local Covid CSV file')
     parser.add_argument('--gdrive-path', type=str, help='Path to Covid CSV file on Google Drive (Colab only)')
+    parser.add_argument('--enable-cleanlab', action='store_true', help='Enable Cleanlab Datalab plugin for data issue detection')
+    parser.add_argument('--cleanlab-label-column', type=str, help='Column to use as label for Cleanlab plugin')
+    parser.add_argument('--save-cleanlab-output', action='store_true', help='Save Cleanlab plugin output to cleanlab_issues.json')
     args, _ = parser.parse_known_args()
     download_covid_data()
-    manager = DataLifecycleManager()
+    config = {
+        'enable_cleanlab': args.enable_cleanlab,
+        'cleanlab_label_column': args.cleanlab_label_column
+    }
+    manager = DataLifecycleManager(config=config)
     # Step 1: Load raw data
     data_path = resolve_data_path(DATA_PATH, args)
     if not os.path.exists(data_path):
@@ -68,6 +75,18 @@ def covid_etl_pipeline():
         sys.exit(1)
     df = robust_read_csv(data_path)
     print("Loaded Covid-19 data:", df.head())
+    # Step 1.5: Run Cleanlab plugin if enabled
+    label_col = config.get('cleanlab_label_column')
+    labels = df[label_col].tolist() if label_col and label_col in df.columns else None
+    cleanlab_result = manager.run_cleanlab_plugin(df, labels=labels)
+    if cleanlab_result:
+        print("\n[Cleanlab Datalab Plugin Output]")
+        print(cleanlab_result)
+        if args.save_cleanlab_output:
+            import json
+            with open('cleanlab_issues.json', 'w', encoding='utf-8') as f:
+                json.dump(cleanlab_result, f, ensure_ascii=False, indent=2)
+                print("Cleanlab plugin output saved to cleanlab_issues.json")
     # Step 2: Build data model
     schema = build_covid_data_model(df)
     print("Inferred schema:", schema)

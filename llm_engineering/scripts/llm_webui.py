@@ -20,6 +20,9 @@ except ImportError as e:
     print(f"Warning: LLM engineering not available: {e}")
     LLM_AVAILABLE = False
 
+from llm_engineering.workflows import ecommerce_support
+from llm_engineering.workflows.logging import get_workflow_logs
+
 # Initialize manager with error handling
 manager = None
 if LLM_AVAILABLE:
@@ -172,6 +175,49 @@ def evaluate_model(name, dataset_path, extra_kwargs_json):
     except Exception as e:
         return f"Error during evaluation: {e}"
 
+# --- Workflow Execution Functions ---
+def run_order_status_workflow_ui(customer_id, order_id, status, expected_delivery):
+    if not manager:
+        return "LLM Manager not available."
+    orchestrator = manager.llm_providers.get('langgraph_orchestrator')
+    if not orchestrator:
+        return "LangGraph orchestrator provider not found in config."
+    try:
+        result = ecommerce_support.run_order_status_workflow(
+            orchestrator, customer_id, order_id, status, expected_delivery
+        )
+        return str(result)
+    except Exception as e:
+        return f"Workflow execution failed: {e}"
+
+def run_returns_workflow_ui(customer_id, order_id, reason):
+    if not manager:
+        return "LLM Manager not available."
+    orchestrator = manager.llm_providers.get('langgraph_orchestrator')
+    if not orchestrator:
+        return "LangGraph orchestrator provider not found in config."
+    try:
+        result = ecommerce_support.run_returns_workflow(
+            orchestrator, customer_id, order_id, reason
+        )
+        return str(result)
+    except Exception as e:
+        return f"Workflow execution failed: {e}"
+
+def run_escalation_workflow_ui(customer_id, issue):
+    if not manager:
+        return "LLM Manager not available."
+    orchestrator = manager.llm_providers.get('langgraph_orchestrator')
+    if not orchestrator:
+        return "LangGraph orchestrator provider not found in config."
+    try:
+        result = ecommerce_support.run_escalation_workflow(
+            orchestrator, customer_id, issue
+        )
+        return str(result)
+    except Exception as e:
+        return f"Workflow execution failed: {e}"
+
 # --- Gradio UI ---
 with gr.Blocks(title="LLM Model Manager & Tuning WebUI") as demo:
     gr.Markdown("# 🤖 LLM Model Manager & Tuning WebUI")
@@ -247,6 +293,46 @@ with gr.Blocks(title="LLM Model Manager & Tuning WebUI") as demo:
         ev_btn = gr.Button("Evaluate")
         ev_out = gr.Textbox(label="Result/Log", lines=6)
         ev_btn.click(evaluate_model, inputs=[ev_name, ev_dataset, ev_kwargs], outputs=ev_out)
+
+    with gr.Tab("Workflows (Ecommerce Support)"):
+        gr.Markdown("## Run Ecommerce Customer Support Workflows (LangGraph)")
+        with gr.Tab("Order Status"):
+            customer_id = gr.Textbox(label="Customer ID", value="12345")
+            order_id = gr.Textbox(label="Order ID", value="A1001")
+            status = gr.Textbox(label="Order Status", value="Shipped")
+            expected_delivery = gr.Textbox(label="Expected Delivery", value="2024-07-20")
+            run_btn = gr.Button("Run Order Status Workflow")
+            result_out = gr.Textbox(label="Result", lines=6)
+            run_btn.click(run_order_status_workflow_ui, inputs=[customer_id, order_id, status, expected_delivery], outputs=result_out)
+        with gr.Tab("Returns/Refunds"):
+            customer_id2 = gr.Textbox(label="Customer ID", value="12345")
+            order_id2 = gr.Textbox(label="Order ID", value="A1001")
+            reason = gr.Textbox(label="Return Reason", value="Changed my mind")
+            run_btn2 = gr.Button("Run Returns Workflow")
+            result_out2 = gr.Textbox(label="Result", lines=6)
+            run_btn2.click(run_returns_workflow_ui, inputs=[customer_id2, order_id2, reason], outputs=result_out2)
+        with gr.Tab("Escalation"):
+            customer_id3 = gr.Textbox(label="Customer ID", value="12345")
+            issue = gr.Textbox(label="Escalation Issue", value="Order not delivered after 2 weeks")
+            run_btn3 = gr.Button("Run Escalation Workflow")
+            result_out3 = gr.Textbox(label="Result", lines=6)
+            run_btn3.click(run_escalation_workflow_ui, inputs=[customer_id3, issue], outputs=result_out3)
+
+    with gr.Tab("Workflow Logs"):
+        gr.Markdown("## Recent Workflow Runs")
+        log_btn = gr.Button("Refresh Logs")
+        log_out = gr.Textbox(label="Workflow Logs", lines=20)
+        def format_logs():
+            logs = get_workflow_logs()
+            if not logs:
+                return "No workflow runs yet."
+            out = []
+            for entry in logs[-50:]:
+                out.append(f"[{entry['timestamp']}] {entry['workflow']}\nInput: {entry['input']}\nOutput: {entry['output']}\nError: {entry['error']}\n---")
+            return "\n".join(out)
+        log_btn.click(lambda: format_logs(), outputs=log_out)
+        # Show logs on load
+        log_out.value = format_logs()
 
 def main():
     parser = argparse.ArgumentParser(description="LLM Model Manager & Tuning WebUI")

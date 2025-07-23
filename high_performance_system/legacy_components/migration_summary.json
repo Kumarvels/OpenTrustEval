@@ -1,0 +1,15 @@
+{
+  "migration_date": "2025-07-13T08:40:19.329233",
+  "migrated_components": [
+    "lhem.py",
+    "tee.py",
+    "del.py",
+    "tcen.py",
+    "cdf.py",
+    "sra.py",
+    "pipeline_logger.py"
+  ],
+  "new_location": "high_performance_system\\legacy_components",
+  "compatibility_layer": "high_performance_system\\legacy_compatibility",
+  "description": "Legacy src/ components migrated to high_performance_system/legacy_components for reference"
+}

@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from src.lhem import process_input
-from src.tee import extract_evidence
+from high_performance_system.legacy_compatibility import process_input
+from high_performance_system.legacy_compatibility import extract_evidence
 import importlib
 
 del_module = importlib.import_module('src.del')

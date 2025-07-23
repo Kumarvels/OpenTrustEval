@@ -24,3 +24,65 @@ providers:
     model_path: ../models/test-model
   name: test_model
   type: llama_factory
+# Hugging Face Providers
+- config:
+    model_name: LinWeizheDragon/ColBERT-v2
+    model_type: retrieval
+    device: auto
+    trust_remote_code: true
+  name: colbert_v2_retrieval
+  type: huggingface
+- config:
+    model_name: gpt2
+    model_type: causal
+    device: auto
+    trust_remote_code: true
+  name: gpt2_generation
+  type: huggingface
+- config:
+    model_name: t5-small
+    model_type: seq2seq
+    device: auto
+    trust_remote_code: true
+  name: t5_translation
+  type: huggingface
+- config:
+    model_name: bert-base-uncased
+    model_type: classification
+    device: auto
+    trust_remote_code: true
+  name: bert_classification
+  type: huggingface
+- config:
+    model_name: microsoft/DialoGPT-medium
+    model_type: causal
+    device: auto
+    trust_remote_code: true
+  name: dialogpt_chat
+  type: huggingface
+- config:
+    model_name: facebook/bart-base
+    model_type: seq2seq
+    device: auto
+    trust_remote_code: true
+  name: bart_summarization
+  type: huggingface
+
+# LangChain Provider Example
+- config:
+    model_name: gpt-3.5-turbo
+    openai_api_key: "sk-..."
+  name: langchain_llm
+  type: langchain
+
+# LangGraph Provider Example
+- config:
+    graph_config: path/to/graph.yaml
+  name: langgraph_orchestrator
+  type: langgraph
+
+# LlamaIndex Provider Example
+- config:
+    index_path: path/to/index
+  name: llamaindex_rag
+  type: llamaindex

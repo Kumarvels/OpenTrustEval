@@ -9,6 +9,30 @@ LLM Engineering Lifecycle Management
 - LLM governance and security (access control, audit, compliance)
 - Modular, pluggable architecture for LLM tools/providers
 """
+# High-Performance System Integration
+try:
+    from high_performance_system.core.ultimate_moe_system import UltimateMoESystem
+    from high_performance_system.core.advanced_expert_ensemble import AdvancedExpertEnsemble
+    
+    # Initialize high-performance components
+    moe_system = UltimateMoESystem()
+    expert_ensemble = AdvancedExpertEnsemble()
+    
+    HIGH_PERFORMANCE_AVAILABLE = True
+    print(f"✅ LLM lifecycle integrated with high-performance system")
+except ImportError as e:
+    HIGH_PERFORMANCE_AVAILABLE = False
+    print(f"⚠️ High-performance system not available for LLM lifecycle: {e}")
+
+def get_high_performance_llm_status():
+    """Get high-performance LLM system status"""
+    global moe_system, expert_ensemble
+    return {
+        'available': HIGH_PERFORMANCE_AVAILABLE,
+        'moe_system': 'active' if HIGH_PERFORMANCE_AVAILABLE and 'moe_system' in globals() and moe_system else 'inactive',
+        'expert_ensemble': 'active' if HIGH_PERFORMANCE_AVAILABLE and 'expert_ensemble' in globals() and expert_ensemble else 'inactive'
+    }
+
 
 import importlib
 import os
@@ -35,9 +59,11 @@ class LLMLifecycleManager:
             provider_type = entry['type']
             provider_config = entry.get('config', {})
             module = importlib.import_module(f"llm_engineering.providers.{provider_type}_provider")
-            # Patch: Use correct class name for llama_factory
+            # Patch: Use correct class name for different provider types
             if provider_type == 'llama_factory':
                 class_name = 'LLaMAFactoryProvider'
+            elif provider_type == 'huggingface':
+                class_name = 'HuggingFaceProvider'
             else:
                 class_name = ''.join([part.capitalize() for part in provider_type.split('_')]) + 'Provider'
             provider_class = getattr(module, class_name)
@@ -104,6 +130,8 @@ class LLMLifecycleManager:
         module = importlib.import_module(f"llm_engineering.providers.{provider_type}_provider")
         if provider_type == 'llama_factory':
             class_name = 'LLaMAFactoryProvider'
+        elif provider_type == 'huggingface':
+            class_name = 'HuggingFaceProvider'
         else:
             class_name = ''.join([part.capitalize() for part in provider_type.split('_')]) + 'Provider'
         provider_class = getattr(module, class_name)
