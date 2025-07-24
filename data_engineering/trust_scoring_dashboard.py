@@ -123,7 +123,8 @@ class TrustScoringDashboard:
                 dataset_name TEXT,
                 dataset_id TEXT,
                 missing_values_ratio REAL,
-                duplicate_rows_ratio REAL,
+                exact_duplicate_rows_ratio REAL,
+                approximate_duplicate_rows_ratio REAL,
                 outlier_ratio REAL,
                 data_completeness REAL,
                 data_consistency REAL,
@@ -204,12 +205,13 @@ class TrustScoringDashboard:
         
         cursor.execute('''
             INSERT INTO quality_metrics 
-            (dataset_name, dataset_id, missing_values_ratio, duplicate_rows_ratio, 
+            (dataset_name, dataset_id, missing_values_ratio, exact_duplicate_rows_ratio, approximate_duplicate_rows_ratio,
              outlier_ratio, data_completeness, data_consistency, session_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (dataset_name, dataset_id, 
               metrics.get('missing_values_ratio', 0),
-              metrics.get('duplicate_rows_ratio', 0),
+              metrics.get('exact_duplicate_rows_ratio', 0),
+              metrics.get('approximate_duplicate_rows_ratio', 0),
               metrics.get('outlier_ratio', 0),
               metrics.get('data_completeness', 0),
               metrics.get('data_consistency', 0),
@@ -633,11 +635,11 @@ class TrustScoringDashboard:
         # Quality Metrics Dashboard
         if not data['quality_metrics'].empty:
             fig_quality = make_subplots(
-                rows=2, cols=2,
-                subplot_titles=('Missing Values Ratio', 'Duplicate Rows Ratio', 
-                              'Outlier Ratio', 'Data Completeness'),
-                specs=[[{"secondary_y": False}, {"secondary_y": False}],
-                       [{"secondary_y": False}, {"secondary_y": False}]]
+                rows=3, cols=2,
+                subplot_titles=('Missing Values Ratio', 'Exact Duplicate Rows Ratio',
+                              'Approximate Duplicate Rows Ratio', 'Outlier Ratio',
+                              'Data Completeness', 'Data Consistency'),
+                specs=[[{}, {}], [{}, {}], [{"colspan": 2}, None]]
             )
             
             fig_quality.add_trace(
@@ -649,26 +651,33 @@ class TrustScoringDashboard:
             
             fig_quality.add_trace(
                 go.Scatter(x=data['quality_metrics']['timestamp'], 
-                          y=data['quality_metrics']['duplicate_rows_ratio'],
-                          name='Duplicates'),
+                          y=data['quality_metrics']['exact_duplicate_rows_ratio'],
+                          name='Exact Duplicates'),
                 row=1, col=2
             )
             
             fig_quality.add_trace(
+                go.Scatter(x=data['quality_metrics']['timestamp'],
+                          y=data['quality_metrics']['approximate_duplicate_rows_ratio'],
+                          name='Approximate Duplicates'),
+                row=2, col=1
+            )
+
+            fig_quality.add_trace(
                 go.Scatter(x=data['quality_metrics']['timestamp'], 
                           y=data['quality_metrics']['outlier_ratio'],
                           name='Outliers'),
-                row=2, col=1
+                row=2, col=2
             )
             
             fig_quality.add_trace(
                 go.Scatter(x=data['quality_metrics']['timestamp'], 
                           y=data['quality_metrics']['data_completeness'],
                           name='Completeness'),
-                row=2, col=2
+                row=3, col=1
             )
             
-            fig_quality.update_layout(height=600, title_text="Quality Metrics Dashboard")
+            fig_quality.update_layout(height=800, title_text="Quality Metrics Dashboard")
             viz['quality_dashboard'] = fig_quality
         
         # Test Results Summary
@@ -705,7 +714,7 @@ class TrustScoringDashboard:
         # Navigation
         page = st.sidebar.selectbox(
             "Select Page",
-            ["📊 Overview", "🔍 Trust Scoring", "📈 Analytics", "⚡ Commands", "🧪 Testing", "📋 Reports", "🗄️ SQL Query"]
+            ["📊 Overview", "🔍 Trust Scoring", "📈 Analytics", "⚡ Commands", "🧪 Testing", "📋 Reports", "🗄️ SQL Query", "🕵️ Deepchecks Report"]
         )
         
         # Get dashboard data
@@ -725,6 +734,8 @@ class TrustScoringDashboard:
             self.show_reports_page(data)
         elif page == "🗄️ SQL Query":
             self.show_sql_query_page(data)
+        elif page == "🕵️ Deepchecks Report":
+            self.show_deepchecks_report_page()
     
     def show_overview_page(self, data: Dict[str, Any]):
         """Show overview page"""
@@ -976,7 +987,7 @@ class TrustScoringDashboard:
             else:
                 dataset_path = st.text_input("Dataset Path", placeholder="path/to/dataset.csv")
             
-            method = st.selectbox("Scoring Method", ["ensemble", "robust", "uncertainty"])
+            method = st.selectbox("Scoring Method", ["ensemble", "robust", "uncertainty", "deepchecks"])
         
         with col2:
             st.write("**Quick Actions**")
@@ -1766,7 +1777,7 @@ class TrustScoringDashboard:
         
         examples = {
             "Recent Trust Scores": "SELECT dataset_name, trust_score, method, timestamp FROM trust_scores ORDER BY timestamp DESC LIMIT 10",
-            "Quality Issues": "SELECT dataset_name, missing_values_ratio, duplicate_rows_ratio, outlier_ratio FROM quality_metrics ORDER BY timestamp DESC LIMIT 10",
+            "Quality Issues": "SELECT dataset_name, missing_values_ratio, exact_duplicate_rows_ratio, outlier_ratio FROM quality_metrics ORDER BY timestamp DESC LIMIT 10",
             "Test Success Rate": "SELECT test_type, COUNT(*) as total_tests, SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as successful_tests FROM test_results GROUP BY test_type",
             "Command Performance": "SELECT command, AVG(duration) as avg_duration, COUNT(*) as execution_count FROM commands_executed GROUP BY command ORDER BY avg_duration DESC",
             "System Health": "SELECT metric_name, AVG(metric_value) as avg_value, MAX(metric_value) as max_value FROM system_metrics GROUP BY metric_name"
@@ -1775,6 +1786,37 @@ class TrustScoringDashboard:
         selected_example = st.selectbox("Select Example Query", list(examples.keys()))
         if st.button("Load Example"):
             st.text_area("SQL Query", value=examples[selected_example], height=150, key="example_query")
+
+    def show_deepchecks_report_page(self):
+        """Show Deepchecks report page"""
+        st.header("🕵️ Deepchecks Report")
+
+        st.info("This page allows you to run Deepchecks suites and view the reports.")
+
+        # File upload
+        uploaded_file = st.file_uploader("Upload a dataset (CSV)", type="csv")
+        if uploaded_file is not None:
+            dataset = pd.read_csv(uploaded_file)
+            st.success("Dataset uploaded successfully.")
+
+            # Suite selection
+            suite_type = st.selectbox("Select Deepchecks Suite", ["Data Integrity", "Train-Test Validation"])
+
+            if suite_type == "Data Integrity":
+                target_col = st.selectbox("Select Target Column (Optional)", [None] + list(dataset.columns))
+                if st.button("Run Data Integrity Suite"):
+                    from data_engineering.deepchecks_integration import DeepchecksDataQualityManager
+                    manager = DeepchecksDataQualityManager()
+                    result = manager.run_data_integrity_suite(dataset, target_col=target_col)
+                    if result and "error" not in result:
+                        st.success("Data Integrity Suite completed.")
+                        st.components.v1.html(result['results'], height=600, scrolling=True)
+                    else:
+                        st.error(f"Error running suite: {result.get('error', 'Unknown error')}")
+
+            elif suite_type == "Train-Test Validation":
+                st.warning("This suite requires two datasets: a training set and a testing set.")
+                # Add file uploaders for train and test sets
     
     def generate_report(self, report_type: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """Generate report based on type"""
