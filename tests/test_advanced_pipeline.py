@@ -1,12 +1,12 @@
 import numpy as np
 import pytest
-from high_performance_system.legacy_compatibility import process_input
-from high_performance_system.legacy_compatibility import extract_evidence
+from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import process_input
+from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import extract_evidence
 import importlib
 
-from high_performance_system.legacy_compatibility import aggregate_evidence as del_aggregate_evidence
-from high_performance_system.legacy_compatibility import extract_evidence as tee_extract_evidence
-from plugins.plugin_loader import load_plugins
+from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import aggregate_evidence as del_aggregate_evidence
+from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import extract_evidence as tee_extract_evidence
+from src.opentrusteval.plugins.plugin_loader import load_plugins
 
 @pytest.mark.parametrize("text,img_shape", [
     ("", (256, 256, 3)),  # Empty text, valid image

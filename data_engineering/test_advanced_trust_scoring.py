@@ -331,7 +331,7 @@ if __name__ == "__main__":
     main()
 
 import unittest
-from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
+from src.opentrusteval.data.advanced_trust_scoring import AdvancedTrustScoringEngine
 
 class TestAdvancedTrustScoringEngine(unittest.TestCase):
     def setUp(self):

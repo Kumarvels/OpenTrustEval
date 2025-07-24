@@ -75,10 +75,10 @@ except ImportError:
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import trust scoring components
-from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
-from data_engineering.cleanlab_integration import FallbackDataQualityManager
-from data_engineering.dataset_integration import DatasetManager
-from data_engineering.batch_trust_scoring_test_suite import BatchTrustScoringTestSuite
+from src.opentrusteval.data.advanced_trust_scoring import AdvancedTrustScoringEngine
+from src.opentrusteval.data.cleanlab_integration import FallbackDataQualityManager
+from src.opentrusteval.data.dataset_integration import DatasetManager
+from src.opentrusteval.data.batch_trust_scoring_test_suite import BatchTrustScoringTestSuite
 
 class TrustScoringDashboard:
     """
