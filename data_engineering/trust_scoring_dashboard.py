@@ -993,10 +993,19 @@ class TrustScoringDashboard:
             st.write("**Quick Actions**")
             if st.button("Calculate Trust Score", type="primary"):
                 if dataset_path:
-                    result = self.execute_trust_scoring_command("calculate_trust_score", dataset_path)
+                    df = pd.read_csv(dataset_path)
+                    labels = st.selectbox("Select Label Column", [None] + list(df.columns))
+                    result = self.advanced_engine.calculate_advanced_trust_score(df, labels=df[labels] if labels else None, method=method)
+
                     if "error" not in result:
                         st.success(f"Trust Score: {result.get('trust_score', 'N/A'):.3f}")
                         st.json(result)
+
+                        if method == "ensemble" and labels:
+                            label_issues = self.advanced_engine.find_label_issues(df[self.advanced_engine.config['features']], df[labels])
+                            if label_issues is not None and not label_issues.empty:
+                                st.subheader("Potential Label Errors")
+                                st.dataframe(label_issues)
                     else:
                         st.error(f"Error: {result['error']}")
                 else:

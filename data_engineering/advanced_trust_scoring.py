@@ -274,6 +274,13 @@ class AdvancedTrustScoringEngine:
                 cleanlab_score = self._calculate_cleanlab_component(X_scaled, labels)
         except ImportError:
             pass  # Cleanlab not available
+
+        # 8. Label error detection
+        label_error_score = None
+        if labels is not None:
+            label_issues = self.find_label_issues(X_scaled, np.array(labels))
+            if label_issues is not None:
+                label_error_score = 1 - (len(label_issues) / len(X))
         
         # Calculate weighted ensemble trust score
         weights = self.config['weights']
@@ -292,6 +299,10 @@ class AdvancedTrustScoringEngine:
         # Adjust for cleanlab if available
         if cleanlab_score is not None:
             trust_score = 0.8 * trust_score + 0.2 * cleanlab_score
+
+        # Adjust for label errors
+        if label_error_score is not None:
+            trust_score = 0.9 * trust_score + 0.1 * label_error_score
         
         return {
             "trust_score": max(0, min(1, float(trust_score))),
@@ -302,7 +313,8 @@ class AdvancedTrustScoringEngine:
                 "distribution_analysis": distribution_score,
                 "uncertainty_quantification": uncertainty_score,
                 "clustering_quality": clustering_score,
-                "cleanlab_integration": cleanlab_score
+                "cleanlab_integration": cleanlab_score,
+                "label_error_score": label_error_score
             },
             "method": "ensemble_advanced",
             "timestamp": datetime.now().isoformat(),
@@ -871,6 +883,38 @@ class AdvancedTrustScoringEngine:
         """Placeholder for Bayesian uncertainty estimation. To be implemented with advanced Bayesian methods."""
         # TODO: Implement Bayesian uncertainty estimation (e.g., Bayesian neural networks, MC dropout, etc.)
         return 0.5
+
+    def find_label_issues(self, X: pd.DataFrame, labels: np.ndarray) -> Optional[pd.DataFrame]:
+        """
+        Find potential label issues using a classification model.
+        Returns a DataFrame of potential label errors.
+        """
+        if not SKLEARN_AVAILABLE or labels is None:
+            return None
+
+        try:
+            # Train a classifier
+            clf = RandomForestClassifier(random_state=42)
+            clf.fit(X, labels)
+
+            # Get predicted probabilities
+            pred_probs = clf.predict_proba(X)
+
+            # Find potential label errors
+            potential_errors = []
+            for i, (pred_prob, true_label) in enumerate(zip(pred_probs, labels)):
+                if np.argmax(pred_prob) != true_label:
+                    potential_errors.append({
+                        "index": i,
+                        "true_label": true_label,
+                        "predicted_label": np.argmax(pred_prob),
+                        "confidence": np.max(pred_prob)
+                    })
+
+            return pd.DataFrame(potential_errors)
+        except Exception as e:
+            self.logger.error(f"Error finding label issues: {e}")
+            return None
 
     def run_deepchecks_suite(self, dataset: pd.DataFrame, target_col: Optional[str] = None) -> Dict[str, Any]:
         """Run Deepchecks data integrity suite"""
