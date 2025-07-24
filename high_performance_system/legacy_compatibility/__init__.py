@@ -21,10 +21,20 @@ def process_input(input_data, image_model_name='EfficientNetB0'):
     # Process the input using the new system
     if isinstance(input_data, dict) and 'text' in input_data:
         text = input_data['text']
+        image = input_data.get('image')
         context = input_data.get('context', '')
+
+        if not text and image is None:
+            raise ValueError("Either text or image must be provided.")
+
+        if image is not None and (len(image.shape) != 3 or image.shape[-1] != 3):
+            raise ValueError("Image must have 3 channels.")
         
+        import asyncio
         # Use the new verification system
-        result = await moe_system.verify_text(text, context)
+        async def verify():
+            return await moe_system.verify_text(text, context)
+        result = asyncio.run(verify())
         
         # Return in legacy format
         return {
