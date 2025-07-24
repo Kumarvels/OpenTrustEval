@@ -3,7 +3,7 @@
 ## 🚀 Overview
 OpenTrustEval is a comprehensive, high-performance, and modular platform for AI evaluation, hallucination detection, data quality, and trustworthy AI lifecycle management. It integrates:
 - **LLM Management** (dynamic loading, fine-tuning, evaluation, deployment)
-- **Data Engineering** (ETL, trust scoring, validation, analytics)
+- **Data Engineering** (ELT, trust scoring, validation, analytics)
 - **Security** (auth, monitoring, secrets, OAuth/SAML)
 - **Research Platform** (experiments, use cases, analysis, project management)
 - **Unified WebUI** for all managers and workflows
@@ -58,7 +58,7 @@ python superfast_production_server.py
 1. **Start the API server** (`python superfast_production_server.py`)
 2. **Start the WebUI** (`streamlit run launch_workflow_webui.py`)
 3. **Upload or create datasets** (Data Manager)
-4. **Run ETL, trust scoring, and validation** (Data Manager)
+4. **Run ELT, trust scoring, and validation** (Data Manager)
 5. **Manage and deploy LLMs** (LLM Manager)
 6. **Configure security, users, and secrets** (Security Manager)
 7. **Create research use cases and experiments** (Research Platform)
