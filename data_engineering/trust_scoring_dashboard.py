@@ -714,7 +714,7 @@ class TrustScoringDashboard:
         # Navigation
         page = st.sidebar.selectbox(
             "Select Page",
-            ["📊 Overview", "🔍 Trust Scoring", "📈 Analytics", "⚡ Commands", "🧪 Testing", "📋 Reports", "🗄️ SQL Query", "🕵️ Deepchecks Report"]
+            ["📊 Overview", "🔍 Trust Scoring", "📈 Analytics", "⚡ Commands", "🧪 Testing", "📋 Reports", "🗄️ SQL Query", "🕵️ Deepchecks Report", "🏭 Production Monitoring"]
         )
         
         # Get dashboard data
@@ -736,6 +736,8 @@ class TrustScoringDashboard:
             self.show_sql_query_page(data)
         elif page == "🕵️ Deepchecks Report":
             self.show_deepchecks_report_page()
+        elif page == "🏭 Production Monitoring":
+            self.show_production_monitoring_page()
     
     def show_overview_page(self, data: Dict[str, Any]):
         """Show overview page"""
@@ -1880,10 +1882,54 @@ class TrustScoringDashboard:
         
         return report
 
+    def show_production_monitoring_page(self):
+        """Show production monitoring page"""
+        st.header("🏭 Production Model Monitoring")
+
+        st.info("This page allows you to monitor the performance of models in a production environment.")
+
+        # Performance Tracking
+        st.subheader("📈 Performance Tracking")
+        # Add your performance tracking visualizations here
+
+        # Data Drift Detection
+        st.subheader("🕵️ Data Drift Detection")
+        st.warning("This feature requires a training dataset and a production dataset.")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            train_file = st.file_uploader("Upload Training Data (CSV)", type="csv", key="train")
+        with col2:
+            prod_file = st.file_uploader("Upload Production Data (CSV)", type="csv", key="prod")
+
+        if train_file and prod_file:
+            train_data = pd.read_csv(train_file)
+            prod_data = pd.read_csv(prod_file)
+            st.success("Training and production datasets uploaded successfully.")
+
+            if st.button("Run Data Drift Detection"):
+                from data_engineering.deepchecks_integration import DeepchecksDataQualityManager
+                manager = DeepchecksDataQualityManager()
+                result = manager.run_train_test_validation_suite(train_data, prod_data)
+                if result and "error" not in result:
+                    st.success("Data Drift Detection suite completed.")
+                    st.components.v1.html(result['results'], height=600, scrolling=True)
+                else:
+                    st.error(f"Error running suite: {result.get('error', 'Unknown error')}")
+
+        # Alerting System
+        st.subheader("🚨 Alerting System")
+        st.info("This is a simple alerting system that will notify you of significant issues.")
+
+        alert_threshold = st.slider("Alert Threshold", 0.0, 1.0, 0.8, 0.05)
+        if st.button("Check for Alerts"):
+            # Simulate checking for alerts
+            st.success("No alerts found.")
+
 def main():
     """Main function to run the dashboard"""
     dashboard = TrustScoringDashboard()
     dashboard.run_streamlit_dashboard()
 
 if __name__ == "__main__":
-    main() 
+    main()

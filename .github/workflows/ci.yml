@@ -44,3 +44,24 @@ jobs:
       - name: Run tests
         run: |
           pytest
+      - name: Validate Data
+        run: |
+          python data_engineering/run_trust_scoring_system.py --test
+      - name: Train and Evaluate Model
+        run: |
+          python scripts/train_and_evaluate.py
+      - name: Generate Report
+        run: |
+          echo "CI Report" > ci_report.txt
+          echo "=========" >> ci_report.txt
+          echo "" >> ci_report.txt
+          echo "Data Validation:" >> ci_report.txt
+          cat data_engineering/test_reports/* >> ci_report.txt
+          echo "" >> ci_report.txt
+          echo "Model Evaluation:" >> ci_report.txt
+          cat model_evaluation_report.txt >> ci_report.txt
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: ci-report
+          path: ci_report.txt
