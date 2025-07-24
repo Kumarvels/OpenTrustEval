@@ -9,8 +9,8 @@ import logging
 from datetime import datetime
 
 try:
-    from deepchecks.tabular.suites import data_integrity, train_test_validation
-    from deepchecks.tabular import Dataset
+    from src.opentrusteval.data.deepchecks.tabular.suites import data_integrity, train_test_validation
+    from src.opentrusteval.data.deepchecks.tabular import Dataset
     DEEPCHECKS_AVAILABLE = True
 except ImportError:
     DEEPCHECKS_AVAILABLE = False

@@ -11,7 +11,7 @@ from pathlib import Path
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from data_engineering.trust_scoring_dashboard import TrustScoringDashboard
+from src.opentrusteval.data.trust_scoring_dashboard import TrustScoringDashboard
 
 def test_file_upload_functionality():
     """Test the file upload functionality"""
