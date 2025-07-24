@@ -54,6 +54,12 @@ except ImportError:
     SKLEARN_AVAILABLE = False
     print("Warning: Scikit-learn not available. Install with: pip install scikit-learn")
 
+try:
+    from sklearn.ensemble import IsolationForest
+except ImportError:
+    IsolationForest = None
+    print("Warning: IsolationForest not available. Install with: pip install scikit-learn")
+
 # Import advanced trust scoring engine
 try:
     from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
@@ -98,10 +104,11 @@ class FallbackDataQualityManager:
             # Calculate basic quality metrics
             quality_metrics = {
                 "missing_values_ratio": float(X.isnull().sum().sum() / (X.shape[0] * X.shape[1])),
-                "duplicate_rows_ratio": float(X.duplicated().sum() / X.shape[0]),
+                "exact_duplicate_rows_ratio": self._detect_exact_duplicates(dataset),
+                "approximate_duplicate_rows_ratio": self._detect_approximate_duplicates(X),
                 "zero_variance_features": int((X.var() == 0).sum()) if len(features) > 0 else 0,
                 "correlation_issues": self._detect_correlation_issues(X),
-                "outlier_ratio": self._detect_outliers_ratio(X),
+                "outlier_ratio": self._detect_outliers_ratio(X, method='isolation_forest' if IsolationForest else 'iqr'),
                 "data_completeness": float(1 - X.isnull().sum().sum() / (X.shape[0] * X.shape[1])),
                 "data_consistency": self._calculate_consistency_score(X)
             }
@@ -109,7 +116,8 @@ class FallbackDataQualityManager:
             # Calculate overall trust score
             trust_score = 1 - (
                 quality_metrics["missing_values_ratio"] * 0.25 +
-                quality_metrics["duplicate_rows_ratio"] * 0.2 +
+                quality_metrics["exact_duplicate_rows_ratio"] * 0.15 +
+                quality_metrics["approximate_duplicate_rows_ratio"] * 0.05 +
                 (quality_metrics["zero_variance_features"] / max(1, X.shape[1])) * 0.15 +
                 quality_metrics["correlation_issues"] * 0.15 +
                 quality_metrics["outlier_ratio"] * 0.15 +
@@ -139,9 +147,13 @@ class FallbackDataQualityManager:
             return 0.0
     
     def _detect_outliers_ratio(self, X: pd.DataFrame, method: str = 'iqr') -> float:
-        """Detect outliers using IQR method"""
+        """Detect outliers using IQR or Isolation Forest method"""
         try:
-            if method == 'iqr':
+            if method == 'isolation_forest' and IsolationForest:
+                clf = IsolationForest(contamination='auto', random_state=42)
+                outliers = clf.fit_predict(X)
+                return float(np.sum(outliers == -1) / len(X))
+            elif method == 'iqr':
                 Q1 = X.quantile(0.25)
                 Q3 = X.quantile(0.75)
                 IQR = Q3 - Q1
@@ -150,7 +162,33 @@ class FallbackDataQualityManager:
             return 0.0
         except:
             return 0.0
-    
+
+    def _detect_exact_duplicates(self, dataset: pd.DataFrame) -> float:
+        """Detect exact duplicate rows"""
+        return float(dataset.duplicated().sum() / len(dataset))
+
+    def _detect_approximate_duplicates(self, X: pd.DataFrame, threshold: float = 0.95) -> float:
+        """Detect approximate duplicate rows using Locality-Sensitive Hashing (LSH)"""
+        # This is a simplified example of LSH. A more robust implementation would be needed for large datasets.
+        try:
+            from sklearn.feature_extraction.text import HashingVectorizer
+            # Convert rows to strings to use HashingVectorizer
+            X_str = X.astype(str).agg(' '.join, axis=1)
+            vectorizer = HashingVectorizer(n_features=2**10)
+            hashed_features = vectorizer.fit_transform(X_str)
+
+            # Simple comparison of hashed features
+            # A more advanced LSH would use banding to find candidate pairs
+            duplicates = 0
+            for i in range(hashed_features.shape[0]):
+                for j in range(i + 1, hashed_features.shape[0]):
+                    similarity = (hashed_features[i].multiply(hashed_features[j])).sum()
+                    if similarity >= threshold:
+                        duplicates += 1
+            return float(duplicates / len(X))
+        except:
+            return 0.0
+
     def _calculate_consistency_score(self, X: pd.DataFrame) -> float:
         """Calculate data consistency score"""
         try:
@@ -226,7 +264,7 @@ class FallbackDataQualityManager:
                 results["issues_found"].append("High missing values ratio (>50%)")
                 results["validation_passed"] = False
             
-            if quality_metrics.get("quality_metrics", {}).get("duplicate_rows_ratio", 0) > 0.3:
+            if quality_metrics.get("quality_metrics", {}).get("exact_duplicate_rows_ratio", 0) > 0.3:
                 results["issues_found"].append("High duplicate rows ratio (>30%)")
                 results["validation_passed"] = False
             
@@ -247,6 +285,12 @@ class FallbackDataQualityManager:
             
             if results["quality_metrics"].get("correlation_issues", 0) > 0.1:
                 results["recommendations"].append("Check for highly correlated features")
+
+            if results["quality_metrics"].get("outlier_ratio", 0) > 0.1:
+                results["recommendations"].append("High outlier ratio detected. Investigate outliers.")
+
+            if results["quality_metrics"].get("exact_duplicate_rows_ratio", 0) > 0.05:
+                results["recommendations"].append("Consider removing duplicate data.")
             
             results["timestamp"] = datetime.now().isoformat()
             results["method"] = "fallback_statistical"

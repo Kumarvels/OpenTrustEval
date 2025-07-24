@@ -55,6 +55,13 @@ except ImportError:
     SKLEARN_AVAILABLE = False
     print("Warning: Scikit-learn not available. Install with: pip install scikit-learn")
 
+try:
+    from data_engineering.deepchecks_integration import DeepchecksDataQualityManager
+    DEEPCHECKS_AVAILABLE = True
+except ImportError:
+    DEEPCHECKS_AVAILABLE = False
+    print("Warning: Deepchecks integration not available. Check deepchecks_integration.py")
+
 # Remove Cleanlab imports and logic
 # Remove: import cleanlab, from cleanlab import find_label_issues, get_label_quality_scores, CleanLearning
 # Remove: CLEANLAB_AVAILABLE logic and all Cleanlab-based scoring except for benchmarking
@@ -76,6 +83,8 @@ class AdvancedTrustScoringEngine:
         self.scalers = {}
         self.models = {}
         self._initialize_models()
+        if DEEPCHECKS_AVAILABLE:
+            self.deepchecks_manager = DeepchecksDataQualityManager()
         
     def _get_default_config(self) -> Dict:
         """Get default configuration for advanced trust scoring"""
@@ -169,7 +178,7 @@ class AdvancedTrustScoringEngine:
             dataset: Input dataset
             labels: Optional labels for supervised methods
             features: Optional feature columns to use
-            method: Scoring method ("ensemble", "cleanlab", "robust", "uncertainty")
+            method: Scoring method ("ensemble", "cleanlab", "robust", "uncertainty", "deepchecks")
         
         Returns:
             Dictionary containing trust score and detailed metrics
@@ -200,6 +209,8 @@ class AdvancedTrustScoringEngine:
                 return self._calculate_robust_trust_score(X, X_scaled)
             elif method == "uncertainty":
                 return self._calculate_uncertainty_trust_score(X, X_scaled)
+            elif method == "deepchecks" and DEEPCHECKS_AVAILABLE:
+                return self.run_deepchecks_suite(dataset, target_col=labels)
             else:
                 return self._calculate_ensemble_trust_score(X, X_scaled, labels)
                 
@@ -860,6 +871,14 @@ class AdvancedTrustScoringEngine:
         """Placeholder for Bayesian uncertainty estimation. To be implemented with advanced Bayesian methods."""
         # TODO: Implement Bayesian uncertainty estimation (e.g., Bayesian neural networks, MC dropout, etc.)
         return 0.5
+
+    def run_deepchecks_suite(self, dataset: pd.DataFrame, target_col: Optional[str] = None) -> Dict[str, Any]:
+        """Run Deepchecks data integrity suite"""
+        if not DEEPCHECKS_AVAILABLE:
+            return {"error": "Deepchecks not available"}
+
+        self.logger.info("Running Deepchecks data integrity suite...")
+        return self.deepchecks_manager.run_data_integrity_suite(dataset, target_col=target_col)
     
     def _detect_correlation_issues(self, X: pd.DataFrame, threshold: float = 0.95) -> float:
         """Detect highly correlated features"""
@@ -999,5 +1018,15 @@ def example_advanced_trust_scoring():
     except ImportError:
         print("Cleanlab not installed. Skipping Cleanlab benchmark.")
 
+    # Deepchecks method
+    if DEEPCHECKS_AVAILABLE:
+        deepchecks_result = engine.calculate_advanced_trust_score(data, method="deepchecks")
+        print("Deepchecks Method:")
+        if "error" in deepchecks_result:
+            print(f"Error: {deepchecks_result['error']}")
+        else:
+            print("Deepchecks suite run successfully.")
+        print()
+
 if __name__ == "__main__":
-    example_advanced_trust_scoring() 
+    example_advanced_trust_scoring()
