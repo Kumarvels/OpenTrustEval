@@ -88,5 +88,36 @@ class TestDeepchecksDataQualityManager(unittest.TestCase):
             self.assertIn('suite_name', result)
             self.assertEqual(result['suite_name'], 'Train-Test Validation')
 
+from data_engineering.advanced_trust_scoring import AdvancedTrustScoringEngine
+
+class TestAdvancedTrustScoringEngine(unittest.TestCase):
+    """
+    Tests for the AdvancedTrustScoringEngine
+    """
+
+    def setUp(self):
+        """Set up a sample dataset for testing"""
+        self.engine = AdvancedTrustScoringEngine()
+        self.data = pd.DataFrame({
+            'feature1': np.random.randn(100),
+            'feature2': np.random.randn(100)
+        })
+        self.labels = np.random.randint(0, 2, 100)
+
+    def test_find_label_issues(self):
+        """Test the find_label_issues method"""
+        # Introduce a label error
+        self.labels[50] = 1 - self.labels[50]
+
+        label_issues = self.engine.find_label_issues(self.data, self.labels)
+        self.assertIsNotNone(label_issues)
+        self.assertIsInstance(label_issues, pd.DataFrame)
+
+        if not label_issues.empty:
+            self.assertIn('index', label_issues.columns)
+            self.assertIn('true_label', label_issues.columns)
+            self.assertIn('predicted_label', label_issues.columns)
+            self.assertIn('confidence', label_issues.columns)
+
 if __name__ == '__main__':
     unittest.main()
