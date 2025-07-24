@@ -2371,10 +2371,12 @@ class UnifiedWorkflowWebUI:
         else:
             st.session_state.check_dashboard_launch_future = future
 
+
 def main():
     """Main function"""
     webui = UnifiedWorkflowWebUI()
     webui.main_interface()
 
+
 if __name__ == "__main__":
-    main() 
+    main()
