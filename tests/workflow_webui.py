@@ -122,7 +122,7 @@ class UnifiedWorkflowWebUI:
         if self.dataset_manager is not None:
             return self.dataset_manager
         try:
-            from data_engineering.dataset_integration import DatasetManager
+            from src.opentrusteval.data.dataset_integration import DatasetManager
             self.dataset_manager = DatasetManager()
             self.DATASET_AVAILABLE = True
         except ImportError as e:
@@ -135,7 +135,7 @@ class UnifiedWorkflowWebUI:
         if self.llm_manager is not None:
             return self.llm_manager
         try:
-            from llm_engineering.llm_lifecycle import LLMLifecycleManager
+            from src.opentrusteval.models.llm_lifecycle import LLMLifecycleManager
             self.llm_manager = LLMLifecycleManager()
             self.LLM_AVAILABLE = True
         except ImportError as e:
@@ -148,7 +148,7 @@ class UnifiedWorkflowWebUI:
         if self.auth_manager is not None:
             return self.auth_manager
         try:
-            from security.auth_manager import AuthManager
+            from src.opentrusteval.security.auth_manager import AuthManager
             self.auth_manager = AuthManager()
             self.SECURITY_AVAILABLE = True
         except ImportError as e:
