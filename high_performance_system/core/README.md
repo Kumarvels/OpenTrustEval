@@ -123,10 +123,9 @@ flowchart TD
 ---
 ---
 ---
-===================================
- Summary of Revolutionary Features
-===================================
 
+ Summary of Revolutionary Features
+---
 1. Trust Evolution Timeline
 Track trust changes over time
 Predict future trust trajectories
