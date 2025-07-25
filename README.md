@@ -112,108 +112,108 @@ python superfast_production_server.py
 
 ---
 
-## Why Trust-Based Systems Are Better Than Other Solutions (example: Label Error Detection Systems)
+## Why Trust-Based Systems Are Better (than Label Error Detection Systems) ?
 
 Let me break down the fundamental differences and explain why a trust-based approach is more comprehensive and valuable.
 
 ## Core Philosophical Differences
 
 ### **Label Error Detection System**
-
+```
 Focus: Data Quality → Model Performance
 Approach: Find and fix problems in training data
 Scope: Limited to labeled dataset issues
 Outcome: Better training data
-
+```
 
 ### **Trust-Based System**
-
+```
 Focus: Holistic System Reliability → Real-World Performance
 Approach: Evaluate comprehensive trustworthiness
 Scope: End-to-end system behavior including deployment
 Outcome: Confidence in system behavior
-
+```
 
 ## Detailed Comparison
 
 ### 1. **Scope and Coverage**
 
 **Label Error Detection Limitations:**
-python
+```python
 # CleanLab approach - focused on training data
 def cleanlab_approach(training_data, labels):
     # Only addresses:
     # 1. Mislabeling in training data
     # 2. Data quality issues
     # 3. Confidence in training predictions
-
-  label_issues = find_label_errors(labels, pred_probs)
-  cleaned_data = remove_label_issues(training_data, label_issues)
-  return cleaned_data  # Better training data, but...
+    
+    label_issues = find_label_errors(labels, pred_probs)
+    cleaned_data = remove_label_issues(training_data, label_issues)
+    return cleaned_data  # Better training data, but...
     
 # What about deployment behavior? Real-world performance? 
 # These are NOT addressed by label error detection alone
-
+```
 
 **Trust-Based Approach:**
-python
+```python
 # OpenTrustEval approach - comprehensive trust evaluation
 def trust_based_approach(model, training_data, test_data, production_data):
     trust_assessment = {
         # Training Data Quality (includes label error detection)
         'data_quality': evaluate_data_quality(training_data, labels),
         
-  # Model Reliability
-  'reliability': evaluate_reliability(model, test_data),
+        # Model Reliability
+        'reliability': evaluate_reliability(model, test_data),
         
-  # Consistency Across Inputs
-   'consistency': evaluate_consistency(model, various_inputs),
+        # Consistency Across Inputs
+        'consistency': evaluate_consistency(model, various_inputs),
         
-  # Fairness and Bias
-   'fairness': evaluate_fairness(model, diverse_test_cases),
+        # Fairness and Bias
+        'fairness': evaluate_fairness(model, diverse_test_cases),
         
-  # Robustness to Adversarial Attacks
-   'robustness': evaluate_robustness(model, adversarial_examples),
+        # Robustness to Adversarial Attacks
+        'robustness': evaluate_robustness(model, adversarial_examples),
         
-  # Explainability and Transparency
-   'explainability': evaluate_explainability(model, inputs),
+        # Explainability and Transparency
+        'explainability': evaluate_explainability(model, inputs),
         
-  # Production Behavior
-   'deployment_trust': evaluate_production_behavior(model, production_data)
+        # Production Behavior
+        'deployment_trust': evaluate_production_behavior(model, production_data)
     }
     
-  return comprehensive_trust_score(trust_assessment)
+    return comprehensive_trust_score(trust_assessment)
+```
 
- 
 ### 2. **Real-World Performance vs. Training Performance**
 
 **The Fundamental Problem:**
-python
+```python
 # Scenario: Perfect training data, poor real-world trust
 class ExampleScenario:
     def demonstrate_limitation(self):
-  # Training data is perfect (no label errors)
-   training_data_quality = 0.99  # CleanLab would be happy
+        # Training data is perfect (no label errors)
+        training_data_quality = 0.99  # CleanLab would be happy
         
- # But model has issues:
-   reliability_score = 0.6       # Unreliable predictions
-   consistency_score = 0.5       # Inconsistent responses
-   fairness_score = 0.4          # Biased decisions
-   robustness_score = 0.3        # Fragile to input changes
+        # But model has issues:
+        reliability_score = 0.6       # Unreliable predictions
+        consistency_score = 0.5       # Inconsistent responses
+        fairness_score = 0.4          # Biased decisions
+        robustness_score = 0.3        # Fragile to input changes
         
- # Label error detection says: "Data is clean!"
- # Trust system says: "Don't deploy this - it's not trustworthy!"
+        # Label error detection says: "Data is clean!"
+        # Trust system says: "Don't deploy this - it's not trustworthy!"
         
-   return {
+        return {
             'cleanlab_assessment': 'Data quality excellent',
             'trust_assessment': 'System not ready for deployment'
         }
-
+```
 
 ### 3. **Temporal and Contextual Trust**
 
 **Label Error Detection Cannot Address:**
-python
+```python
 # Issues that arise over time and context
 def temporal_trust_challenges():
     return {
@@ -222,52 +222,52 @@ def temporal_trust_challenges():
         'data_drift': 'Input distribution shifts in production',
         'model_degradation': 'Performance naturally degrades over time',
         
- # Context-based issues:
-   'domain_adaptation': 'Works in training domain but fails in deployment domain',
-   'edge_cases': 'Handles common cases but fails on edge cases',
-   'user_trust': 'Users lose confidence due to inconsistent behavior'
+        # Context-based issues:
+        'domain_adaptation': 'Works in training domain but fails in deployment domain',
+        'edge_cases': 'Handles common cases but fails on edge cases',
+        'user_trust': 'Users lose confidence due to inconsistent behavior'
     }
-
+```
 
 ## Why Trust-Based Systems Are Superior
 
 ### 1. **Comprehensive Risk Assessment**
 
 **Trust systems evaluate:**
-python
+```python
 def comprehensive_risk_assessment():
     return {
         # Pre-deployment risks (partially covered by CleanLab)
         'training_data_risks': ['label_errors', 'bias', 'completeness'],
         
-  # Model behavior risks (NOT covered by CleanLab)
-   'behavioral_risks': [
+        # Model behavior risks (NOT covered by CleanLab)
+        'behavioral_risks': [
             'overconfidence',           # Model too confident in wrong answers
             'inconsistency',            # Different responses to similar inputs
             'adversarial_vulnerability', # Security risks
             'bias_amplification'        # Fairness issues in deployment
         ],
         
- # Deployment risks (NOT covered by CleanLab)
-   'deployment_risks': [
+        # Deployment risks (NOT covered by CleanLab)
+        'deployment_risks': [
             'production_drift',         # Performance degradation over time
             'user_acceptance',          # Human trust and adoption
             'regulatory_compliance',    # Legal and ethical requirements
             'business_impact'           # Real-world consequences of failures
         ]
     }
-
+```
 
 ### 2. **Decision-Making Support**
 
 **Beyond Data Quality:**
-python
+```python
 def decision_making_support():
     # CleanLab helps answer: "Is my training data good?"
     cleanlab_question = "Should I retrain with cleaned data?"
     
-# Trust systems help answer broader questions:
-  trust_questions = [
+    # Trust systems help answer broader questions:
+    trust_questions = [
         "Should I deploy this model to production?",
         "Can I trust this model's decisions in critical situations?",
         "How will this model perform with real users?",
@@ -275,16 +275,16 @@ def decision_making_support():
         "How can I improve overall system trustworthiness?"
     ]
     
- return {
+    return {
         'cleanlab_scope': cleanlab_question,
         'trust_scope': trust_questions
     }
-
+```
 
 ### 3. **Continuous Monitoring and Improvement**
 
 **Evolution Over Time:**
-python
+```python
 def evolution_comparison():
     return {
         'label_error_detection': {
@@ -294,20 +294,20 @@ def evolution_comparison():
             'outcome': 'Better training data'
         },
         
- 'trust_based_system': {
+        'trust_based_system': {
             'phase': 'End-to-end lifecycle (training → deployment → monitoring)',
             'frequency': 'Continuous monitoring',
             'scope': 'Dynamic system behavior in real-world conditions',
             'outcome': 'Confidence in system reliability and safety'
         }
     }
-
+```
 
 ## Concrete Examples Where Trust Systems Excel
 
 ### Example 1: **Medical Diagnosis System**
 
-python
+```python
 # CleanLab approach:
 medical_model_cleanlab = {
     'training_data_quality': 0.98,  # Very clean data
@@ -325,11 +325,11 @@ medical_model_trust = {
     'overall_trust': 0.6,              # NOT ready for deployment!
     'recommendation': 'Needs significant improvement before deployment'
 }
-
+```
 
 ### Example 2: **Autonomous Vehicle Perception**
 
-python
+```python
 # CleanLab approach:
 av_perception_cleanlab = {
     'training_data_quality': 0.95,  # Good object detection labels
@@ -346,17 +346,17 @@ av_perception_trust = {
     'safety_trust': 0.3,               # DANGEROUS for deployment!
     'recommendation': 'Absolutely not ready - safety risks too high'
 }
-
+```
 
 ## The Trust Advantage: Beyond Binary Decisions
 
 ### **CleanLab's Binary Thinking:**
-
+```
 Data Quality: Good/Bad → Retrain/Don't Retrain
-
+```
 
 ### **Trust-Based Thinking:**
-
+```
 Trust Dimensions:
 ├── Reliability: 0.7 (Moderate confidence)
 ├── Consistency: 0.6 (Some variability acceptable)
@@ -369,7 +369,7 @@ Decision Matrix:
 ├── Critical Applications: DON'T DEPLOY
 ├── Low-Stakes Applications: DEPLOY with monitoring
 └── Research Applications: DEPLOY with caveats
-
+```
 
 ## Fundamental Truth
 
