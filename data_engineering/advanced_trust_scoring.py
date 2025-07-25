@@ -55,13 +55,6 @@ except ImportError:
     SKLEARN_AVAILABLE = False
     print("Warning: Scikit-learn not available. Install with: pip install scikit-learn")
 
-try:
-    from data_engineering.deepchecks_integration import DeepchecksDataQualityManager
-    DEEPCHECKS_AVAILABLE = True
-except ImportError:
-    DEEPCHECKS_AVAILABLE = False
-    print("Warning: Deepchecks integration not available. Check deepchecks_integration.py")
-
 # Remove Cleanlab imports and logic
 # Remove: import cleanlab, from cleanlab import find_label_issues, get_label_quality_scores, CleanLearning
 # Remove: CLEANLAB_AVAILABLE logic and all Cleanlab-based scoring except for benchmarking
@@ -83,8 +76,6 @@ class AdvancedTrustScoringEngine:
         self.scalers = {}
         self.models = {}
         self._initialize_models()
-        if DEEPCHECKS_AVAILABLE:
-            self.deepchecks_manager = DeepchecksDataQualityManager()
         
     def _get_default_config(self) -> Dict:
         """Get default configuration for advanced trust scoring"""
@@ -178,7 +169,7 @@ class AdvancedTrustScoringEngine:
             dataset: Input dataset
             labels: Optional labels for supervised methods
             features: Optional feature columns to use
-            method: Scoring method ("ensemble", "cleanlab", "robust", "uncertainty", "deepchecks")
+            method: Scoring method ("ensemble", "cleanlab", "robust", "uncertainty")
         
         Returns:
             Dictionary containing trust score and detailed metrics
@@ -209,8 +200,6 @@ class AdvancedTrustScoringEngine:
                 return self._calculate_robust_trust_score(X, X_scaled)
             elif method == "uncertainty":
                 return self._calculate_uncertainty_trust_score(X, X_scaled)
-            elif method == "deepchecks" and DEEPCHECKS_AVAILABLE:
-                return self.run_deepchecks_suite(dataset, target_col=labels)
             else:
                 return self._calculate_ensemble_trust_score(X, X_scaled, labels)
                 
@@ -274,13 +263,6 @@ class AdvancedTrustScoringEngine:
                 cleanlab_score = self._calculate_cleanlab_component(X_scaled, labels)
         except ImportError:
             pass  # Cleanlab not available
-
-        # 8. Label error detection
-        label_error_score = None
-        if labels is not None:
-            label_issues = self.find_label_issues(X_scaled, np.array(labels))
-            if label_issues is not None:
-                label_error_score = 1 - (len(label_issues) / len(X))
         
         # Calculate weighted ensemble trust score
         weights = self.config['weights']
@@ -299,10 +281,6 @@ class AdvancedTrustScoringEngine:
         # Adjust for cleanlab if available
         if cleanlab_score is not None:
             trust_score = 0.8 * trust_score + 0.2 * cleanlab_score
-
-        # Adjust for label errors
-        if label_error_score is not None:
-            trust_score = 0.9 * trust_score + 0.1 * label_error_score
         
         return {
             "trust_score": max(0, min(1, float(trust_score))),
@@ -313,8 +291,7 @@ class AdvancedTrustScoringEngine:
                 "distribution_analysis": distribution_score,
                 "uncertainty_quantification": uncertainty_score,
                 "clustering_quality": clustering_score,
-                "cleanlab_integration": cleanlab_score,
-                "label_error_score": label_error_score
+                "cleanlab_integration": cleanlab_score
             },
             "method": "ensemble_advanced",
             "timestamp": datetime.now().isoformat(),
@@ -883,46 +860,6 @@ class AdvancedTrustScoringEngine:
         """Placeholder for Bayesian uncertainty estimation. To be implemented with advanced Bayesian methods."""
         # TODO: Implement Bayesian uncertainty estimation (e.g., Bayesian neural networks, MC dropout, etc.)
         return 0.5
-
-    def find_label_issues(self, X: pd.DataFrame, labels: np.ndarray) -> Optional[pd.DataFrame]:
-        """
-        Find potential label issues using a classification model.
-        Returns a DataFrame of potential label errors.
-        """
-        if not SKLEARN_AVAILABLE or labels is None:
-            return None
-
-        try:
-            # Train a classifier
-            clf = RandomForestClassifier(random_state=42)
-            clf.fit(X, labels)
-
-            # Get predicted probabilities
-            pred_probs = clf.predict_proba(X)
-
-            # Find potential label errors
-            potential_errors = []
-            for i, (pred_prob, true_label) in enumerate(zip(pred_probs, labels)):
-                if np.argmax(pred_prob) != true_label:
-                    potential_errors.append({
-                        "index": i,
-                        "true_label": true_label,
-                        "predicted_label": np.argmax(pred_prob),
-                        "confidence": np.max(pred_prob)
-                    })
-
-            return pd.DataFrame(potential_errors)
-        except Exception as e:
-            self.logger.error(f"Error finding label issues: {e}")
-            return None
-
-    def run_deepchecks_suite(self, dataset: pd.DataFrame, target_col: Optional[str] = None) -> Dict[str, Any]:
-        """Run Deepchecks data integrity suite"""
-        if not DEEPCHECKS_AVAILABLE:
-            return {"error": "Deepchecks not available"}
-
-        self.logger.info("Running Deepchecks data integrity suite...")
-        return self.deepchecks_manager.run_data_integrity_suite(dataset, target_col=target_col)
     
     def _detect_correlation_issues(self, X: pd.DataFrame, threshold: float = 0.95) -> float:
         """Detect highly correlated features"""
@@ -1061,16 +998,6 @@ def example_advanced_trust_scoring():
         print()
     except ImportError:
         print("Cleanlab not installed. Skipping Cleanlab benchmark.")
-
-    # Deepchecks method
-    if DEEPCHECKS_AVAILABLE:
-        deepchecks_result = engine.calculate_advanced_trust_score(data, method="deepchecks")
-        print("Deepchecks Method:")
-        if "error" in deepchecks_result:
-            print(f"Error: {deepchecks_result['error']}")
-        else:
-            print("Deepchecks suite run successfully.")
-        print()
 
 if __name__ == "__main__":
     example_advanced_trust_scoring()

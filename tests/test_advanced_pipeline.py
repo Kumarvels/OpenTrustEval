@@ -1,12 +1,14 @@
 import numpy as np
 import pytest
-from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import process_input
-from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import extract_evidence
+from high_performance_system.legacy_compatibility import process_input
+from high_performance_system.legacy_compatibility import extract_evidence
 import importlib
 
-from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import aggregate_evidence as del_aggregate_evidence
-from src.opentrusteval.pipelines.high_performance_system.legacy_compatibility import extract_evidence as tee_extract_evidence
-from src.opentrusteval.plugins.plugin_loader import load_plugins
+del_module = importlib.import_module('src.del')
+tcen_module = importlib.import_module('src.tcen')
+cdf_module = importlib.import_module('src.cdf')
+sra_module = importlib.import_module('src.sra')
+from plugins.plugin_loader import load_plugins
 
 @pytest.mark.parametrize("text,img_shape", [
     ("", (256, 256, 3)),  # Empty text, valid image
@@ -36,13 +38,11 @@ def test_pipeline_edge_cases(text, img_shape):
             assert False, "Should raise error for invalid image shape"
         return
     embedding = process_input(input_dict)
-    evidence = tee_extract_evidence(embedding)
-    decision = del_aggregate_evidence(evidence)
-    optimized = decision
-    # The following modules are not available in the new system, so we can't test them.
-    # explanation = tcen_module.explain_decision(decision)
-    # final = cdf_module.finalize_decision(explanation)
-    # optimized = sra_module.optimize_result(final)
+    evidence = extract_evidence(embedding)
+    decision = del_module.aggregate_evidence(evidence)
+    explanation = tcen_module.explain_decision(decision)
+    final = cdf_module.finalize_decision(explanation)
+    optimized = sra_module.optimize_result(final)
     discovered_plugins = load_plugins('plugins')
     for name, plugin in discovered_plugins.items():
         if hasattr(plugin, 'custom_plugin'):
