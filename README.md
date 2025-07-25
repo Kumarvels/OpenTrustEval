@@ -20,7 +20,7 @@ OpenTrustEval is a comprehensive, high-performance, and modular platform for AI 
 ---
 
 ## 🛠️ Installation
-```bash
+bash
 git clone https://github.com/Kumarvels/OpenTrustEval.git
 cd OpenTrustEval
 python -m venv .venv
@@ -30,12 +30,12 @@ source .venv/bin/activate  # On Linux/Mac
 pip install -r requirements.txt
 ```
 
----
+
 
 ## 🌐 Launch the Unified WebUI
 The WebUI provides a single interface for LLM, Data, Security, and Research management.
 
-```bash
+bash
 streamlit run launch_workflow_webui.py
 ```
 - Open [http://localhost:8501](http://localhost:8501) in your browser.
@@ -112,7 +112,7 @@ python superfast_production_server.py
 
 ---
 
-## Why Trust-Based Systems Are Better Than Label Error Detection Systems
+## Why Trust-Based Systems Are Better Than Other Solutions (example: Label Error Detection Systems)
 
 Let me break down the fundamental differences and explain why a trust-based approach is more comprehensive and valuable.
 
