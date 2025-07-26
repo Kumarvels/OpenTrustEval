@@ -9,7 +9,7 @@ streamlit>=1.28.0
 plotly>=5.15.0
 
 # Database
-sqlite3  # Usually included with Python
+# sqlite3  # Usually included with Python
 
 # Optional: For enhanced features
 # scikit-learn>=1.1.0  # For advanced trust scoring

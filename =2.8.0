@@ -1,0 +1,45 @@
+Collecting google-cloud-storage
+  Downloading google_cloud_storage-3.2.0-py3-none-any.whl.metadata (13 kB)
+Collecting google-auth<3.0.0,>=2.26.1 (from google-cloud-storage)
+  Downloading google_auth-2.40.3-py2.py3-none-any.whl.metadata (6.2 kB)
+Collecting google-api-core<3.0.0,>=2.15.0 (from google-cloud-storage)
+  Downloading google_api_core-2.25.1-py3-none-any.whl.metadata (3.0 kB)
+Collecting google-cloud-core<3.0.0,>=2.4.2 (from google-cloud-storage)
+  Downloading google_cloud_core-2.4.3-py2.py3-none-any.whl.metadata (2.7 kB)
+Collecting google-resumable-media<3.0.0,>=2.7.2 (from google-cloud-storage)
+  Downloading google_resumable_media-2.7.2-py2.py3-none-any.whl.metadata (2.2 kB)
+Requirement already satisfied: requests<3.0.0,>=2.22.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-cloud-storage) (2.31.0)
+Collecting google-crc32c<2.0.0,>=1.1.3 (from google-cloud-storage)
+  Downloading google_crc32c-1.7.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.3 kB)
+Collecting googleapis-common-protos<2.0.0,>=1.56.2 (from google-api-core<3.0.0,>=2.15.0->google-cloud-storage)
+  Downloading googleapis_common_protos-1.70.0-py3-none-any.whl.metadata (9.3 kB)
+Requirement already satisfied: protobuf!=3.20.0,!=3.20.1,!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<7.0.0,>=3.19.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core<3.0.0,>=2.15.0->google-cloud-storage) (4.25.8)
+Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core<3.0.0,>=2.15.0->google-cloud-storage) (1.26.1)
+Collecting cachetools<6.0,>=2.0.0 (from google-auth<3.0.0,>=2.26.1->google-cloud-storage)
+  Downloading cachetools-5.5.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting pyasn1-modules>=0.2.1 (from google-auth<3.0.0,>=2.26.1->google-cloud-storage)
+  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting rsa<5,>=3.1.4 (from google-auth<3.0.0,>=2.26.1->google-cloud-storage)
+  Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+Requirement already satisfied: charset-normalizer<4,>=2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.22.0->google-cloud-storage) (3.4.2)
+Requirement already satisfied: idna<4,>=2.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.22.0->google-cloud-storage) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.22.0->google-cloud-storage) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.22.0->google-cloud-storage) (2025.7.14)
+Requirement already satisfied: pyasn1>=0.1.3 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from rsa<5,>=3.1.4->google-auth<3.0.0,>=2.26.1->google-cloud-storage) (0.6.1)
+Downloading google_cloud_storage-3.2.0-py3-none-any.whl (176 kB)
+Downloading google_api_core-2.25.1-py3-none-any.whl (160 kB)
+Downloading google_auth-2.40.3-py2.py3-none-any.whl (216 kB)
+Downloading cachetools-5.5.2-py3-none-any.whl (10 kB)
+Downloading google_cloud_core-2.4.3-py2.py3-none-any.whl (29 kB)
+Downloading google_crc32c-1.7.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (32 kB)
+Downloading google_resumable_media-2.7.2-py2.py3-none-any.whl (81 kB)
+Downloading googleapis_common_protos-1.70.0-py3-none-any.whl (294 kB)
+Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+Installing collected packages: rsa, pyasn1-modules, googleapis-common-protos, google-crc32c, cachetools, google-resumable-media, google-auth, google-api-core, google-cloud-core, google-cloud-storage
+  Attempting uninstall: cachetools
+    Found existing installation: cachetools 6.1.0
+    Uninstalling cachetools-6.1.0:
+      Successfully uninstalled cachetools-6.1.0
+
+Successfully installed cachetools-5.5.2 google-api-core-2.25.1 google-auth-2.40.3 google-cloud-core-2.4.3 google-cloud-storage-3.2.0 google-crc32c-1.7.1 google-resumable-media-2.7.2 googleapis-common-protos-1.70.0 pyasn1-modules-0.4.2 rsa-4.9.1
