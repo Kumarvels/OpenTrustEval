@@ -1,0 +1,24 @@
+Collecting tables
+  Downloading tables-3.10.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.0 kB)
+Requirement already satisfied: numpy>=1.20.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from tables) (1.26.4)
+Requirement already satisfied: numexpr>=2.6.2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from tables) (2.11.0)
+Requirement already satisfied: packaging in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from tables) (25.0)
+Requirement already satisfied: py-cpuinfo in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from tables) (9.0.0)
+Collecting blosc2>=2.3.0 (from tables)
+  Downloading blosc2-3.6.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (7.0 kB)
+Requirement already satisfied: typing-extensions>=4.4.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from tables) (4.14.1)
+Requirement already satisfied: ndindex in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from blosc2>=2.3.0->tables) (1.10.0)
+Requirement already satisfied: msgpack in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from blosc2>=2.3.0->tables) (1.1.1)
+Requirement already satisfied: platformdirs in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from blosc2>=2.3.0->tables) (4.3.8)
+Requirement already satisfied: requests in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from blosc2>=2.3.0->tables) (2.31.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests->blosc2>=2.3.0->tables) (3.4.2)
+Requirement already satisfied: idna<4,>=2.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests->blosc2>=2.3.0->tables) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests->blosc2>=2.3.0->tables) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests->blosc2>=2.3.0->tables) (2025.7.14)
+Downloading tables-3.10.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (7.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.5/7.5 MB 88.3 MB/s eta 0:00:00
+Downloading blosc2-3.6.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 95.1 MB/s eta 0:00:00
+Installing collected packages: blosc2, tables
+
+Successfully installed blosc2-3.6.1 tables-3.10.2

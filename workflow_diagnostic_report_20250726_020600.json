@@ -1,0 +1,242 @@
+{
+  "timestamp": "2025-07-26T02:06:00.806086",
+  "summary": {
+    "total_checks": 13,
+    "passed": 10,
+    "failed": 0,
+    "warnings": 3,
+    "skipped": 0
+  },
+  "results": [
+    {
+      "component": "System Environment",
+      "status": "PASS",
+      "message": "System environment is ready",
+      "duration": 1.7772915363311768,
+      "timestamp": "2025-07-26T02:05:59.214582",
+      "details": {
+        "python_version": "3.12.11",
+        "fastapi_available": true,
+        "uvicorn_available": true,
+        "streamlit_available": true,
+        "pandas_available": true,
+        "numpy_available": true,
+        "plotly_available": true,
+        "requests_available": true,
+        "asyncio_available": true,
+        "logging_available": true,
+        "json_available": true,
+        "memory_available": "7.16 GB",
+        "cpu_count": 4,
+        "disk_free": "2.58 GB",
+        "working_directory": "/app",
+        "project_root": "/app"
+      }
+    },
+    {
+      "component": "Data Uploads",
+      "status": "PASS",
+      "message": "Data uploads system is functional",
+      "duration": 0.014145374298095703,
+      "timestamp": "2025-07-26T02:05:59.229098",
+      "details": {
+        "uploads_dir_exists": true,
+        "write_permissions": true,
+        "dataset_connector_available": false,
+        "dataset_connector_error": "No module named 'data_engineering'"
+      }
+    },
+    {
+      "component": "Data Engineering",
+      "status": "PASS",
+      "message": "Data engineering components are functional",
+      "duration": 0.12368917465209961,
+      "timestamp": "2025-07-26T02:05:59.353004",
+      "details": {
+        "data_engineering.advanced_trust_scoring_available": false,
+        "data_engineering.advanced_trust_scoring_error": "No module named 'data_engineering'",
+        "data_engineering.cleanlab_integration_available": false,
+        "data_engineering.cleanlab_integration_error": "No module named 'data_engineering'",
+        "data_engineering.trust_scoring_dashboard_available": false,
+        "data_engineering.trust_scoring_dashboard_error": "No module named 'data_engineering'",
+        "data_engineering.data_lifecycle_available": false,
+        "data_engineering.data_lifecycle_error": "No module named 'data_engineering'",
+        "trust_scoring_test": "FAIL",
+        "trust_scoring_error": "No module named 'data_engineering'",
+        "database_connectivity": true
+      }
+    },
+    {
+      "component": "LLM Engineering",
+      "status": "PASS",
+      "message": "LLM engineering components are functional",
+      "duration": 0.0006618499755859375,
+      "timestamp": "2025-07-26T02:05:59.353965",
+      "details": {
+        "llm_engineering.llm_lifecycle_available": false,
+        "llm_engineering.llm_lifecycle_error": "No module named 'llm_engineering'",
+        "llm_engineering.providers.base_provider_available": false,
+        "llm_engineering.providers.base_provider_error": "No module named 'llm_engineering'",
+        "llm_engineering.providers.llama_factory_provider_available": false,
+        "llm_engineering.providers.llama_factory_provider_error": "No module named 'llm_engineering'",
+        "llm_lifecycle_manager": "FAIL",
+        "llm_lifecycle_error": "No module named 'llm_engineering'",
+        "llm_config_exists": true
+      }
+    },
+    {
+      "component": "High Performance System",
+      "status": "PASS",
+      "message": "High performance system components are functional",
+      "duration": 0.0008711814880371094,
+      "timestamp": "2025-07-26T02:05:59.355021",
+      "details": {
+        "high_performance_system.core.ultimate_moe_system_available": false,
+        "high_performance_system.core.ultimate_moe_system_error": "No module named 'high_performance_system'",
+        "high_performance_system.core.advanced_expert_ensemble_available": false,
+        "high_performance_system.core.advanced_expert_ensemble_error": "No module named 'high_performance_system'",
+        "high_performance_system.core.intelligent_domain_router_available": false,
+        "high_performance_system.core.intelligent_domain_router_error": "No module named 'high_performance_system'",
+        "high_performance_system.core.enhanced_dataset_profiler_available": false,
+        "high_performance_system.core.enhanced_dataset_profiler_error": "No module named 'high_performance_system'",
+        "high_performance_system.core.comprehensive_pii_detector_available": false,
+        "high_performance_system.core.comprehensive_pii_detector_error": "No module named 'high_performance_system'",
+        "high_performance_system.core.advanced_trust_scorer_available": false,
+        "high_performance_system.core.advanced_trust_scorer_error": "No module named 'high_performance_system'",
+        "moe_system_test": "FAIL",
+        "moe_system_error": "No module named 'high_performance_system'",
+        "expert_ensemble": "FAIL",
+        "expert_ensemble_error": "No module named 'high_performance_system'"
+      }
+    },
+    {
+      "component": "Security System",
+      "status": "PASS",
+      "message": "Security system components are functional",
+      "duration": 0.00035881996154785156,
+      "timestamp": "2025-07-26T02:05:59.355529",
+      "details": {
+        "security.auth_manager_available": false,
+        "security.auth_manager_error": "No module named 'security'",
+        "security.secrets_manager_available": false,
+        "security.secrets_manager_error": "No module named 'security'",
+        "security.security_monitor_available": false,
+        "security.security_monitor_error": "No module named 'security'",
+        "security_webui": "FAIL",
+        "security_webui_error": "No module named 'security'"
+      }
+    },
+    {
+      "component": "MCP Server",
+      "status": "WARNING",
+      "message": "MCP server check completed",
+      "duration": 0.007213115692138672,
+      "timestamp": "2025-07-26T02:05:59.362933",
+      "details": {
+        "mcp_server/server.py_exists": false,
+        "mcp_server/client.py_exists": true,
+        "mcp_server/config.py_exists": true,
+        "mcp_server_running": false,
+        "mcp_server_error": "Server not responding"
+      }
+    },
+    {
+      "component": "Cloud APIs",
+      "status": "PASS",
+      "message": "Cloud APIs check completed",
+      "duration": 0.23957180976867676,
+      "timestamp": "2025-07-26T02:05:59.602769",
+      "details": {
+        "cloudscale_apis/docs/cloud_provider_integration.md_exists": true,
+        "cloudscale_apis/endpoints/_exists": true,
+        "cloudscale_apis/webhooks/_exists": true,
+        "aws_sdk_available": true,
+        "azure_sdk_available": false,
+        "gcp_sdk_available": true
+      }
+    },
+    {
+      "component": "Third-party Integrations",
+      "status": "PASS",
+      "message": "Third-party integrations check completed",
+      "duration": 0.0004413127899169922,
+      "timestamp": "2025-07-26T02:05:59.603562",
+      "details": {
+        "thirdparty_integrations.endpoints.verify_realtime_available": false,
+        "thirdparty_integrations.endpoints.verify_realtime_error": "No module named 'thirdparty_integrations'",
+        "thirdparty_integrations.endpoints.verify_batch_available": false,
+        "thirdparty_integrations.endpoints.verify_batch_error": "No module named 'thirdparty_integrations'",
+        "thirdparty_integrations.webhooks.verify_webhook_available": false,
+        "thirdparty_integrations.webhooks.verify_webhook_error": "No module named 'thirdparty_integrations'"
+      }
+    },
+    {
+      "component": "Tests",
+      "status": "WARNING",
+      "message": "Tests check completed",
+      "duration": 1.1941814422607422,
+      "timestamp": "2025-07-26T02:06:00.797914",
+      "details": {
+        "test_high_performance_system.py_exists": true,
+        "simple_unit_test.py_exists": false,
+        "tests/test_advanced_pipeline.py_exists": true,
+        "simple_test_run": "FAIL",
+        "test_error": "ERROR: file or directory not found: simple_unit_test.py\n\n"
+      }
+    },
+    {
+      "component": "Plugins",
+      "status": "PASS",
+      "message": "Plugins check completed",
+      "duration": 0.0003821849822998047,
+      "timestamp": "2025-07-26T02:06:00.798560",
+      "details": {
+        "plugin_loader": "FAIL",
+        "plugin_loader_error": "No module named 'plugins'",
+        "plugins/example_plugin.py_exists": true,
+        "plugins/hallucination_detector.py_exists": true,
+        "plugins/eu_gdpr_embed.py_exists": true
+      }
+    },
+    {
+      "component": "Analytics & Dashboards",
+      "status": "PASS",
+      "message": "Analytics and dashboards check completed",
+      "duration": 0.0002613067626953125,
+      "timestamp": "2025-07-26T02:06:00.798988",
+      "details": {
+        "high_performance_system/analytics/ultimate_analytics_dashboard.py_exists": true,
+        "high_performance_system/analytics/sme_dashboard.py_exists": true,
+        "data_engineering/trust_scoring_dashboard.py_exists": true,
+        "operation_sindoor_dashboard.py_exists": false,
+        "ultimate_dashboard": "FAIL",
+        "ultimate_dashboard_error": "No module named 'high_performance_system'"
+      }
+    },
+    {
+      "component": "Production Server",
+      "status": "WARNING",
+      "message": "Production server check completed",
+      "duration": 0.006836891174316406,
+      "timestamp": "2025-07-26T02:06:00.805957",
+      "details": {
+        "superfast_production_server.py_exists": true,
+        "ote_api.py_exists": false,
+        "production_server_running": false,
+        "production_server_error": "Server not responding",
+        "performance_endpoint": "FAIL"
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "MEDIUM",
+      "action": "Address warnings",
+      "components": [
+        "MCP Server",
+        "Tests",
+        "Production Server"
+      ]
+    }
+  ]
+}

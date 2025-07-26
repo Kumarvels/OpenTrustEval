@@ -1,0 +1,45 @@
+Collecting pydrive
+  Downloading PyDrive-1.3.1.tar.gz (987 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 987.4/987.4 kB 26.0 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting google-api-python-client>=1.2 (from pydrive)
+  Downloading google_api_python_client-2.177.0-py3-none-any.whl.metadata (7.0 kB)
+Collecting oauth2client>=4.0.0 (from pydrive)
+  Downloading oauth2client-4.1.3-py2.py3-none-any.whl.metadata (1.2 kB)
+Requirement already satisfied: PyYAML>=3.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from pydrive) (6.0.1)
+Collecting httplib2<1.0.0,>=0.19.0 (from google-api-python-client>=1.2->pydrive)
+  Downloading httplib2-0.22.0-py3-none-any.whl.metadata (2.6 kB)
+Requirement already satisfied: google-auth!=2.24.0,!=2.25.0,<3.0.0,>=1.32.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-python-client>=1.2->pydrive) (2.40.3)
+Collecting google-auth-httplib2<1.0.0,>=0.2.0 (from google-api-python-client>=1.2->pydrive)
+  Downloading google_auth_httplib2-0.2.0-py2.py3-none-any.whl.metadata (2.2 kB)
+Requirement already satisfied: google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-python-client>=1.2->pydrive) (2.25.1)
+Requirement already satisfied: uritemplate<5,>=3.0.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-python-client>=1.2->pydrive) (4.2.0)
+Requirement already satisfied: googleapis-common-protos<2.0.0,>=1.56.2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (1.70.0)
+Requirement already satisfied: protobuf!=3.20.0,!=3.20.1,!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<7.0.0,>=3.19.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (4.25.8)
+Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (1.26.1)
+Requirement already satisfied: requests<3.0.0,>=2.18.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (2.31.0)
+Requirement already satisfied: cachetools<6.0,>=2.0.0 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=1.32.0->google-api-python-client>=1.2->pydrive) (5.5.2)
+Requirement already satisfied: pyasn1-modules>=0.2.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=1.32.0->google-api-python-client>=1.2->pydrive) (0.4.2)
+Requirement already satisfied: rsa<5,>=3.1.4 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=1.32.0->google-api-python-client>=1.2->pydrive) (4.9.1)
+Requirement already satisfied: pyparsing!=3.0.0,!=3.0.1,!=3.0.2,!=3.0.3,<4,>=2.4.2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from httplib2<1.0.0,>=0.19.0->google-api-python-client>=1.2->pydrive) (3.2.3)
+Requirement already satisfied: charset-normalizer<4,>=2 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.18.0->google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (3.4.2)
+Requirement already satisfied: idna<4,>=2.5 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.18.0->google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.18.0->google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (2.5.0)
+Requirement already satisfied: certifi>=2017.4.17 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from requests<3.0.0,>=2.18.0->google-api-core!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0,<3.0.0,>=1.31.5->google-api-python-client>=1.2->pydrive) (2025.7.14)
+Requirement already satisfied: pyasn1>=0.1.3 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from rsa<5,>=3.1.4->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=1.32.0->google-api-python-client>=1.2->pydrive) (0.6.1)
+Requirement already satisfied: six>=1.6.1 in /home/jules/.pyenv/versions/3.12.11/lib/python3.12/site-packages (from oauth2client>=4.0.0->pydrive) (1.17.0)
+Downloading google_api_python_client-2.177.0-py3-none-any.whl (13.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.7/13.7 MB 92.1 MB/s eta 0:00:00
+Downloading google_auth_httplib2-0.2.0-py2.py3-none-any.whl (9.3 kB)
+Downloading httplib2-0.22.0-py3-none-any.whl (96 kB)
+Downloading oauth2client-4.1.3-py2.py3-none-any.whl (98 kB)
+Building wheels for collected packages: pydrive
+  Building wheel for pydrive (setup.py): started
+  Building wheel for pydrive (setup.py): finished with status 'done'
+  Created wheel for pydrive: filename=pydrive-1.3.1-py3-none-any.whl size=27539 sha256=0837f0594e858cf75dd820443de7c32c35f56eb6d5136425711b8aed656701ea
+  Stored in directory: /home/jules/.cache/pip/wheels/6c/10/da/a5b513f5b3916fc391c20ee7b4633e5cf3396d570cdd74970f
+Successfully built pydrive
+Installing collected packages: httplib2, oauth2client, google-auth-httplib2, google-api-python-client, pydrive
+
+Successfully installed google-api-python-client-2.177.0 google-auth-httplib2-0.2.0 httplib2-0.22.0 oauth2client-4.1.3 pydrive-1.3.1
