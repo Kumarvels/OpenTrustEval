@@ -106,7 +106,7 @@ def get_saml_provider():
 def get_cache_key(operation: str, params: Dict) -> str:
     """Generate cache key for operation"""
     param_str = json.dumps(params, sort_keys=True)
-    return hashlib.md5(f"{operation}:{param_str}".encode()).hexdigest()
+    return hashlib.sha256(f"{operation}:{param_str}".encode()).hexdigest()
 
 def is_cache_valid(cache_key: str, max_age: int = 300) -> bool:
     """Check if cache entry is still valid"""
