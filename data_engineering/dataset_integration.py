@@ -345,10 +345,28 @@ class DatasetManager:
             elif operation == 'rename_columns':
                 df = df.rename(columns=params['mapping'])
             elif operation == 'filter':
-                condition = params['condition']
-                if not self.is_safe_query(condition, df.columns):
-                    raise ValueError("Unsafe filter condition detected. Only simple column comparisons are allowed.")
-                df = df.query(condition)
+                # Expect params: {'column': ..., 'operator': ..., 'value': ...}
+                column = params.get('column')
+                operator = params.get('operator')
+                value = params.get('value')
+                allowed_operators = ['==', '!=', '<', '>', '<=', '>=']
+                if column not in df.columns:
+                    raise ValueError(f"Column '{column}' not found in dataset.")
+                if operator not in allowed_operators:
+                    raise ValueError(f"Operator '{operator}' is not allowed.")
+                # Apply filter using boolean indexing
+                if operator == '==':
+                    df = df[df[column] == value]
+                elif operator == '!=':
+                    df = df[df[column] != value]
+                elif operator == '<':
+                    df = df[df[column] < value]
+                elif operator == '>':
+                    df = df[df[column] > value]
+                elif operator == '<=':
+                    df = df[df[column] <= value]
+                elif operator == '>=':
+                    df = df[df[column] >= value]
             elif operation == 'sort':
                 df = df.sort_values(by=params['columns'], ascending=params.get('ascending', True))
             elif operation == 'groupby':
