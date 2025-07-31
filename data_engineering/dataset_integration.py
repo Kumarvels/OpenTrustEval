@@ -15,6 +15,7 @@ import logging
 from datetime import datetime
 import hashlib
 
+import re
 # Optional imports for advanced features
 try:
     import plotly.express as px
@@ -298,6 +299,28 @@ class DatasetManager:
             self.logger.error(f"Error creating quality-filtered dataset: {e}")
             raise
     
+    def is_safe_query(self, query_str: str, allowed_columns) -> bool:
+        """
+        Check if the query string is safe: only allowed column names, numbers, and safe operators.
+        """
+        # Only allow column names, numbers, whitespace, and safe operators
+        # Disallow parentheses, function calls, __import__, etc.
+        # Allowed operators: ==, !=, <, >, <=, >=, and, or, not
+        # Build regex for allowed columns
+        col_pattern = r'|'.join([re.escape(col) for col in allowed_columns])
+        # Full pattern: allowed columns, numbers, operators, whitespace
+        safe_pattern = rf'^([\s\d\.\'"]*({col_pattern})[\s\d\.\'"]*(==|!=|<=|>=|<|>|and|or|not|&|\||\s)*[\s\d\.\'"]*)+$'
+        # Disallow suspicious keywords
+        forbidden = ['__import__', 'os.', 'sys.', 'eval', 'exec', 'open(', '(', ')', '[', ']', '{', '}', ';']
+        lowered = query_str.lower()
+        for word in forbidden:
+            if word in lowered:
+                return False
+        # Check regex
+        if re.match(safe_pattern, query_str):
+            return True
+        return False
+
     def process_dataset(self, dataset_id: str, transformations: List[Dict]) -> str:
         """
         Apply transformations to a dataset
@@ -322,7 +345,28 @@ class DatasetManager:
             elif operation == 'rename_columns':
                 df = df.rename(columns=params['mapping'])
             elif operation == 'filter':
-                df = df.query(params['condition'])
+                # Expect params: {'column': ..., 'operator': ..., 'value': ...}
+                column = params.get('column')
+                operator = params.get('operator')
+                value = params.get('value')
+                allowed_operators = ['==', '!=', '<', '>', '<=', '>=']
+                if column not in df.columns:
+                    raise ValueError(f"Column '{column}' not found in dataset.")
+                if operator not in allowed_operators:
+                    raise ValueError(f"Operator '{operator}' is not allowed.")
+                # Apply filter using boolean indexing
+                if operator == '==':
+                    df = df[df[column] == value]
+                elif operator == '!=':
+                    df = df[df[column] != value]
+                elif operator == '<':
+                    df = df[df[column] < value]
+                elif operator == '>':
+                    df = df[df[column] > value]
+                elif operator == '<=':
+                    df = df[df[column] <= value]
+                elif operator == '>=':
+                    df = df[df[column] >= value]
             elif operation == 'sort':
                 df = df.sort_values(by=params['columns'], ascending=params.get('ascending', True))
             elif operation == 'groupby':

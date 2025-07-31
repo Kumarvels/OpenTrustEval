@@ -248,7 +248,7 @@ with gr.Blocks(title="Dataset Management WebUI") as demo:
         process_id = gr.Textbox(label="Dataset ID", placeholder="Enter dataset ID")
         transformations = gr.Textbox(
             label="Transformations (JSON)",
-            placeholder='[{"operation": "filter", "params": {"condition": "age > 30"}}]',
+            placeholder='[{"operation": "filter", "params": {"column": "age", "operator": ">", "value": 30}}]',
             lines=5
         )
         process_btn = gr.Button("Process Dataset")
