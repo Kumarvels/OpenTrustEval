@@ -1163,8 +1163,9 @@ class TrustScoringDashboard:
                 return pd.read_parquet(dataset_path)
             elif data_format == "HDF5":
                 return pd.read_hdf(dataset_path)
-            elif data_format == "Pickle":
-                return pd.read_pickle(dataset_path)
+            # Removed Pickle support due to security concerns
+            # elif data_format == "Pickle":
+            #     return pd.read_pickle(dataset_path)
             elif data_format == "Feather":
                 return pd.read_feather(dataset_path)
             elif data_format == "Stata":
